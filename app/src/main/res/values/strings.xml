@@ -14,7 +14,7 @@
     <string name="decrement_pambazos_naturales">Disminuir cantidad de pambazos naturales</string>
     <string name="decrement_pambazos_naturales_combinados">Disminuir cantidad de pambazos naturales combinados</string>
     <string name="decrement_pambazos_naturales_combinados_queso">Disminuir cantidad de pambazos naturales combinados con Queso</string>
-    <string name="decrement_pambazos_naturales_extra">Disminuir cantidad de pambazos naturales extra</string>
+    <string name="decrement_pambazos_naturales_queso">Disminuir cantidad de pambazos naturales Queso</string>
     <string name="decrement_pambazos_adobados">Disminuir cantidad de pambazos adobados</string>
     <string name="decrement_pambazos_adobados_combinados">Disminuir cantidad de pambazos adobados combinados</string>
     <string name="decrement_pambazos_adobados_combinados_queso">Disminuir cantidad de pambazos adobados combinados con queso</string>
@@ -50,7 +50,7 @@
     <string name="increment_pambazos_naturales">Aumentar cantidad de pambazos naturales</string>
     <string name="increment_pambazos_naturales_combinados">Aumentar cantidad de pambazos naturales combinados</string>
     <string name="increment_pambazos_naturales_combinados_queso">Aumentar cantidad de pambazos naturales combinados con queso</string>
-    <string name="increment_pambazos_naturales_extra">Aumentar cantidad de pambazos naturales extra</string>
+    <string name="increment_pambazos_naturales_queso">Aumentar cantidad de pambazos naturales Queso</string>
     <string name="increment_pambazos_adobados">Aumentar cantidad de pambazos adobados</string>
     <string name="increment_pambazos_adobados_combinados">Aumentar cantidad de pambazos adobados combinados</string>
     <string name="increment_pambazos_adobados_combinados_queso">Aumentar cantidad de pambazos adobados combinados con queso</string>
