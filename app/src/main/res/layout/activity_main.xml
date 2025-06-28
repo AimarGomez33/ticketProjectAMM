@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@color/app_background"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -20,6 +21,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="20dp"
             android:text="Antojitos Mexicanos Margarita"
+            android:textColor="@color/text_primary"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -31,18 +33,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelQuesadillas"
                         android:layout_width="match_parent"
@@ -51,23 +52,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Quesadillas"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosQuesadillas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_quesadillas"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadQuesadillas"
                             android:layout_width="wrap_content"
@@ -77,15 +78,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasQuesadillas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_quesadillas"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -93,18 +96,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPozoleGrande"
                         android:layout_width="match_parent"
@@ -113,23 +115,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Pozole Grande"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPozoleGrande"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_pozole_grande"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPozoleGrande"
                             android:layout_width="wrap_content"
@@ -139,15 +141,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPozoleGrande"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_pozole_grande"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -155,18 +159,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPozoleChico"
                         android:layout_width="match_parent"
@@ -175,23 +178,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Pozole Chico"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPozoleChico"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_pozole_chico"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPozoleChico"
                             android:layout_width="wrap_content"
@@ -201,15 +204,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPozoleChico"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_pozole_chico"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -217,18 +222,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelTostadas"
                         android:layout_width="match_parent"
@@ -237,23 +241,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Tostadas"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosTostadas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_tostadas"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadTostadas"
                             android:layout_width="wrap_content"
@@ -263,15 +267,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasTostadas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_tostadas"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -279,18 +285,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelVolcanes"
                         android:layout_width="match_parent"
@@ -299,23 +304,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Volcanes"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosVolcanes"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_volcanes"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadVolcanes"
                             android:layout_width="wrap_content"
@@ -325,15 +330,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasVolcanes"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_volcanes"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -341,18 +348,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelGuajolotaExtra"
                         android:layout_width="match_parent"
@@ -361,23 +367,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Volcan Queso/Guisado Extra"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosGuajolotaExtra"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_guajolota_extra"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadGuajolotaExtra"
                             android:layout_width="wrap_content"
@@ -387,15 +393,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasGuajolotaExtra"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_guajolota_extra"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -403,18 +411,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelGuajoloyetNatural"
                         android:layout_width="match_parent"
@@ -423,23 +430,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Guajoloyets Naturales"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosGuajoloyetNatural"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_guajoloyet_natural"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadGuajoloyetNatural"
                             android:layout_width="wrap_content"
@@ -449,15 +456,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasGuajoloyetNatural"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_guajoloyet_natural"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -465,18 +474,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelGujoloyetNaturalExtra"
                         android:layout_width="match_parent"
@@ -484,24 +492,24 @@
                         android:layout_marginBottom="4dp"
                         android:gravity="center"
                         android:minLines="2"
-                        android:text="Guajoloyets Naturales Queso"
+                        android:text="Guajoloyets Naturales Queso/Guisado Extra"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosGujoloyetNaturalExtra"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_guajoloyet_natural_extra"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadGujoloyetNaturalExtra"
                             android:layout_width="wrap_content"
@@ -511,15 +519,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasGujoloyetNaturalExtra"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_guajoloyet_natural_extra"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -527,18 +537,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelGuajoloyetAdobado"
                         android:layout_width="match_parent"
@@ -547,23 +556,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Guajoloyets Adobados"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosGuajoloyetAdobado"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_guajoloyet_adobado"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadGuajoloyetAdobado"
                             android:layout_width="wrap_content"
@@ -573,15 +582,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasGuajoloyetAdobado"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_guajoloyet_adobado"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -589,18 +600,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelGujoloyetAdobadoExtra"
                         android:layout_width="match_parent"
@@ -608,24 +618,24 @@
                         android:layout_marginBottom="4dp"
                         android:gravity="center"
                         android:minLines="2"
-                        android:text="Guajoloyets Adobados Queso"
+                        android:text="Guajoloyets Adobados Queso/Guisado Extra"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosGujoloyetAdobadoExtra"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_guajoloyet_adobado_extra"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadGujoloyetAdobadoExtra"
                             android:layout_width="wrap_content"
@@ -635,15 +645,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasGujoloyetAdobadoExtra"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_guajoloyet_adobado_extra"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -651,18 +663,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPambazosNaturales"
                         android:layout_width="match_parent"
@@ -671,23 +682,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Pambazos Naturales"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPambazosNaturales"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_pambazos_naturales"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPambazosNaturales"
                             android:layout_width="wrap_content"
@@ -697,15 +708,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPambazosNaturales"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_pambazos_naturales"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -713,18 +726,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPambazosNaturalesQueso"
                         android:layout_width="match_parent"
@@ -732,24 +744,24 @@
                         android:layout_marginBottom="4dp"
                         android:gravity="center"
                         android:minLines="2"
-                        android:text="Pambazos Naturales Queso"
+                        android:text="Pambazos Naturales Queso Extra"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPambazosNaturalesQueso"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_pambazos_naturales_queso"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPambazosNaturalesQueso"
                             android:layout_width="wrap_content"
@@ -759,15 +771,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPambazosNaturalesQueso"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_pambazos_naturales_queso"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -775,18 +789,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPambazosNaturalesCombinados"
                         android:layout_width="match_parent"
@@ -795,23 +808,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Pambazos Naturales Combinados"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPambazosNaturalesCombinados"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_pambazos_naturales_combinados"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPambazosNaturalesCombinados"
                             android:layout_width="wrap_content"
@@ -821,15 +834,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPambazosNaturalesCombinados"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_pambazos_naturales_combinados"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -837,18 +852,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPambazosNaturalesCombinadosQueso"
                         android:layout_width="match_parent"
@@ -857,23 +871,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Pambazos Naturales Combinados con Queso"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPambazosNaturalesCombinadosQueso"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_pambazos_naturales_combinados_queso"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPambazosNaturalesCombinadosQueso"
                             android:layout_width="wrap_content"
@@ -883,15 +897,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPambazosNaturalesCombinadosQueso"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_pambazos_naturales_combinados_queso"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -899,18 +915,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPambazosAdobados"
                         android:layout_width="match_parent"
@@ -919,23 +934,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Pambazos Adobados"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPambazosAdobados"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_pambazos_adobados"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPambazosAdobados"
                             android:layout_width="wrap_content"
@@ -945,15 +960,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPambazosAdobados"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_pambazos_adobados"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -961,18 +978,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPambazosAdobadosCombinados"
                         android:layout_width="match_parent"
@@ -981,23 +997,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Pambazos Adobados Combinados"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPambazosAdobadosCombinados"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_pambazos_adobados_combinados"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPambazosAdobadosCombinados"
                             android:layout_width="wrap_content"
@@ -1007,15 +1023,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPambazosAdobadosCombinados"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_pambazos_adobados_combinados"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1023,18 +1041,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPambazosAdobadosCombinadosQueso"
                         android:layout_width="match_parent"
@@ -1043,23 +1060,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Pambazos Adobados Combinados con Queso"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPambazosAdobadosCombinadosQueso"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_pambazos_adobados_combinados_queso"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPambazosAdobadosCombinadosQueso"
                             android:layout_width="wrap_content"
@@ -1069,15 +1086,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPambazosAdobadosCombinadosQueso"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_pambazos_adobados_combinados_queso"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1085,18 +1104,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPambazosAdobadosExtra"
                         android:layout_width="match_parent"
@@ -1105,23 +1123,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Pambazos Adobados Queso"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPambazosAdobadosExtra"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_pambazos_adobados_extra"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPambazosAdobadosExtra"
                             android:layout_width="wrap_content"
@@ -1131,15 +1149,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPambazosAdobadosExtra"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_pambazos_adobados_extra"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1147,18 +1167,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelChalupas"
                         android:layout_width="match_parent"
@@ -1167,24 +1186,25 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Chalupas"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosChalupas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_chalupas"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/cantidadChalupas"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -1193,15 +1213,21 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
-                            android:textSize="18sp" />
-
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp"
+                            android:background="@android:color/transparent"
+                            android:inputType="number"
+                            android:selectAllOnFocus="true"
+                            android:imeOptions="actionDone" />
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasChalupas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_chalupas"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1209,18 +1235,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelAlones"
                         android:layout_width="match_parent"
@@ -1229,23 +1254,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Alones"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosAlones"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_alones"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadAlones"
                             android:layout_width="wrap_content"
@@ -1255,15 +1280,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasAlones"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_alones"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1271,18 +1298,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelMollejas"
                         android:layout_width="match_parent"
@@ -1291,23 +1317,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Mollejas"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosMollejas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_mollejas"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadMollejas"
                             android:layout_width="wrap_content"
@@ -1317,15 +1343,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasMollejas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_mollejas"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1333,18 +1361,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelHigados"
                         android:layout_width="match_parent"
@@ -1353,23 +1380,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Hígados"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosHigados"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_higados"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadHigados"
                             android:layout_width="wrap_content"
@@ -1379,15 +1406,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasHigados"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_higados"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1395,18 +1424,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPatitas"
                         android:layout_width="match_parent"
@@ -1415,23 +1443,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Patitas"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPatitas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_patitas"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPatitas"
                             android:layout_width="wrap_content"
@@ -1441,15 +1469,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPatitas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_patitas"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1457,18 +1487,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelHuevos"
                         android:layout_width="match_parent"
@@ -1477,23 +1506,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Huevos"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosHuevos"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_huevos"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadHuevos"
                             android:layout_width="wrap_content"
@@ -1503,15 +1532,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasHuevos"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_huevos"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1519,18 +1550,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelRefrescos"
                         android:layout_width="match_parent"
@@ -1539,23 +1569,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Refrescos"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosRefrescos"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_refrescos"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadRefrescos"
                             android:layout_width="wrap_content"
@@ -1565,15 +1595,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasRefrescos"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_refrescos"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1581,18 +1613,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelCafe"
                         android:layout_width="match_parent"
@@ -1601,23 +1632,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Café"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosCafe"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_cafe"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadCafe"
                             android:layout_width="wrap_content"
@@ -1627,15 +1658,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasCafe"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_cafe"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1643,18 +1676,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelAguas"
                         android:layout_width="match_parent"
@@ -1663,23 +1695,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Agua Jamaica/Horchata"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosAguas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_aguas"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadAguas"
                             android:layout_width="wrap_content"
@@ -1689,15 +1721,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasAguas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_aguas"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1705,18 +1739,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelAguasSabor"
                         android:layout_width="match_parent"
@@ -1725,23 +1758,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Aguas de Sabor"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosAguasSabor"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_aguas_sabor"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadAguasSabor"
                             android:layout_width="wrap_content"
@@ -1751,15 +1784,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasAguasSabor"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_aguas_sabor"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1767,18 +1802,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelAguasNat"
                         android:layout_width="match_parent"
@@ -1787,23 +1821,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Agua Natural"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosAguasNat"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_agua_nat"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadAguasNat"
                             android:layout_width="wrap_content"
@@ -1813,15 +1847,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasAguasNat"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_agua_nat"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1829,18 +1865,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelAguaTe"
                         android:layout_width="match_parent"
@@ -1849,23 +1884,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Agua para Té"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosAguaTe"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_agua_te"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadAguaTe"
                             android:layout_width="wrap_content"
@@ -1875,15 +1910,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasAguaTe"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_agua_te"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1891,18 +1928,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelExtra10"
                         android:layout_width="match_parent"
@@ -1911,23 +1947,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Extra +10"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosExtra10"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_extra10"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadExtra10"
                             android:layout_width="wrap_content"
@@ -1937,15 +1973,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasExtra10"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_extra10"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -1953,18 +1991,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelExtra5"
                         android:layout_width="match_parent"
@@ -1973,23 +2010,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Extra +5"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosExtra5"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_extra5"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadExtra5"
                             android:layout_width="wrap_content"
@@ -1999,15 +2036,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasExtra5"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_extra5"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -2015,18 +2054,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPostres25"
                         android:layout_width="match_parent"
@@ -2035,23 +2073,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Postres 25"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPostres25"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_postres25"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPostres25"
                             android:layout_width="wrap_content"
@@ -2061,15 +2099,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPostres25"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_postres25"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -2077,18 +2117,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPostres30"
                         android:layout_width="match_parent"
@@ -2097,23 +2136,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Postres 30"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPostres30"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_postres30"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPostres30"
                             android:layout_width="wrap_content"
@@ -2123,15 +2162,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPostres30"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_postres30"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -2139,18 +2180,17 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
-                android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
+                app:cardElevation="2dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="4dp">
-
                     <TextView
                         android:id="@+id/labelPostres35"
                         android:layout_width="match_parent"
@@ -2159,23 +2199,23 @@
                         android:gravity="center"
                         android:minLines="2"
                         android:text="Postres 35"
+                        android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMenosPostres35"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/decrement_postres35"
                             android:text="-"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <TextView
                             android:id="@+id/cantidadPostres35"
                             android:layout_width="wrap_content"
@@ -2185,15 +2225,17 @@
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:text="0"
+                            android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPostres35"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_postres35"
                             android:text="+"
+                            android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -2207,38 +2249,125 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnImprimir"
+            style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:padding="16dp"
             android:text="Imprimir Ticket"
-            android:textSize="20sp" />
+            android:textColor="@color/text_on_accent"
+            android:textSize="20sp"
+            app:backgroundTint="@color/button_accent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEmparejar"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:padding="16dp"
             android:text="Emparejar Impresora Bluetooth"
-            android:textSize="20sp" />
+            android:textColor="@color/text_primary"
+            android:textSize="20sp"
+            app:strokeColor="@color/button_accent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLimpiar"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:padding="16dp"
             android:text="Limpiar Cantidades"
+            android:textColor="@color/text_primary"
             android:textSize="20sp" />
 
-        <ImageView
-            android:id="@+id/imgQR"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:contentDescription="@string/qr_code_image" />
+            android:layout_marginTop="20dp">
+
+            <ImageView
+                android:id="@+id/imgQR"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/qr_code_image"
+                android:visibility="gone" /> <LinearLayout
+            android:id="@+id/summaryContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/summary_background"
+            android:padding="16dp"
+            android:visibility="gone"
+            tools:visibility="visible"> <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Resumen de la Cuenta"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnCloseSummary"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                app:icon="@android:drawable/ic_menu_close_clear_cancel"
+                app:iconTint="@color/text_secondary" />
+        </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/button_accent"
+                android:layout_marginBottom="8dp"/>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="200dp">
+
+                <TextView
+                    android:id="@+id/summaryTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="16sp"
+                    android:lineSpacingExtra="4dp"
+                    tools:text="2 x Quesadillas... $56.00\n1 x Pozole Grande... $110.00" />
+            </ScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/button_accent"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:id="@+id/summaryTotalTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:paddingTop="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp"
+                tools:text="TOTAL: $166.00" />
+
+        </LinearLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
 </ScrollView>

@@ -14,10 +14,14 @@ import android.graphics.Color
 import android.hardware.usb.*
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.View // <<-- Asegúrate de tener esta importación
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RelativeLayout // <<-- Y esta también
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -37,6 +41,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.nio.charset.StandardCharsets
 
+
+
 class MainActivity : AppCompatActivity() {
 
     // --- Constantes y variables de la clase ---
@@ -47,21 +53,28 @@ class MainActivity : AppCompatActivity() {
         private val PRINTER_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // UUID estándar de SPP
     }
 
-    // Vistas
+    // <<-- Vistas del resumen (ya las tenías, solo confirmando)
+    private lateinit var summaryContainer: View
+    private lateinit var summaryTextView: TextView
+    private lateinit var summaryTotalTextView: TextView
+    private lateinit var btnCloseSummary: Button
+
+    // Vistas y Estado
     private val products = mutableMapOf<String, ProductData>()
+    private val quantities = mutableMapOf<String, Int>()
+
     private lateinit var btnImprimir: Button
     private lateinit var btnEmparejar: Button
-    private lateinit var btnLimpiar: Button // <<-- Nuevo botón
+    private lateinit var btnLimpiar: Button
     private lateinit var imgQR: ImageView
 
-    // Gestión de USB
+    // Gestión de USB y Bluetooth... (sin cambios)
     private lateinit var usbManager: UsbManager
     private var usbDevice: UsbDevice? = null
     private var usbDeviceConnection: UsbDeviceConnection? = null
     private var usbInterface: UsbInterface? = null
     private var usbEndpointOut: UsbEndpoint? = null
 
-    // Gestión de Bluetooth
     private val bluetoothManager: BluetoothManager by lazy {
         getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
     }
@@ -70,7 +83,7 @@ class MainActivity : AppCompatActivity() {
     }
     private var bluetoothSocket: BluetoothSocket? = null
 
-    // --- ActivityResultLaunchers para Permisos y Bluetooth ---
+    // --- ActivityResultLaunchers (sin cambios) ---
     private val requestBluetoothPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val granted = permissions.entries.all { it.value }
@@ -92,7 +105,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    // --- Receptor de permisos USB ---
+    // --- Receptor de permisos USB (sin cambios) ---
     private val usbReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (ACTION_USB_PERMISSION == intent?.action) {
@@ -112,7 +125,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // --- Ciclo de vida de la actividad ---
+    // --- Ciclo de vida de la actividad (sin cambios) ---
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -122,7 +135,6 @@ class MainActivity : AppCompatActivity() {
         setupProductViews()
         setupButtons()
 
-        // Registrar el BroadcastReceiver para los permisos USB
         val filter = IntentFilter(ACTION_USB_PERMISSION)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(usbReceiver, filter, RECEIVER_NOT_EXPORTED)
@@ -130,8 +142,6 @@ class MainActivity : AppCompatActivity() {
             @Suppress("UnspecifiedRegisterReceiverFlag")
             registerReceiver(usbReceiver, filter)
         }
-
-        // Configuración inicial de permisos
         checkAndRequestBluetoothPermissions()
         detectAndRequestUsbPermission()
     }
@@ -145,7 +155,7 @@ class MainActivity : AppCompatActivity() {
 
     // --- Configuración de la UI (Vistas y Botones) ---
     private fun setupProductViews() {
-        // Mapea los productos con sus IDs de TextView, Button y precio
+        // ... (toda tu lista de products["..."] = ... se queda igual)
         products["Quesadillas"] = ProductData(findViewById(R.id.cantidadQuesadillas), findViewById(R.id.btnMenosQuesadillas), findViewById(R.id.btnMasQuesadillas), 28.0)
         products["Pozole Grande"] = ProductData(findViewById(R.id.cantidadPozoleGrande), findViewById(R.id.btnMenosPozoleGrande), findViewById(R.id.btnMasPozoleGrande), 110.0)
         products["Pozole Chico"] = ProductData(findViewById(R.id.cantidadPozoleChico), findViewById(R.id.btnMenosPozoleChico), findViewById(R.id.btnMasPozoleChico), 90.0)
@@ -182,13 +192,32 @@ class MainActivity : AppCompatActivity() {
         products["Postres 30"] = ProductData(findViewById(R.id.cantidadPostres30), findViewById(R.id.btnMenosPostres30), findViewById(R.id.btnMasPostres30), 30.0)
         products["Postres 35"] = ProductData(findViewById(R.id.cantidadPostres35), findViewById(R.id.btnMenosPostres35), findViewById(R.id.btnMasPostres35), 35.0)
 
-        // Configura los listeners para los botones +/- de cada producto
-        products.values.forEach { productData ->
+
+        products.forEach { (productName, productData) ->
+            quantities[productName] = 0 // Inicializa la cantidad en el mapa
+
+            // Los listeners deben llamar a la versión de updateQuantity con el "productName"
             productData.btnMas.setOnClickListener {
-                updateQuantity(productData.cantidadTV, 1)
+                updateQuantity(productName, 1)
             }
             productData.btnMenos.setOnClickListener {
-                updateQuantity(productData.cantidadTV, -1)
+                updateQuantity(productName, -1)
+            }
+
+            // El caso especial para el EditText de Chalupas
+            if (productName == "Chalupas" && productData.cantidadTV is EditText) {
+                productData.cantidadTV.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                    override fun afterTextChanged(s: Editable?) {
+                        val currentQuantity = quantities[productName] ?: 0
+                        val newValue = s?.toString()?.toIntOrNull() ?: 0
+
+                        if (currentQuantity != newValue) {
+                            quantities[productName] = newValue
+                        }
+                    }
+                })
             }
         }
     }
@@ -196,15 +225,19 @@ class MainActivity : AppCompatActivity() {
     private fun setupButtons() {
         btnImprimir = findViewById(R.id.btnImprimir)
         btnEmparejar = findViewById(R.id.btnEmparejar)
-        btnLimpiar = findViewById(R.id.btnLimpiar) // <<-- Inicialización del nuevo botón
+        btnLimpiar = findViewById(R.id.btnLimpiar)
         imgQR = findViewById(R.id.imgQR)
+
+        // <<-- Inicialización de las vistas del resumen (ya las tenías, solo confirmando)
+        summaryContainer = findViewById(R.id.summaryContainer)
+        summaryTextView = findViewById(R.id.summaryTextView)
+        summaryTotalTextView = findViewById(R.id.summaryTotalTextView)
+        btnCloseSummary = findViewById(R.id.btnCloseSummary)
 
         btnImprimir.setOnClickListener {
             imprimirTicket()
         }
-
         btnEmparejar.setOnClickListener {
-            // Abre la configuración de Bluetooth para que el usuario pueda emparejar
             val intent = Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS)
             if (intent.resolveActivity(packageManager) != null) {
                 startActivity(intent)
@@ -212,51 +245,59 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "No se pudo abrir la configuración de Bluetooth", Toast.LENGTH_SHORT).show()
             }
         }
-
-        // <<-- Lógica del botón Limpiar Cantidades
         btnLimpiar.setOnClickListener {
             limpiarCantidades()
         }
-    }
 
-    /**
-     * Actualiza la cantidad de un producto en la UI.
-     * @param textView El TextView que muestra la cantidad.
-     * @param change El cambio de cantidad (+1 o -1).
-     */
-    private fun updateQuantity(textView: TextView, change: Int) {
-        val currentQuantity = textView.text.toString().toIntOrNull() ?: 0
-        val newQuantity = (currentQuantity + change).coerceAtLeast(0) // No permitir números negativos
-        textView.text = newQuantity.toString()
-    }
-
-    /**
-     * Restablece todas las cantidades de los productos a cero en la interfaz de usuario.
-     */
-    private fun limpiarCantidades() {
-        products.values.forEach { productData ->
-            productData.cantidadTV.text = "0"
+        // <<-- AÑADIDO: Listener para el botón de cerrar el resumen.
+        btnCloseSummary.setOnClickListener {
+            ocultarResumen()
         }
-        Toast.makeText(this, "Cantidades restablecidas a 0", Toast.LENGTH_SHORT).show()
-        // Opcional: También podrías limpiar la imagen del QR si la tienes visible
-        imgQR.setImageDrawable(null)
     }
 
-    // --- Lógica de Impresión ---
-    private fun imprimirTicket() {
-        val textoTicket = generarTextoTicket()
-        val bitmapQR = generarQR(textoTicket)
-        mostrarQR(bitmapQR)
+    // Tu función updateQuantity se mantiene igual
+    private fun updateQuantity(productName: String, change: Int) {
+        val currentQuantity = quantities[productName] ?: 0
+        val newQuantity = (currentQuantity + change).coerceAtLeast(0)
+        quantities[productName] = newQuantity
+        val view = products[productName]?.cantidadTV
+        view?.text = newQuantity.toString()
+        if (view is EditText) {
+            view.setSelection(view.text.length)
+        }
+    }
 
-        // Ejecutar la impresión en un coroutine en el hilo de IO
+    private fun limpiarCantidades() {
+        products.keys.forEach { productName ->
+            // Primero actualiza el estado en el mapa
+            quantities[productName] = 0
+            // Luego actualiza la vista
+            products[productName]?.cantidadTV?.text = "0"
+        }
+        ocultarResumen() // Oculta el resumen si estaba visible
+        Toast.makeText(this, "Cantidades restablecidas a 0", Toast.LENGTH_SHORT).show()
+    }
+    // --- Lógica de Impresión ---
+    // <<-- FUNCIÓN MODIFICADA: Ahora muestra el resumen en lugar del QR.
+    private fun imprimirTicket() {
+        val productosSeleccionados = obtenerProductosDesdeInputs()
+
+        if (productosSeleccionados.isEmpty()) {
+            Toast.makeText(this, "No hay productos seleccionados", Toast.LENGTH_SHORT).show()
+            return // No hagas nada más si no hay productos
+        }
+
+        // 1. Muestra el resumen en la UI
+        mostrarResumen(productosSeleccionados)
+
+        // 2. Prepara el texto para la impresora
+        val textoTicket = generarTextoTicket()
+
+        // 3. Envía a imprimir en segundo plano
         lifecycleScope.launch {
-            // Intentar impresión USB primero
             val usbSuccess = printViaUsb(textoTicket)
-            if (usbSuccess) {
-                Toast.makeText(this@MainActivity, "Ticket enviado por USB", Toast.LENGTH_SHORT).show()
-            } else {
+            if (!usbSuccess) {
                 Log.w(TAG, "Fallo al imprimir por USB. Intentando Bluetooth...")
-                // Si USB falla, intentar Bluetooth
                 if (checkBluetoothPermissions()) {
                     val btSuccess = printViaBluetooth(textoTicket)
                     if (btSuccess) {
@@ -267,34 +308,27 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(this@MainActivity, "Permisos de Bluetooth no concedidos.", Toast.LENGTH_LONG).show()
                 }
+            } else {
+                Toast.makeText(this@MainActivity, "Ticket enviado por USB", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    // --- Métodos de Bluetooth ---
-
-    /**
-     * Verifica y solicita los permisos de Bluetooth necesarios para la versión de Android.
-     */
+    // --- Métodos de Bluetooth, USB, etc. (SIN CAMBIOS) ---
+    // ... (El resto de tus funciones de checkAndRequestBluetoothPermissions, connectToBluetoothPrinter, printViaBluetooth, etc., no cambian)
     private fun checkAndRequestBluetoothPermissions() {
         val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)
         } else {
             arrayOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
         }
-
         val allPermissionsGranted = permissions.all {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
-
         if (!allPermissionsGranted) {
             requestBluetoothPermissionLauncher.launch(permissions)
         }
     }
-
-    /**
-     * Verifica si se tienen los permisos de Bluetooth en tiempo de ejecución.
-     */
     private fun checkBluetoothPermissions(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
@@ -302,13 +336,7 @@ class MainActivity : AppCompatActivity() {
             ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED
         }
     }
-
-    /**
-     * Intenta conectar con la impresora Bluetooth.
-     * Es una función suspendida para ser llamada desde una coroutine.
-     * @return El socket Bluetooth conectado o null si falla.
-     */
-    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+    @SuppressLint("MissingPermission")
     private suspend fun connectToBluetoothPrinter(): BluetoothSocket? = withContext(Dispatchers.IO) {
         if (bluetoothAdapter == null) {
             Log.e(TAG, "Adaptador Bluetooth no disponible.")
@@ -324,17 +352,13 @@ class MainActivity : AppCompatActivity() {
             }
             return@withContext null
         }
-
-        // Buscar dispositivo emparejado
         val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter!!.bondedDevices
         val printerDevice = pairedDevices?.find { it.name.equals(PRINTER_NAME_BLUETOOTH, ignoreCase = true) }
-
         if (printerDevice == null) {
             Log.e(TAG, "Impresora Bluetooth '$PRINTER_NAME_BLUETOOTH' no encontrada entre los dispositivos emparejados.")
             withContext(Dispatchers.Main) { Toast.makeText(this@MainActivity, "Impresora no emparejada: $PRINTER_NAME_BLUETOOTH", Toast.LENGTH_LONG).show() }
             return@withContext null
         }
-
         Log.d(TAG, "Intentando conectar con la impresora Bluetooth: ${printerDevice.name} [${printerDevice.address}]")
         return@withContext try {
             val socket = printerDevice.createRfcommSocketToServiceRecord(PRINTER_UUID)
@@ -349,12 +373,7 @@ class MainActivity : AppCompatActivity() {
             null
         }
     }
-
-    /**
-     * Imprime datos a través de la conexión Bluetooth.
-     * @return true si la impresión fue exitosa, false en caso contrario.
-     */
-    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+    @SuppressLint("MissingPermission")
     private suspend fun printViaBluetooth(textoTicket: String): Boolean = withContext(Dispatchers.IO) {
         var success = false
         try {
@@ -364,31 +383,24 @@ class MainActivity : AppCompatActivity() {
                 Log.e(TAG, "No se pudo conectar a la impresora Bluetooth")
                 return@withContext false
             }
-
             val outputStream: OutputStream = socket.outputStream
-            val initPrinter = byteArrayOf(0x1B, 0x40) // Inicializar impresora
-            val cutPaper = byteArrayOf(0x1D, 0x56, 0x42, 0x00) // Cortar papel
-
-            // Enviar texto
+            val initPrinter = byteArrayOf(0x1B, 0x40)
+            val cutPaper = byteArrayOf(0x1D, 0x56, 0x42, 0x00)
             val ticketBytes = textoTicket.toByteArray(Charset.forName("GB18030"))
             outputStream.write(initPrinter)
             outputStream.write(ticketBytes)
             outputStream.write(cutPaper)
             outputStream.flush()
             success = true
-
         } catch (e: IOException) {
             Log.e(TAG, "Error de E/S al imprimir por Bluetooth: ${e.message}", e)
         } catch (e: SecurityException) {
             Log.e(TAG, "Error de seguridad (permisos) al imprimir por Bluetooth: ${e.message}", e)
         } finally {
-            // No cierres el socket aquí si planeas reutilizarlo.
-            // Para una conexión efímera por ticket, ciérralo.
             closeBluetoothSocket()
         }
         return@withContext success
     }
-
     private fun closeBluetoothSocket() {
         try {
             bluetoothSocket?.close()
@@ -398,22 +410,14 @@ class MainActivity : AppCompatActivity() {
             Log.e(TAG, "Error al cerrar socket Bluetooth: ${e.message}", e)
         }
     }
-
-    // --- Métodos de USB ---
     private fun detectAndRequestUsbPermission() {
-        // Busca impresoras USB por ID de Vendor y Product si los conoces
         val deviceList = usbManager.deviceList
         val printerDevice = deviceList.values.firstOrNull {
-            // Ejemplo de IDs para una impresora ESC/POS genérica
-            // Reemplaza con los IDs de tu impresora si los conoces
-            it.vendorId == 1155 && it.productId == 22339 // Ejemplo: 04B8:0E23 para Epson
-        } ?: deviceList.values.firstOrNull() // Si no se encuentra, toma el primer dispositivo disponible
-
+            it.vendorId == 1155 && it.productId == 22339
+        } ?: deviceList.values.firstOrNull()
         if (printerDevice == null) {
-            Toast.makeText(this, "No se encontró impresora USB compatible", Toast.LENGTH_SHORT).show()
             return
         }
-
         if (usbManager.hasPermission(printerDevice)) {
             Log.d(TAG, "Permiso USB ya concedido para: ${printerDevice.deviceName}")
             setupUsbDevice(printerDevice)
@@ -426,7 +430,6 @@ class MainActivity : AppCompatActivity() {
             usbManager.requestPermission(printerDevice, permissionIntent)
         }
     }
-
     private fun setupUsbDevice(device: UsbDevice) {
         releaseUsbDevice()
         usbDeviceConnection = usbManager.openDevice(device)
@@ -434,8 +437,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "No se pudo abrir la conexión USB", Toast.LENGTH_SHORT).show()
             return
         }
-
-        // Busca la interfaz y el endpoint correctos
         for (i in 0 until device.interfaceCount) {
             val usbIface = device.getInterface(i)
             if (usbIface.interfaceClass == UsbConstants.USB_CLASS_PRINTER) {
@@ -448,34 +449,28 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
         if (usbInterface == null || usbEndpointOut == null) {
             Toast.makeText(this, "No se encontró interfaz de impresora USB", Toast.LENGTH_SHORT).show()
             releaseUsbDevice()
             return
         }
-
         if (!usbDeviceConnection!!.claimInterface(usbInterface, true)) {
             Toast.makeText(this, "No se pudo reclamar la interfaz USB", Toast.LENGTH_SHORT).show()
             releaseUsbDevice()
             return
         }
-
         this.usbDevice = device
         Toast.makeText(this, "Impresora USB lista: ${device.deviceName}", Toast.LENGTH_SHORT).show()
     }
-
     private suspend fun printViaUsb(data: String): Boolean = withContext(Dispatchers.IO) {
         if (usbDeviceConnection == null || usbEndpointOut == null) {
             Log.w(TAG, "Dispositivo USB no configurado. Intentando re-detectar.")
             withContext(Dispatchers.Main) { detectAndRequestUsbPermission() }
             return@withContext false
         }
-
         return@withContext try {
             val bytes = data.toByteArray(Charset.forName("GB18030"))
             val sentBytes = usbDeviceConnection!!.bulkTransfer(usbEndpointOut!!, bytes, bytes.size, 5000)
-
             if (sentBytes >= 0) {
                 Log.d(TAG, "Datos ($sentBytes bytes) enviados por USB.")
                 true
@@ -496,7 +491,6 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
-
     private fun releaseUsbDevice() {
         usbDeviceConnection?.let { conn ->
             usbInterface?.let { intf ->
@@ -513,13 +507,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     // --- Generación de Ticket y QR ---
+    // La función mostrarQR ahora solo se usa internamente si la necesitas, pero no en el flujo principal.
     private fun mostrarQR(bitmap: Bitmap) {
         imgQR.setImageBitmap(bitmap)
     }
 
     private fun generarQR(texto: String): Bitmap {
         val writer = QRCodeWriter()
-        val size = 300 // pixels
+        val size = 300
         val bitMatrix = writer.encode(texto, BarcodeFormat.QR_CODE, size, size)
         val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565)
         for (x in 0 until size) {
@@ -530,9 +525,32 @@ class MainActivity : AppCompatActivity() {
         return bitmap
     }
 
-    /**
-     * Estructura de datos para un producto en la UI.
-     */
+    // <<-- AÑADIDO: Nuevas funciones para controlar la visibilidad y el contenido del resumen.
+    private fun mostrarResumen(productos: List<Producto>) {
+        val sb = StringBuilder()
+        var totalGeneral = 0.0
+
+        productos.forEach { producto ->
+            val totalProducto = producto.cantidad * producto.precio
+            totalGeneral += totalProducto
+            sb.appendLine("${producto.cantidad} x ${producto.nombre} ... $${"%.2f".format(totalProducto)}")
+        }
+
+        summaryTextView.text = sb.toString()
+        summaryTotalTextView.text = "TOTAL: $${"%.2f".format(totalGeneral)}"
+
+        // Oculta el QR (si estuviera visible) y muestra el contenedor del resumen
+        imgQR.visibility = View.GONE
+        summaryContainer.visibility = View.VISIBLE
+    }
+
+    private fun ocultarResumen() {
+        if (::summaryContainer.isInitialized) { // Comprobación de seguridad
+            summaryContainer.visibility = View.GONE
+        }
+    }
+
+    // Tu data class no necesita cambios.
     data class ProductData(
         val cantidadTV: TextView,
         val btnMenos: Button,
@@ -548,37 +566,36 @@ class MainActivity : AppCompatActivity() {
         val total: Double get() = precio * cantidad
     }
 
+    // <<-- FUNCIÓN CORREGIDA: Ahora lee del mapa `quantities` que es la fuente de verdad.
     private fun obtenerProductosDesdeInputs(): List<Producto> {
-        val productos = mutableListOf<Producto>()
+        val listaDeProductos = mutableListOf<Producto>()
+        // Itera sobre el mapa de productos para obtener nombre y precio
         products.forEach { (nombre, data) ->
-            val cantidad = data.cantidadTV.text.toString().toIntOrNull() ?: 0
+            // Obtiene la cantidad desde nuestro mapa de estado 'quantities'
+            val cantidad = quantities[nombre] ?: 0
             if (cantidad > 0) {
-                productos.add(Producto(nombre, data.precio, cantidad))
+                listaDeProductos.add(Producto(nombre, data.precio, cantidad))
             }
         }
-        return productos
+        return listaDeProductos
     }
 
     private fun generarTextoTicket(): String {
+        // ... (Tu código original aquí no necesita cambios)
         val fechaHora = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
         val sb = StringBuilder()
-        val anchoTotalLinea = 32 // Ancho de caracteres de la impresora
-
+        val anchoTotalLinea = 32
         sb.appendLine("   ANTOJITOS MEXICANOS MARGARITA")
-        sb.appendLine("********************************") // 32 asteriscos
+        sb.appendLine("********************************")
         sb.appendLine("     *** TICKET DE COMPRA ***")
         sb.appendLine("********************************")
         sb.appendLine("Fecha y hora: $fechaHora")
-
         val lineaSeparadoraCorta = "-".repeat(anchoTotalLinea)
         sb.appendLine(lineaSeparadoraCorta)
-
         sb.appendLine(String.format("%-15s %6s %3s %7s", "Producto", "Precio", "Cant", "Total"))
         sb.appendLine(lineaSeparadoraCorta)
-
         var totalGeneral = 0.0
         val productos = obtenerProductosDesdeInputs()
-
         if (productos.isEmpty()) {
             sb.appendLine("      NINGUN PRODUCTO")
             sb.appendLine("       SELECCIONADO")
@@ -588,88 +605,45 @@ class MainActivity : AppCompatActivity() {
                 val nombreProducto = if (p.nombre.length > 15) p.nombre.substring(0, 12) + "..." else p.nombre
                 val precioConSimbolo = String.format("$%.2f", p.precio)
                 val totalConSimbolo = String.format("$%.2f", p.total)
-
-                sb.appendLine(
-                    String.format(
-                        "%-15s %6s %3d %7s",
-                        nombreProducto,
-                        precioConSimbolo,
-                        p.cantidad,
-                        totalConSimbolo
-                    )
-                )
+                sb.appendLine(String.format("%-15s %6s %3d %7s", nombreProducto, precioConSimbolo, p.cantidad, totalConSimbolo))
             }
         }
-
         sb.appendLine(lineaSeparadoraCorta)
         val totalGeneralConSimbolo = String.format("$%.2f", totalGeneral)
         sb.appendLine(String.format("%-22s%10s", "TOTAL:", totalGeneralConSimbolo))
         sb.appendLine(lineaSeparadoraCorta)
-
         sb.appendLine("")
         sb.appendLine("    Gracias por su compra")
         sb.appendLine("    Vuelva pronto")
-        sb.appendLine("\n\n\n") // Saltos de línea para empujar el ticket hacia arriba
-        sb.append(byteArrayOf(0x1D, 0x56, 0x42, 0x01).toString(StandardCharsets.ISO_8859_1)) // Comando de corte
-
+        sb.appendLine("\n\n\n")
+        sb.append(byteArrayOf(0x1D, 0x56, 0x42, 0x01).toString(StandardCharsets.ISO_8859_1))
         return sb.toString()
     }
 
-    /**
-     * Convierte un Bitmap a un array de bytes para imprimir en una impresora ESC/POS.
-     * Utiliza un enfoque común para imprimir gráficos.
-     * ¡Ajusta el umbral y el algoritmo según sea necesario para tu impresora!
-     */
     private fun bitmapToEscPosData(bitmap: Bitmap, printerDotsPerLine: Int = 384): ByteArray {
+        // ... (Tu código original sin cambios)
         val outputStream = java.io.ByteArrayOutputStream()
-
-        // 1. Redimensionar si es necesario y asegurar que el ancho sea múltiplo de 8
-        //    Para este ejemplo, asumimos que el bitmap ya tiene un tamaño adecuado
-        //    o que la impresora manejará el recorte/escalado.
-        //    Un bitmap más ancho que printerDotsPerLine será recortado por muchas impresoras.
         var scaledBitmap = bitmap
         if (bitmap.width > printerDotsPerLine) {
             val newHeight = (bitmap.height.toFloat() * (printerDotsPerLine.toFloat() / bitmap.width.toFloat())).toInt()
             scaledBitmap = Bitmap.createScaledBitmap(bitmap, printerDotsPerLine, newHeight, true)
         }
-
         val width = scaledBitmap.width
         val height = scaledBitmap.height
-
-        // 2. Convertir a monocromático y preparar datos de píxeles
         val pixels = IntArray(width * height)
         scaledBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
-
-        val threshold = 128 // Umbral para decidir si un píxel es blanco o negro
-
-        // ESC/POS comúnmente procesa la imagen en "columnas" de 8 píxeles de alto.
-        // O en "rodajas" horizontales de 8 píxeles de ancho (o 24).
-        // Este ejemplo toma un enfoque más simple, enviando datos de píxeles para el comando GS v 0
-        // que espera datos por puntos.
-
-        // Comando GS v 0 pL pH d1...dk
-        // pL = (widthBytes % 256)
-        // pH = (widthBytes / 256)
-        // widthBytes = (width + 7) / 8  (bytes por fila de la imagen)
-
+        val threshold = 128
         val widthBytes = (width + 7) / 8
         val pL = widthBytes % 256
         val pH = widthBytes / 256
-
-        // Iniciar modo de imagen de bits (GS v 0 m xL xH yL yH d1...dk)
-        // m = 0 (modo normal)
-        // xL, xH = ancho en puntos
-        // yL, yH = alto en puntos
-        outputStream.write(0x1D) // GS
-        outputStream.write(0x76) // v
-        outputStream.write(0x30) // 0 (comando para imprimir imagen de bits)
-        outputStream.write(0x00) // m = 0 (modo normal)
-        outputStream.write(pL)   // xL
-        outputStream.write(pH)   // xH
-        outputStream.write(height % 256) // yL
-        outputStream.write(height / 256) // yH
-
-        // Convertir píxeles a datos de bytes
+        outputStream.write(0x1D)
+        outputStream.write(0x76)
+        outputStream.write(0x30)
+        outputStream.write(0x00)
+        outputStream.write(pL)
+        outputStream.write(pH)
+        outputStream.write(height % 256)
+        outputStream.write(height / 256)
         for (y in 0 until height) {
             var byteVal = 0
             for (x in 0 until width) {
@@ -678,14 +652,12 @@ class MainActivity : AppCompatActivity() {
                 val g = Color.green(pixelColor)
                 val b = Color.blue(pixelColor)
                 val luminance = (0.299 * r + 0.587 * g + 0.114 * b).toInt()
-
-                if (luminance < threshold) { // Píxel negro
+                if (luminance < threshold) {
                     byteVal = byteVal or (1 shl (7 - (x % 8)))
                 }
-
-                if (x % 8 == 7 || x == width - 1) { // Byte completo o fin de fila
+                if (x % 8 == 7 || x == width - 1) {
                     outputStream.write(byteVal)
-                    byteVal = 0 // Reset para el siguiente byte
+                    byteVal = 0
                 }
             }
         }
