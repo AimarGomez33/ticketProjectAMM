@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -14,244 +13,1431 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
-        android:text="Ticket POS58"
-        android:textSize="24sp" />
-
-        <EditText
-            android:id="@+id/inputQuesadillas"
-            android:layout_width="250dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Quesadillas"
-            android:inputType="number" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:text="Ticket POS58"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/inputPozoleGrande"
-            android:layout_width="250dp"
+        <GridLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="Pozole Grande"
-            android:inputType="number" />
+            android:columnCount="2"
+            android:orientation="horizontal"
+            android:useDefaultMargins="true">
 
-    <EditText
-        android:id="@+id/inputPozoleChico"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Pozole Chico"
-        android:inputType="number" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
 
-    <EditText
-        android:id="@+id/inputTostadas"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Tostadas"
-        android:inputType="number" />
+                <TextView
+                    android:id="@+id/labelQuesadillas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quesadillas"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
 
-    <EditText
-        android:id="@+id/inputGuajolota"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Volcanes"
-        android:inputType="number" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-    <EditText
-        android:id="@+id/inputGuajolotaExtra"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Guajolota Queso/Guisado Extra"
-        android:inputType="number" />
+                    <Button
+                        android:id="@+id/btnMenosQuesadillas"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_quesadillas" />
 
-    <EditText
-        android:id="@+id/inputGuajoloyetNatural"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Guajoloyets Naturales"
-        android:inputType="number" />
+                    <TextView
+                        android:id="@+id/cantidadQuesadillas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
 
-    <EditText
-        android:id="@+id/inputGujoloyetNaturalExtra"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Guajoloyets Naturales Queso/Guisado Extra"
-        android:inputType="number" />
+                    <Button
+                        android:id="@+id/btnMasQuesadillas"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_quesadillas" />
+                </LinearLayout>
+            </LinearLayout>
 
-    <EditText
-        android:id="@+id/inputGuajoloyetAdobado"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Guajoloyets Adobados"
-        android:inputType="number" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
 
-    <EditText
-        android:id="@+id/inputGujoloyetAdobadoExtra"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Guajoloyets Adobados Queso/Guisado Extra"
-        android:inputType="number" />
+                <TextView
+                    android:id="@+id/labelPozoleGrande"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pozole Grande"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
 
-    <EditText
-        android:id="@+id/inputPambazosNaturales"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Pambazos Naturales"
-        android:inputType="number" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-    <EditText
-        android:id="@+id/inputPambazosNaturalesExtra"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Pambazos Naturales Queso/Guisado Extra"
-        android:inputType="number" />
+                    <Button
+                        android:id="@+id/btnMenosPozoleGrande"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_pozole_grande" />
 
-    <EditText
-        android:id="@+id/inputPambazosAdobados"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Pambazos Adobados"
-        android:inputType="number" />
+                    <TextView
+                        android:id="@+id/cantidadPozoleGrande"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
 
-    <EditText
-        android:id="@+id/inputPambazosAdobadosExtra"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Pambazos Adobados Queso/Guisado Extra"
-        android:inputType="number" />
+                    <Button
+                        android:id="@+id/btnMasPozoleGrande"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_pozole_grande" />
+                </LinearLayout>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
 
-    <EditText
-        android:id="@+id/inputChalupas"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="chalupas"
-        android:inputType="number" />
+                <TextView
+                    android:id="@+id/labelPozoleChico"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pozole Chico"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
 
-    <EditText
-        android:id="@+id/inputAlon"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Alones"
-        android:inputType="number" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-    <EditText
-        android:id="@+id/inputMollejas"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="mollejas"
-        android:inputType="number" />
+                    <Button
+                        android:id="@+id/btnMenosPozoleChico"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_pozole_chico" />
 
-    <EditText
-        android:id="@+id/inputHigados"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Higados"
-        android:inputType="number" />
+                    <TextView
+                        android:id="@+id/cantidadPozoleChico"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
 
-    <EditText
-        android:id="@+id/inputPatitas"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Patitas"
-        android:inputType="number" />
+                    <Button
+                        android:id="@+id/btnMasPozoleChico"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_pozole_chico" />
+                </LinearLayout>
+            </LinearLayout>
 
-    <EditText
-        android:id="@+id/inputHuevo"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Huevos"
-        android:inputType="number" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
 
-    <EditText
-        android:id="@+id/inputRefrescos"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Refrescos"
-        android:inputType="number" />
+                <TextView
+                    android:id="@+id/labelTostadas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tostadas"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
 
-    <EditText
-        android:id="@+id/inputCafe"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Cafes"
-        android:inputType="number" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-    <EditText
-        android:id="@+id/inputAguas"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Aguas De Jamaica/Horchata"
-        android:inputType="number" />
+                    <Button
+                        android:id="@+id/btnMenosTostadas"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_tostadas" />
 
-    <EditText
-        android:id="@+id/inputAguasSabor"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Aguas De Sabor"
-        android:inputType="number" />
+                    <TextView
+                        android:id="@+id/cantidadTostadas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
 
-    <EditText
-        android:id="@+id/inputAguasNat"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Botellas de Agua Natural"
-        android:inputType="number" />
+                    <Button
+                        android:id="@+id/btnMasTostadas"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_tostadas" />
+                </LinearLayout>
+            </LinearLayout>
 
-    <EditText
-        android:id="@+id/inputAguaTe"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="Aguas para Té"
-        android:inputType="number" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
 
-    <Button
-        android:id="@+id/btnImprimir"
-        android:layout_width="268dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Imprimir Ticket"
-        tools:ignore="ExtraText" />
+                <TextView
+                    android:id="@+id/labelVolcanes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Volcanes"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
 
-    <Button
-        android:id="@+id/btnEmparejar"
-        android:layout_width="262dp"
-        android:layout_height="wrap_content"
-        android:text="Emparejar Impresora Bluetooth" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
+                    <Button
+                        android:id="@+id/btnMenosVolcanes"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_volcanes" />
 
-    <ImageView
-        android:id="@+id/imgQR"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp" />
+                    <TextView
+                        android:id="@+id/cantidadVolcanes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasVolcanes"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_volcanes" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelGuajolotaExtra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Guajolota Queso/Guisado Extra"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosGuajolotaExtra"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_guajolota_extra" />
+
+                    <TextView
+                        android:id="@+id/cantidadGuajolotaExtra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasGuajolotaExtra"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_guajolota_extra" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelGuajoloyetNatural"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Guajoloyets Naturales"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosGuajoloyetNatural"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_guajoloyet_natural" />
+
+                    <TextView
+                        android:id="@+id/cantidadGuajoloyetNatural"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasGuajoloyetNatural"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_guajoloyet_natural" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelGujoloyetNaturalExtra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Guajoloyets Naturales Extra"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosGujoloyetNaturalExtra"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_guajoloyet_natural_extra" />
+
+                    <TextView
+                        android:id="@+id/cantidadGujoloyetNaturalExtra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasGujoloyetNaturalExtra"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_guajoloyet_natural_extra" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelGuajoloyetAdobado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Guajoloyets Adobados"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosGuajoloyetAdobado"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_guajoloyet_adobado" />
+
+                    <TextView
+                        android:id="@+id/cantidadGuajoloyetAdobado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasGuajoloyetAdobado"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_guajoloyet_adobado" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelGujoloyetAdobadoExtra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Guajoloyets Adobados Extra"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosGujoloyetAdobadoExtra"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_guajoloyet_adobado_extra" />
+
+                    <TextView
+                        android:id="@+id/cantidadGujoloyetAdobadoExtra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasGujoloyetAdobadoExtra"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_guajoloyet_adobado_extra" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelPambazosNaturales"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pambazos Naturales"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosPambazosNaturales"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_pambazos_naturales" />
+
+                    <TextView
+                        android:id="@+id/cantidadPambazosNaturales"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasPambazosNaturales"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_pambazos_naturales" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelPambazosNaturalesExtra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pambazos Naturales Extra"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosPambazosNaturalesExtra"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_pambazos_naturales_extra" />
+
+                    <TextView
+                        android:id="@+id/cantidadPambazosNaturalesExtra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasPambazosNaturalesExtra"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_pambazos_naturales_extra" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelPambazosAdobados"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pambazos Adobados"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosPambazosAdobados"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_pambazos_adobados" />
+
+                    <TextView
+                        android:id="@+id/cantidadPambazosAdobados"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasPambazosAdobados"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_pambazos_adobados" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelPambazosAdobadosExtra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pambazos Adobados Extra"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosPambazosAdobadosExtra"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_pambazos_adobados_extra" />
+
+                    <TextView
+                        android:id="@+id/cantidadPambazosAdobadosExtra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasPambazosAdobadosExtra"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_pambazos_adobados_extra" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelChalupas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chalupas"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosChalupas"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_chalupas" />
+
+                    <TextView
+                        android:id="@+id/cantidadChalupas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasChalupas"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_chalupas" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelAlones"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Alones"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosAlones"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_alones" />
+
+                    <TextView
+                        android:id="@+id/cantidadAlones"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasAlones"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_alones" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelMollejas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mollejas"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosMollejas"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_mollejas" />
+
+                    <TextView
+                        android:id="@+id/cantidadMollejas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasMollejas"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_mollejas" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelHigados"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hígados"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosHigados"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_higados" />
+
+                    <TextView
+                        android:id="@+id/cantidadHigados"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasHigados"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_higados" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelPatitas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Patitas"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosPatitas"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_patitas" />
+
+                    <TextView
+                        android:id="@+id/cantidadPatitas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasPatitas"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_patitas" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelHuevos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Huevos"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosHuevos"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_huevos" />
+
+                    <TextView
+                        android:id="@+id/cantidadHuevos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasHuevos"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_huevos" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelRefrescos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Refrescos"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosRefrescos"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_refrescos" />
+
+                    <TextView
+                        android:id="@+id/cantidadRefrescos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasRefrescos"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_refrescos" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelCafe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Café"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosCafe"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_cafe" />
+
+                    <TextView
+                        android:id="@+id/cantidadCafe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasCafe"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_cafe" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelAguas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Agua Jamaica/Horchata"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosAguas"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_aguas" />
+
+                    <TextView
+                        android:id="@+id/cantidadAguas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasAguas"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_aguas" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelAguasSabor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Aguas de Sabor"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosAguasSabor"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_aguas_sabor" />
+
+                    <TextView
+                        android:id="@+id/cantidadAguasSabor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasAguasSabor"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_aguas_sabor" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelAguasNat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Agua Natural"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosAguasNat"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_agua_nat" />
+
+                    <TextView
+                        android:id="@+id/cantidadAguasNat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasAguasNat"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_agua_nat" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelAguaTe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Agua para Té"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/btnMenosAguaTe"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/decrement_agua_te" />
+
+                    <TextView
+                        android:id="@+id/cantidadAguaTe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasAguaTe"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:contentDescription="@string/increment_agua_te" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </GridLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp"/>
+
+        <Button
+            android:id="@+id/btnImprimir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Imprimir Ticket"
+            android:textSize="20sp"
+            android:padding="16dp"/>
+
+        <Button
+            android:id="@+id/btnEmparejar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Emparejar Impresora Bluetooth"
+            android:textSize="20sp"
+            android:padding="16dp"/>
+
+        <ImageView
+            android:id="@+id/imgQR"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/qr_code_image" />
 
     </LinearLayout>
-    </ScrollView>
-
+</ScrollView>

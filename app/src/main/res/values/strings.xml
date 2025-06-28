@@ -1,3 +1,59 @@
 <resources>
     <string name="app_name">TicketApp</string>
+
+    <string name="decrement_quesadillas">Disminuir cantidad de quesadillas</string>
+    <string name="decrement_pozole_grande">Disminuir cantidad de pozole grande</string>
+    <string name="decrement_pozole_chico">Disminuir cantidad de pozole chico</string>
+    <string name="decrement_tostadas">Disminuir cantidad de tostadas</string>
+    <string name="decrement_volcanes">Disminuir cantidad de volcanes</string>
+    <string name="decrement_guajolota_extra">Disminuir cantidad de guajolota extra</string>
+    <string name="decrement_guajoloyet_natural">Disminuir cantidad de guajoloyets naturales</string>
+    <string name="decrement_guajoloyet_natural_extra">Disminuir cantidad de guajoloyets naturales extra</string>
+    <string name="decrement_guajoloyet_adobado">Disminuir cantidad de guajoloyets adobados</string>
+    <string name="decrement_guajoloyet_adobado_extra">Disminuir cantidad de guajoloyets adobados extra</string>
+    <string name="decrement_pambazos_naturales">Disminuir cantidad de pambazos naturales</string>
+    <string name="decrement_pambazos_naturales_extra">Disminuir cantidad de pambazos naturales extra</string>
+    <string name="decrement_pambazos_adobados">Disminuir cantidad de pambazos adobados</string>
+    <string name="decrement_pambazos_adobados_extra">Disminuir cantidad de pambazos adobados extra</string>
+    <string name="decrement_chalupas">Disminuir cantidad de chalupas</string>
+    <string name="decrement_alones">Disminuir cantidad de alones</string>
+    <string name="decrement_mollejas">Disminuir cantidad de mollejas</string>
+    <string name="decrement_higados">Disminuir cantidad de hígados</string>
+    <string name="decrement_patitas">Disminuir cantidad de patitas</string>
+    <string name="decrement_huevos">Disminuir cantidad de huevos</string>
+    <string name="decrement_refrescos">Disminuir cantidad de refrescos</string>
+    <string name="decrement_cafe">Disminuir cantidad de café</string>
+    <string name="decrement_aguas">Disminuir cantidad de agua de Jamaica/Horchata</string>
+    <string name="decrement_aguas_sabor">Disminuir cantidad de aguas de sabor</string>
+    <string name="decrement_agua_nat">Disminuir cantidad de agua natural</string>
+    <string name="decrement_agua_te">Disminuir cantidad de agua para té</string>
+
+    <string name="increment_quesadillas">Aumentar cantidad de quesadillas</string>
+    <string name="increment_pozole_grande">Aumentar cantidad de pozole grande</string>
+    <string name="increment_pozole_chico">Aumentar cantidad de pozole chico</string>
+    <string name="increment_tostadas">Aumentar cantidad de tostadas</string>
+    <string name="increment_volcanes">Aumentar cantidad de volcanes</string>
+    <string name="increment_guajolota_extra">Aumentar cantidad de guajolota extra</string>
+    <string name="increment_guajoloyet_natural">Aumentar cantidad de guajoloyets naturales</string>
+    <string name="increment_guajoloyet_natural_extra">Aumentar cantidad de guajoloyets naturales extra</string>
+    <string name="increment_guajoloyet_adobado">Aumentar cantidad de guajoloyets adobados</string>
+    <string name="increment_guajoloyet_adobado_extra">Aumentar cantidad de guajoloyets adobados extra</string>
+    <string name="increment_pambazos_naturales">Aumentar cantidad de pambazos naturales</string>
+    <string name="increment_pambazos_naturales_extra">Aumentar cantidad de pambazos naturales extra</string>
+    <string name="increment_pambazos_adobados">Aumentar cantidad de pambazos adobados</string>
+    <string name="increment_pambazos_adobados_extra">Aumentar cantidad de pambazos adobados extra</string>
+    <string name="increment_chalupas">Aumentar cantidad de chalupas</string>
+    <string name="increment_alones">Aumentar cantidad de alones</string>
+    <string name="increment_mollejas">Aumentar cantidad de mollejas</string>
+    <string name="increment_higados">Aumentar cantidad de hígados</string>
+    <string name="increment_patitas">Aumentar cantidad de patitas</string>
+    <string name="increment_huevos">Aumentar cantidad de huevos</string>
+    <string name="increment_refrescos">Aumentar cantidad de refrescos</string>
+    <string name="increment_cafe">Aumentar cantidad de café</string>
+    <string name="increment_aguas">Aumentar cantidad de agua de Jamaica/Horchata</string>
+    <string name="increment_aguas_sabor">Aumentar cantidad de aguas de sabor</string>
+    <string name="increment_agua_nat">Aumentar cantidad de agua natural</string>
+    <string name="increment_agua_te">Aumentar cantidad de agua para té</string>
+
+    <string name="qr_code_image">Código QR del ticket</string>
 </resources>
