@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="20dp"
-            android:text="Ticket POS58"
+            android:text="Antojitos Mexicanos Margarita"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -26,39 +26,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="2"
-            android:orientation="horizontal"
             android:useDefaultMargins="true">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelQuesadillas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Quesadillas"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosQuesadillas"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_quesadillas"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_quesadillas" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadQuesadillas"
@@ -76,9 +76,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_quesadillas"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_quesadillas" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -86,32 +86,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelPozoleGrande"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Pozole Grande"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosPozoleGrande"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_pozole_grande"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_pozole_grande" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadPozoleGrande"
@@ -129,9 +130,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_pozole_grande"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_pozole_grande" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -139,32 +140,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelPozoleChico"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Pozole Chico"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosPozoleChico"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_pozole_chico"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_pozole_chico" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadPozoleChico"
@@ -182,9 +184,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_pozole_chico"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_pozole_chico" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -192,32 +194,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelTostadas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Tostadas"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosTostadas"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_tostadas"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_tostadas" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadTostadas"
@@ -235,9 +238,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_tostadas"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_tostadas" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -245,32 +248,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelVolcanes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Volcanes"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosVolcanes"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_volcanes"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_volcanes" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadVolcanes"
@@ -288,9 +292,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_volcanes"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_volcanes" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -298,32 +302,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelGuajolotaExtra"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Guajolota Queso/Guisado Extra"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="8dp"
+                    android:text="Volcan Queso/Guisado Extra"
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosGuajolotaExtra"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_guajolota_extra"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_guajolota_extra" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadGuajolotaExtra"
@@ -341,9 +346,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_guajolota_extra"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_guajolota_extra" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -351,32 +356,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelGuajoloyetNatural"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Guajoloyets Naturales"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosGuajoloyetNatural"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_guajoloyet_natural"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_guajoloyet_natural" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadGuajoloyetNatural"
@@ -394,9 +400,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_guajoloyet_natural"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_guajoloyet_natural" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -404,32 +410,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelGujoloyetNaturalExtra"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Guajoloyets Naturales Extra"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosGujoloyetNaturalExtra"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_guajoloyet_natural_extra"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_guajoloyet_natural_extra" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadGujoloyetNaturalExtra"
@@ -447,9 +454,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_guajoloyet_natural_extra"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_guajoloyet_natural_extra" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -457,32 +464,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelGuajoloyetAdobado"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Guajoloyets Adobados"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosGuajoloyetAdobado"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_guajoloyet_adobado"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_guajoloyet_adobado" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadGuajoloyetAdobado"
@@ -500,9 +508,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_guajoloyet_adobado"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_guajoloyet_adobado" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -510,32 +518,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelGujoloyetAdobadoExtra"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Guajoloyets Adobados Extra"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosGujoloyetAdobadoExtra"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_guajoloyet_adobado_extra"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_guajoloyet_adobado_extra" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadGujoloyetAdobadoExtra"
@@ -553,9 +562,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_guajoloyet_adobado_extra"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_guajoloyet_adobado_extra" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -563,32 +572,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelPambazosNaturales"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Pambazos Naturales"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosPambazosNaturales"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_pambazos_naturales"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_pambazos_naturales" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadPambazosNaturales"
@@ -606,9 +616,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_pambazos_naturales"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_pambazos_naturales" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -616,32 +626,141 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelPambazosNaturalesCombinados"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Pambazos Naturales Combinados"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnMenosPambazosNaturalesCombinados"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_pambazos_naturales_combinados"
+                        android:text="-"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cantidadPambazosNaturalesCombinados"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasPambazosNaturalesCombinados"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/increment_pambazos_naturales_combinados"
+                        android:text="+"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_background"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelPambazosNaturalesCombinadosQueso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Pambazos Naturales Combinados con Queso"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnMenosPambazosNaturalesCombinadosQueso"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_pambazos_naturales_combinados_queso"
+                        android:text="-"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cantidadPambazosNaturalesCombinadosQueso"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasPambazosNaturalesCombinadosQueso"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/increment_pambazos_naturales_combinados_queso"
+                        android:text="+"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_background"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelPambazosNaturalesExtra"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Pambazos Naturales Extra"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosPambazosNaturalesExtra"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_pambazos_naturales_extra"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_pambazos_naturales_extra" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadPambazosNaturalesExtra"
@@ -659,9 +778,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_pambazos_naturales_extra"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_pambazos_naturales_extra" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -669,32 +788,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelPambazosAdobados"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Pambazos Adobados"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosPambazosAdobados"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_pambazos_adobados"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_pambazos_adobados" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadPambazosAdobados"
@@ -712,9 +832,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_pambazos_adobados"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_pambazos_adobados" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -722,32 +842,142 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelPambazosAdobadosCombinados"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Pambazos Adobados Combinados"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnMenosPambazosAdobadosCombinados"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_pambazos_adobados_combinados"
+                        android:text="-"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cantidadPambazosAdobadosCombinados"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasPambazosAdobadosCombinados"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/increment_pambazos_adobados_combinados"
+                        android:text="+"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_background"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelPambazosAdobadosCombinadosQueso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Pambazos Adobados Combinados con Queso"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnMenosPambazosAdobadosCombinadosQueso"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_pambazos_adobados_combinados_queso"
+                        android:text="-"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cantidadPambazosAdobadosCombinadosQueso"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasPambazosAdobadosCombinadosQueso"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/increment_pambazos_adobados_combinados_queso"
+                        android:text="+"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_background"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelPambazosAdobadosExtra"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Pambazos Adobados Extra"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosPambazosAdobadosExtra"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_pambazos_adobados_extra"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_pambazos_adobados_extra" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadPambazosAdobadosExtra"
@@ -765,9 +995,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_pambazos_adobados_extra"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_pambazos_adobados_extra" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -775,32 +1005,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelChalupas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Chalupas"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosChalupas"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_chalupas"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_chalupas" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadChalupas"
@@ -818,9 +1049,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_chalupas"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_chalupas" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -828,32 +1059,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelAlones"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Alones"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosAlones"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_alones"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_alones" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadAlones"
@@ -871,9 +1103,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_alones"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_alones" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -881,32 +1113,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelMollejas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Mollejas"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosMollejas"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_mollejas"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_mollejas" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadMollejas"
@@ -924,9 +1157,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_mollejas"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_mollejas" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -934,32 +1167,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelHigados"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Hígados"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosHigados"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_higados"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_higados" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadHigados"
@@ -977,9 +1211,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_higados"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_higados" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -987,32 +1221,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelPatitas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Patitas"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosPatitas"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_patitas"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_patitas" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadPatitas"
@@ -1030,9 +1265,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_patitas"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_patitas" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -1040,32 +1275,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelHuevos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Huevos"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosHuevos"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_huevos"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_huevos" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadHuevos"
@@ -1083,9 +1319,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_huevos"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_huevos" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -1093,32 +1329,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelRefrescos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Refrescos"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosRefrescos"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_refrescos"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_refrescos" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadRefrescos"
@@ -1136,9 +1373,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_refrescos"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_refrescos" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -1146,32 +1383,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelCafe"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Café"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosCafe"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_cafe"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_cafe" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadCafe"
@@ -1189,9 +1427,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_cafe"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_cafe" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -1199,32 +1437,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelAguas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Agua Jamaica/Horchata"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosAguas"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_aguas"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_aguas" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadAguas"
@@ -1242,9 +1481,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_aguas"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_aguas" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -1252,32 +1491,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelAguasSabor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Aguas de Sabor"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosAguasSabor"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_aguas_sabor"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_aguas_sabor" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadAguasSabor"
@@ -1295,9 +1535,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_aguas_sabor"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_aguas_sabor" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -1305,32 +1545,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelAguasNat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Agua Natural"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosAguasNat"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_agua_nat"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_agua_nat" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadAguasNat"
@@ -1348,9 +1589,9 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_agua_nat"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_agua_nat" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -1358,32 +1599,33 @@
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:background="@drawable/item_background"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:id="@+id/labelAguaTe"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Agua para Té"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnMenosAguaTe"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_agua_te"
                         android:text="-"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/decrement_agua_te" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cantidadAguaTe"
@@ -1401,9 +1643,279 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
+                        android:contentDescription="@string/increment_agua_te"
                         android:text="+"
-                        android:textSize="20sp"
-                        android:contentDescription="@string/increment_agua_te" />
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_background"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelExtra10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Extra +10"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnMenosExtra10"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_extra10"
+                        android:text="-"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cantidadExtra10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasExtra10"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/increment_extra10"
+                        android:text="+"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_background"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelExtra5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Extra +5"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnMenosExtra5"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_extra5"
+                        android:text="-"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cantidadExtra5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasExtra5"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/increment_extra5"
+                        android:text="+"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_background"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelPostres25"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Postres 25"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnMenosPostres25"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_postres25"
+                        android:text="-"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cantidadPostres25"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasPostres25"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/increment_postres25"
+                        android:text="+"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_background"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelPostres30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Postres 30"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnMenosPostres30"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_postres30"
+                        android:text="-"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cantidadPostres30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasPostres30"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/increment_postres30"
+                        android:text="+"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_background"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/labelPostres35"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Postres 35"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnMenosPostres35"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/decrement_postres35"
+                        android:text="-"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cantidadPostres35"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btnMasPostres35"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:contentDescription="@string/increment_postres35"
+                        android:text="+"
+                        android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -1411,25 +1923,34 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="30dp"/>
+            android:layout_height="30dp" />
 
         <Button
             android:id="@+id/btnImprimir"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:padding="16dp"
             android:text="Imprimir Ticket"
-            android:textSize="20sp"
-            android:padding="16dp"/>
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/btnEmparejar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:padding="16dp"
             android:text="Emparejar Impresora Bluetooth"
-            android:textSize="20sp"
-            android:padding="16dp"/>
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btnLimpiar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="16dp"
+            android:text="Limpiar Cantidades"
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/imgQR"

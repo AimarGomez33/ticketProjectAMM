@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     private val products = mutableMapOf<String, ProductData>()
     private lateinit var btnImprimir: Button
     private lateinit var btnEmparejar: Button
+    private lateinit var btnLimpiar: Button // <<-- Nuevo botón
     private lateinit var imgQR: ImageView
 
     // Gestión de USB
@@ -145,21 +146,24 @@ class MainActivity : AppCompatActivity() {
     // --- Configuración de la UI (Vistas y Botones) ---
     private fun setupProductViews() {
         // Mapea los productos con sus IDs de TextView, Button y precio
-        // IMPORTANTE: Asegúrate de que estos IDs coincidan con tu XML.
         products["Quesadillas"] = ProductData(findViewById(R.id.cantidadQuesadillas), findViewById(R.id.btnMenosQuesadillas), findViewById(R.id.btnMasQuesadillas), 28.0)
         products["Pozole Grande"] = ProductData(findViewById(R.id.cantidadPozoleGrande), findViewById(R.id.btnMenosPozoleGrande), findViewById(R.id.btnMasPozoleGrande), 110.0)
         products["Pozole Chico"] = ProductData(findViewById(R.id.cantidadPozoleChico), findViewById(R.id.btnMenosPozoleChico), findViewById(R.id.btnMasPozoleChico), 90.0)
         products["Tostadas"] = ProductData(findViewById(R.id.cantidadTostadas), findViewById(R.id.btnMenosTostadas), findViewById(R.id.btnMasTostadas), 32.0)
         products["Volcanes"] = ProductData(findViewById(R.id.cantidadVolcanes), findViewById(R.id.btnMenosVolcanes), findViewById(R.id.btnMasVolcanes), 55.0)
-        products["Guajolota Extra"] = ProductData(findViewById(R.id.cantidadGuajolotaExtra), findViewById(R.id.btnMenosGuajolotaExtra), findViewById(R.id.btnMasGuajolotaExtra), 65.0)
-        products["Guajoloyet Natural"] = ProductData(findViewById(R.id.cantidadGuajoloyetNatural), findViewById(R.id.btnMenosGuajoloyetNatural), findViewById(R.id.btnMasGuajoloyetNatural), 55.0)
-        products["Guajoloyet Nat. Extra"] = ProductData(findViewById(R.id.cantidadGujoloyetNaturalExtra), findViewById(R.id.btnMenosGujoloyetNaturalExtra), findViewById(R.id.btnMasGujoloyetNaturalExtra), 65.0)
-        products["Guajoloyet Adobado"] = ProductData(findViewById(R.id.cantidadGuajoloyetAdobado), findViewById(R.id.btnMenosGuajoloyetAdobado), findViewById(R.id.btnMasGuajoloyetAdobado), 60.0)
-        products["Guajoloyet Adobado Extra"] = ProductData(findViewById(R.id.cantidadGujoloyetAdobadoExtra), findViewById(R.id.btnMenosGujoloyetAdobadoExtra), findViewById(R.id.btnMasGujoloyetAdobadoExtra), 70.0)
-        products["Pambazo Natural"] = ProductData(findViewById(R.id.cantidadPambazosNaturales), findViewById(R.id.btnMenosPambazosNaturales), findViewById(R.id.btnMasPambazosNaturales), 34.0)
-        products["Pambazo Nat. Extra"] = ProductData(findViewById(R.id.cantidadPambazosNaturalesExtra), findViewById(R.id.btnMenosPambazosNaturalesExtra), findViewById(R.id.btnMasPambazosNaturalesExtra), 44.0)
-        products["Pambazo Adobado"] = ProductData(findViewById(R.id.cantidadPambazosAdobados), findViewById(R.id.btnMenosPambazosAdobados), findViewById(R.id.btnMasPambazosAdobados), 39.0)
-        products["Pambazo Adobado Extra"] = ProductData(findViewById(R.id.cantidadPambazosAdobadosExtra), findViewById(R.id.btnMenosPambazosAdobadosExtra), findViewById(R.id.btnMasPambazosAdobadosExtra), 49.0)
+        products["Volcan Queso/Guisado Extra"] = ProductData(findViewById(R.id.cantidadGuajolotaExtra), findViewById(R.id.btnMenosGuajolotaExtra), findViewById(R.id.btnMasGuajolotaExtra), 65.0)
+        products["Guajoloyets Naturales"] = ProductData(findViewById(R.id.cantidadGuajoloyetNatural), findViewById(R.id.btnMenosGuajoloyetNatural), findViewById(R.id.btnMasGuajoloyetNatural), 55.0)
+        products["Guajoloyets Naturales Extra"] = ProductData(findViewById(R.id.cantidadGujoloyetNaturalExtra), findViewById(R.id.btnMenosGujoloyetNaturalExtra), findViewById(R.id.btnMasGujoloyetNaturalExtra), 65.0)
+        products["Guajoloyets Adobados"] = ProductData(findViewById(R.id.cantidadGuajoloyetAdobado), findViewById(R.id.btnMenosGuajoloyetAdobado), findViewById(R.id.btnMasGuajoloyetAdobado), 60.0)
+        products["Guajoloyets Adobados Extra"] = ProductData(findViewById(R.id.cantidadGujoloyetAdobadoExtra), findViewById(R.id.btnMenosGujoloyetAdobadoExtra), findViewById(R.id.btnMasGujoloyetAdobadoExtra), 70.0)
+        products["Pambazos Naturales"] = ProductData(findViewById(R.id.cantidadPambazosNaturales), findViewById(R.id.btnMenosPambazosNaturales), findViewById(R.id.btnMasPambazosNaturales), 34.0)
+        products["Pambazos Naturales Combinados"] = ProductData(findViewById(R.id.cantidadPambazosNaturalesCombinados), findViewById(R.id.btnMenosPambazosNaturalesCombinados), findViewById(R.id.btnMasPambazosNaturalesCombinados), 41.0)
+        products["Pambazos Naturales Combinados con Queso"] = ProductData(findViewById(R.id.cantidadPambazosNaturalesCombinadosQueso), findViewById(R.id.btnMenosPambazosNaturalesCombinadosQueso), findViewById(R.id.btnMasPambazosNaturalesCombinadosQueso), 46.0)
+        products["Pambazos Naturales Extra"] = ProductData(findViewById(R.id.cantidadPambazosNaturalesExtra), findViewById(R.id.btnMenosPambazosNaturalesExtra), findViewById(R.id.btnMasPambazosNaturalesExtra), 44.0)
+        products["Pambazos Adobados"] = ProductData(findViewById(R.id.cantidadPambazosAdobados), findViewById(R.id.btnMenosPambazosAdobados), findViewById(R.id.btnMasPambazosAdobados), 39.0)
+        products["Pambazos Adobados Combinados"] = ProductData(findViewById(R.id.cantidadPambazosAdobadosCombinados), findViewById(R.id.btnMenosPambazosAdobadosCombinados), findViewById(R.id.btnMasPambazosAdobadosCombinados), 44.0)
+        products["Pambazos Adobados Combinados con Queso"] = ProductData(findViewById(R.id.cantidadPambazosAdobadosCombinadosQueso), findViewById(R.id.btnMenosPambazosAdobadosCombinadosQueso), findViewById(R.id.btnMasPambazosAdobadosCombinadosQueso), 49.0)
+        products["Pambazos Adobados Extra"] = ProductData(findViewById(R.id.cantidadPambazosAdobadosExtra), findViewById(R.id.btnMenosPambazosAdobadosExtra), findViewById(R.id.btnMasPambazosAdobadosExtra), 49.0)
         products["Chalupas"] = ProductData(findViewById(R.id.cantidadChalupas), findViewById(R.id.btnMenosChalupas), findViewById(R.id.btnMasChalupas), 5.0)
         products["Alones"] = ProductData(findViewById(R.id.cantidadAlones), findViewById(R.id.btnMenosAlones), findViewById(R.id.btnMasAlones), 25.0)
         products["Mollejas"] = ProductData(findViewById(R.id.cantidadMollejas), findViewById(R.id.btnMenosMollejas), findViewById(R.id.btnMasMollejas), 25.0)
@@ -167,12 +171,16 @@ class MainActivity : AppCompatActivity() {
         products["Patitas"] = ProductData(findViewById(R.id.cantidadPatitas), findViewById(R.id.btnMenosPatitas), findViewById(R.id.btnMasPatitas), 22.0)
         products["Huevos"] = ProductData(findViewById(R.id.cantidadHuevos), findViewById(R.id.btnMenosHuevos), findViewById(R.id.btnMasHuevos), 20.0)
         products["Refrescos"] = ProductData(findViewById(R.id.cantidadRefrescos), findViewById(R.id.btnMenosRefrescos), findViewById(R.id.btnMasRefrescos), 25.0)
-        // Agrega los nuevos productos desde tu XML
         products["Cafe"] = ProductData(findViewById(R.id.cantidadCafe), findViewById(R.id.btnMenosCafe), findViewById(R.id.btnMasCafe), 22.0)
         products["Agua Jamaica/Horchata"] = ProductData(findViewById(R.id.cantidadAguas), findViewById(R.id.btnMenosAguas), findViewById(R.id.btnMasAguas), 24.0)
         products["Aguas de Sabor"] = ProductData(findViewById(R.id.cantidadAguasSabor), findViewById(R.id.btnMenosAguasSabor), findViewById(R.id.btnMasAguasSabor), 25.0)
         products["Agua Natural"] = ProductData(findViewById(R.id.cantidadAguasNat), findViewById(R.id.btnMenosAguasNat), findViewById(R.id.btnMasAguasNat), 20.0)
         products["Agua para Te"] = ProductData(findViewById(R.id.cantidadAguaTe), findViewById(R.id.btnMenosAguaTe), findViewById(R.id.btnMasAguaTe), 20.0)
+        products["Extra +5"] = ProductData(findViewById(R.id.cantidadExtra5), findViewById(R.id.btnMenosExtra5), findViewById(R.id.btnMasExtra5), 5.0)
+        products["Extra +10"] = ProductData(findViewById(R.id.cantidadExtra10), findViewById(R.id.btnMenosExtra10), findViewById(R.id.btnMasExtra10), 10.0)
+        products["Postres 25"] = ProductData(findViewById(R.id.cantidadPostres25), findViewById(R.id.btnMenosPostres25), findViewById(R.id.btnMasPostres25), 25.0)
+        products["Postres 30"] = ProductData(findViewById(R.id.cantidadPostres30), findViewById(R.id.btnMenosPostres30), findViewById(R.id.btnMasPostres30), 30.0)
+        products["Postres 35"] = ProductData(findViewById(R.id.cantidadPostres35), findViewById(R.id.btnMenosPostres35), findViewById(R.id.btnMasPostres35), 35.0)
 
         // Configura los listeners para los botones +/- de cada producto
         products.values.forEach { productData ->
@@ -188,6 +196,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupButtons() {
         btnImprimir = findViewById(R.id.btnImprimir)
         btnEmparejar = findViewById(R.id.btnEmparejar)
+        btnLimpiar = findViewById(R.id.btnLimpiar) // <<-- Inicialización del nuevo botón
         imgQR = findViewById(R.id.imgQR)
 
         btnImprimir.setOnClickListener {
@@ -203,6 +212,11 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "No se pudo abrir la configuración de Bluetooth", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // <<-- Lógica del botón Limpiar Cantidades
+        btnLimpiar.setOnClickListener {
+            limpiarCantidades()
+        }
     }
 
     /**
@@ -214,6 +228,18 @@ class MainActivity : AppCompatActivity() {
         val currentQuantity = textView.text.toString().toIntOrNull() ?: 0
         val newQuantity = (currentQuantity + change).coerceAtLeast(0) // No permitir números negativos
         textView.text = newQuantity.toString()
+    }
+
+    /**
+     * Restablece todas las cantidades de los productos a cero en la interfaz de usuario.
+     */
+    private fun limpiarCantidades() {
+        products.values.forEach { productData ->
+            productData.cantidadTV.text = "0"
+        }
+        Toast.makeText(this, "Cantidades restablecidas a 0", Toast.LENGTH_SHORT).show()
+        // Opcional: También podrías limpiar la imagen del QR si la tienes visible
+        imgQR.setImageDrawable(null)
     }
 
     // --- Lógica de Impresión ---

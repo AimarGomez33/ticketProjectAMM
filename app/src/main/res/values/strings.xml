@@ -6,14 +6,18 @@
     <string name="decrement_pozole_chico">Disminuir cantidad de pozole chico</string>
     <string name="decrement_tostadas">Disminuir cantidad de tostadas</string>
     <string name="decrement_volcanes">Disminuir cantidad de volcanes</string>
-    <string name="decrement_guajolota_extra">Disminuir cantidad de guajolota extra</string>
+    <string name="decrement_guajolota_extra">Disminuir cantidad de volcan queso/guisado extra</string>
     <string name="decrement_guajoloyet_natural">Disminuir cantidad de guajoloyets naturales</string>
     <string name="decrement_guajoloyet_natural_extra">Disminuir cantidad de guajoloyets naturales extra</string>
     <string name="decrement_guajoloyet_adobado">Disminuir cantidad de guajoloyets adobados</string>
     <string name="decrement_guajoloyet_adobado_extra">Disminuir cantidad de guajoloyets adobados extra</string>
     <string name="decrement_pambazos_naturales">Disminuir cantidad de pambazos naturales</string>
+    <string name="decrement_pambazos_naturales_combinados">Disminuir cantidad de pambazos naturales combinados</string>
+    <string name="decrement_pambazos_naturales_combinados_queso">Disminuir cantidad de pambazos naturales combinados con Queso</string>
     <string name="decrement_pambazos_naturales_extra">Disminuir cantidad de pambazos naturales extra</string>
     <string name="decrement_pambazos_adobados">Disminuir cantidad de pambazos adobados</string>
+    <string name="decrement_pambazos_adobados_combinados">Disminuir cantidad de pambazos adobados combinados</string>
+    <string name="decrement_pambazos_adobados_combinados_queso">Disminuir cantidad de pambazos adobados combinados con queso</string>
     <string name="decrement_pambazos_adobados_extra">Disminuir cantidad de pambazos adobados extra</string>
     <string name="decrement_chalupas">Disminuir cantidad de chalupas</string>
     <string name="decrement_alones">Disminuir cantidad de alones</string>
@@ -27,20 +31,29 @@
     <string name="decrement_aguas_sabor">Disminuir cantidad de aguas de sabor</string>
     <string name="decrement_agua_nat">Disminuir cantidad de agua natural</string>
     <string name="decrement_agua_te">Disminuir cantidad de agua para té</string>
+    <string name="decrement_extra5">Disminuir cantidad de extra 5</string>
+    <string name="decrement_extra10">Disminuir cantidad de extra 10</string>
+    <string name="decrement_postres25">Disminuir cantidad de Postres 25</string>
+    <string name="decrement_postres30">Disminuir cantidad de Postres 30</string>
+    <string name="decrement_postres35">Disminuir cantidad de Postres 35</string>
 
     <string name="increment_quesadillas">Aumentar cantidad de quesadillas</string>
     <string name="increment_pozole_grande">Aumentar cantidad de pozole grande</string>
     <string name="increment_pozole_chico">Aumentar cantidad de pozole chico</string>
     <string name="increment_tostadas">Aumentar cantidad de tostadas</string>
     <string name="increment_volcanes">Aumentar cantidad de volcanes</string>
-    <string name="increment_guajolota_extra">Aumentar cantidad de guajolota extra</string>
+    <string name="increment_guajolota_extra">Aumentar cantidad de volcan queso/guisado extra</string>
     <string name="increment_guajoloyet_natural">Aumentar cantidad de guajoloyets naturales</string>
     <string name="increment_guajoloyet_natural_extra">Aumentar cantidad de guajoloyets naturales extra</string>
     <string name="increment_guajoloyet_adobado">Aumentar cantidad de guajoloyets adobados</string>
     <string name="increment_guajoloyet_adobado_extra">Aumentar cantidad de guajoloyets adobados extra</string>
     <string name="increment_pambazos_naturales">Aumentar cantidad de pambazos naturales</string>
+    <string name="increment_pambazos_naturales_combinados">Aumentar cantidad de pambazos naturales combinados</string>
+    <string name="increment_pambazos_naturales_combinados_queso">Aumentar cantidad de pambazos naturales combinados con queso</string>
     <string name="increment_pambazos_naturales_extra">Aumentar cantidad de pambazos naturales extra</string>
     <string name="increment_pambazos_adobados">Aumentar cantidad de pambazos adobados</string>
+    <string name="increment_pambazos_adobados_combinados">Aumentar cantidad de pambazos adobados combinados</string>
+    <string name="increment_pambazos_adobados_combinados_queso">Aumentar cantidad de pambazos adobados combinados con queso</string>
     <string name="increment_pambazos_adobados_extra">Aumentar cantidad de pambazos adobados extra</string>
     <string name="increment_chalupas">Aumentar cantidad de chalupas</string>
     <string name="increment_alones">Aumentar cantidad de alones</string>
@@ -54,6 +67,11 @@
     <string name="increment_aguas_sabor">Aumentar cantidad de aguas de sabor</string>
     <string name="increment_agua_nat">Aumentar cantidad de agua natural</string>
     <string name="increment_agua_te">Aumentar cantidad de agua para té</string>
+    <string name="increment_extra5">Aumentar cantidad de extra 5</string>
+    <string name="increment_extra10">Aumentar cantidad de extra 10</string>
+    <string name="increment_postres25">Aumentar cantidad de Postres 25</string>
+    <string name="increment_postres30">Aumentar cantidad de Postres 30</string>
+    <string name="increment_postres35">Aumentar cantidad de Postres 35</string>
 
     <string name="qr_code_image">Código QR del ticket</string>
 </resources>
