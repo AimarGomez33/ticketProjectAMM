@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Filter for a specific vendor and product ID -->
+    <usb-device vendor-id="1234" product-id="5678" />
+
+    <!-- Filter for a specific USB device class, subclass, and protocol -->
+    <usb-device class="255" subclass="66" protocol="1" />
+</resources>

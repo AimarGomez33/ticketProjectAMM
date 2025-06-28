@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Este es un ejemplo para un dispositivo USB específico.
+         Debes reemplazar los valores de vendor-id y product-id
+         con los de tu dispositivo USB real. -->
+
+
+    <!-- Puedes agregar más etiquetas <usb-device> si quieres que tu aplicación
+         responda a múltiples tipos de dispositivos USB. -->
+
+    <!-- Ejemplo: Filtrar por una clase de dispositivo USB (e.g., impresoras)
+         La clase 7 generalmente corresponde a impresoras.
+    <usb-device class="7" />
+    -->
+
+    <!-- Ejemplo: Filtrar por una clase de dispositivo, subclase y protocolo
+    <usb-device class="255" subclass="66" protocol="1" />
+    -->
+</resources>

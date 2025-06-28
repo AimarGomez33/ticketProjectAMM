@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/rootLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:text="Ticket POS58"
+        android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/inputQuesadillas"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="Quesadillas"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/inputPozoleGrande"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Pozole Grande"
+            android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputPozoleChico"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Pozole Chico"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputTostadas"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Tostadas"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputGuajolota"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Volcanes"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputGuajolotaExtra"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Guajolota Queso/Guisado Extra"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputGuajoloyetNatural"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Guajoloyets Naturales"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputGujoloyetNaturalExtra"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Guajoloyets Naturales Queso/Guisado Extra"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputGuajoloyetAdobado"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Guajoloyets Adobados"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputGujoloyetAdobadoExtra"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Guajoloyets Adobados Queso/Guisado Extra"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputPambazosNaturales"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Pambazos Naturales"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputPambazosNaturalesExtra"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Pambazos Naturales Queso/Guisado Extra"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputPambazosAdobados"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Pambazos Adobados"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputPambazosAdobadosExtra"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Pambazos Adobados Queso/Guisado Extra"
+        android:inputType="number" />
+
+
+    <EditText
+        android:id="@+id/inputChalupas"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="chalupas"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputAlon"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Alones"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputMollejas"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="mollejas"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputHigados"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Higados"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputPatitas"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Patitas"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputHuevo"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Huevos"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputRefrescos"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Refrescos"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputCafe"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Cafes"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputAguas"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Aguas De Jamaica/Horchata"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputAguasSabor"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Aguas De Sabor"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputAguasNat"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Botellas de Agua Natural"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/inputAguaTe"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Aguas para Té"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/btnImprimir"
+        android:layout_width="268dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Imprimir Ticket"
+        tools:ignore="ExtraText" />
+
+    <Button
+        android:id="@+id/btnEmparejar"
+        android:layout_width="262dp"
+        android:layout_height="wrap_content"
+        android:text="Emparejar Impresora Bluetooth" />
+
+
+    <ImageView
+        android:id="@+id/imgQR"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp" />
+
+    </LinearLayout>
+    </ScrollView>
+
