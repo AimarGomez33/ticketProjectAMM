@@ -17,11 +17,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.View // <<-- Asegúrate de tener esta importación
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.GridLayout // <<-- AÑADIDO: Importación necesaria
 import android.widget.ImageView
-import android.widget.RelativeLayout // <<-- Y esta también
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -41,25 +42,21 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.nio.charset.StandardCharsets
 
-
-
 class MainActivity : AppCompatActivity() {
 
-    // --- Constantes y variables de la clase ---
+    // --- Constantes y variables de la clase (sin cambios) ---
     private companion object {
         private const val TAG = "MainActivity"
         private const val ACTION_USB_PERMISSION = "com.example.ticketapp.USB_PERMISSION"
-        private const val PRINTER_NAME_BLUETOOTH = "BlueTooth Printer" // Nombre de tu impresora
-        private val PRINTER_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // UUID estándar de SPP
+        private const val PRINTER_NAME_BLUETOOTH = "BlueTooth Printer"
+        private val PRINTER_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
     }
 
-    // <<-- Vistas del resumen (ya las tenías, solo confirmando)
     private lateinit var summaryContainer: View
     private lateinit var summaryTextView: TextView
     private lateinit var summaryTotalTextView: TextView
     private lateinit var btnCloseSummary: Button
 
-    // Vistas y Estado
     private val products = mutableMapOf<String, ProductData>()
     private val quantities = mutableMapOf<String, Int>()
 
@@ -68,7 +65,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnLimpiar: Button
     private lateinit var imgQR: ImageView
 
-    // Gestión de USB y Bluetooth... (sin cambios)
     private lateinit var usbManager: UsbManager
     private var usbDevice: UsbDevice? = null
     private var usbDeviceConnection: UsbDeviceConnection? = null
@@ -83,7 +79,6 @@ class MainActivity : AppCompatActivity() {
     }
     private var bluetoothSocket: BluetoothSocket? = null
 
-    // --- ActivityResultLaunchers (sin cambios) ---
     private val requestBluetoothPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val granted = permissions.entries.all { it.value }
@@ -105,7 +100,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    // --- Receptor de permisos USB (sin cambios) ---
     private val usbReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (ACTION_USB_PERMISSION == intent?.action) {
@@ -125,7 +119,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // --- Ciclo de vida de la actividad (sin cambios) ---
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -134,6 +127,10 @@ class MainActivity : AppCompatActivity() {
 
         setupProductViews()
         setupButtons()
+
+        // --- INICIO DE CAMBIOS: Lógica para categorías plegables ---
+        setupCollapsibleCategories()
+        // --- FIN DE CAMBIOS ---
 
         val filter = IntentFilter(ACTION_USB_PERMISSION)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -155,7 +152,7 @@ class MainActivity : AppCompatActivity() {
 
     // --- Configuración de la UI (Vistas y Botones) ---
     private fun setupProductViews() {
-        // ... (toda tu lista de products["..."] = ... se queda igual)
+        // ... (tu lista de products[...] se queda igual)
         products["Quesadillas"] = ProductData(findViewById(R.id.cantidadQuesadillas), findViewById(R.id.btnMenosQuesadillas), findViewById(R.id.btnMasQuesadillas), 28.0)
         products["Pozole Grande"] = ProductData(findViewById(R.id.cantidadPozoleGrande), findViewById(R.id.btnMenosPozoleGrande), findViewById(R.id.btnMasPozoleGrande), 110.0)
         products["Pozole Chico"] = ProductData(findViewById(R.id.cantidadPozoleChico), findViewById(R.id.btnMenosPozoleChico), findViewById(R.id.btnMasPozoleChico), 90.0)
@@ -194,9 +191,7 @@ class MainActivity : AppCompatActivity() {
 
 
         products.forEach { (productName, productData) ->
-            quantities[productName] = 0 // Inicializa la cantidad en el mapa
-
-            // Los listeners deben llamar a la versión de updateQuantity con el "productName"
+            quantities[productName] = 0
             productData.btnMas.setOnClickListener {
                 updateQuantity(productName, 1)
             }
@@ -204,7 +199,6 @@ class MainActivity : AppCompatActivity() {
                 updateQuantity(productName, -1)
             }
 
-            // El caso especial para el EditText de Chalupas
             if (productName == "Chalupas" && productData.cantidadTV is EditText) {
                 productData.cantidadTV.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -212,7 +206,6 @@ class MainActivity : AppCompatActivity() {
                     override fun afterTextChanged(s: Editable?) {
                         val currentQuantity = quantities[productName] ?: 0
                         val newValue = s?.toString()?.toIntOrNull() ?: 0
-
                         if (currentQuantity != newValue) {
                             quantities[productName] = newValue
                         }
@@ -222,13 +215,38 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // --- INICIO DE CAMBIOS ---
+    private fun setupCollapsibleCategories() {
+        // Llama a la función de ayuda para cada categoría definida en el XML
+        setupCollapsibleView(findViewById(R.id.headerPlatillos), findViewById(R.id.gridPlatillos))
+        setupCollapsibleView(findViewById(R.id.headerPambazos), findViewById(R.id.gridPambazos))
+        setupCollapsibleView(findViewById(R.id.headerGuajoloyets), findViewById(R.id.gridGuajoloyets))
+        setupCollapsibleView(findViewById(R.id.headerEntradas), findViewById(R.id.gridEntradas))
+        setupCollapsibleView(findViewById(R.id.headerBebidas), findViewById(R.id.gridBebidas))
+        setupCollapsibleView(findViewById(R.id.headerPostres), findViewById(R.id.gridPostres))
+    }
+
+    private fun setupCollapsibleView(header: View, content: View) {
+        // Establece el listener en la cabecera
+        header.setOnClickListener {
+            // Revisa la visibilidad actual del contenido
+            if (content.visibility == View.GONE) {
+                // Si está oculto, muéstralo
+                content.visibility = View.VISIBLE
+            } else {
+                // Si está visible, ocúltalo
+                content.visibility = View.GONE
+            }
+        }
+    }
+    // --- FIN DE CAMBIOS ---
+
     private fun setupButtons() {
         btnImprimir = findViewById(R.id.btnImprimir)
         btnEmparejar = findViewById(R.id.btnEmparejar)
         btnLimpiar = findViewById(R.id.btnLimpiar)
         imgQR = findViewById(R.id.imgQR)
 
-        // <<-- Inicialización de las vistas del resumen (ya las tenías, solo confirmando)
         summaryContainer = findViewById(R.id.summaryContainer)
         summaryTextView = findViewById(R.id.summaryTextView)
         summaryTotalTextView = findViewById(R.id.summaryTotalTextView)
@@ -249,13 +267,15 @@ class MainActivity : AppCompatActivity() {
             limpiarCantidades()
         }
 
-        // <<-- AÑADIDO: Listener para el botón de cerrar el resumen.
         btnCloseSummary.setOnClickListener {
             ocultarResumen()
         }
     }
 
-    // Tu función updateQuantity se mantiene igual
+    // El resto de tu código (updateQuantity, limpiarCantidades, imprimirTicket, etc.) permanece igual.
+    // ...
+    // --- Tu código original sin cambios desde aquí hacia abajo ---
+
     private fun updateQuantity(productName: String, change: Int) {
         val currentQuantity = quantities[productName] ?: 0
         val newQuantity = (currentQuantity + change).coerceAtLeast(0)
@@ -269,31 +289,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun limpiarCantidades() {
         products.keys.forEach { productName ->
-            // Primero actualiza el estado en el mapa
             quantities[productName] = 0
-            // Luego actualiza la vista
             products[productName]?.cantidadTV?.text = "0"
         }
-        ocultarResumen() // Oculta el resumen si estaba visible
+        ocultarResumen()
         Toast.makeText(this, "Cantidades restablecidas a 0", Toast.LENGTH_SHORT).show()
     }
-    // --- Lógica de Impresión ---
-    // <<-- FUNCIÓN MODIFICADA: Ahora muestra el resumen en lugar del QR.
+
     private fun imprimirTicket() {
         val productosSeleccionados = obtenerProductosDesdeInputs()
-
         if (productosSeleccionados.isEmpty()) {
             Toast.makeText(this, "No hay productos seleccionados", Toast.LENGTH_SHORT).show()
-            return // No hagas nada más si no hay productos
+            return
         }
-
-        // 1. Muestra el resumen en la UI
         mostrarResumen(productosSeleccionados)
-
-        // 2. Prepara el texto para la impresora
         val textoTicket = generarTextoTicket()
-
-        // 3. Envía a imprimir en segundo plano
         lifecycleScope.launch {
             val usbSuccess = printViaUsb(textoTicket)
             if (!usbSuccess) {
@@ -314,8 +324,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // --- Métodos de Bluetooth, USB, etc. (SIN CAMBIOS) ---
-    // ... (El resto de tus funciones de checkAndRequestBluetoothPermissions, connectToBluetoothPrinter, printViaBluetooth, etc., no cambian)
     private fun checkAndRequestBluetoothPermissions() {
         val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)
@@ -329,6 +337,7 @@ class MainActivity : AppCompatActivity() {
             requestBluetoothPermissionLauncher.launch(permissions)
         }
     }
+
     private fun checkBluetoothPermissions(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
@@ -336,6 +345,7 @@ class MainActivity : AppCompatActivity() {
             ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED
         }
     }
+
     @SuppressLint("MissingPermission")
     private suspend fun connectToBluetoothPrinter(): BluetoothSocket? = withContext(Dispatchers.IO) {
         if (bluetoothAdapter == null) {
@@ -373,6 +383,7 @@ class MainActivity : AppCompatActivity() {
             null
         }
     }
+
     @SuppressLint("MissingPermission")
     private suspend fun printViaBluetooth(textoTicket: String): Boolean = withContext(Dispatchers.IO) {
         var success = false
@@ -401,6 +412,7 @@ class MainActivity : AppCompatActivity() {
         }
         return@withContext success
     }
+
     private fun closeBluetoothSocket() {
         try {
             bluetoothSocket?.close()
@@ -410,6 +422,7 @@ class MainActivity : AppCompatActivity() {
             Log.e(TAG, "Error al cerrar socket Bluetooth: ${e.message}", e)
         }
     }
+
     private fun detectAndRequestUsbPermission() {
         val deviceList = usbManager.deviceList
         val printerDevice = deviceList.values.firstOrNull {
@@ -430,6 +443,7 @@ class MainActivity : AppCompatActivity() {
             usbManager.requestPermission(printerDevice, permissionIntent)
         }
     }
+
     private fun setupUsbDevice(device: UsbDevice) {
         releaseUsbDevice()
         usbDeviceConnection = usbManager.openDevice(device)
@@ -462,6 +476,7 @@ class MainActivity : AppCompatActivity() {
         this.usbDevice = device
         Toast.makeText(this, "Impresora USB lista: ${device.deviceName}", Toast.LENGTH_SHORT).show()
     }
+
     private suspend fun printViaUsb(data: String): Boolean = withContext(Dispatchers.IO) {
         if (usbDeviceConnection == null || usbEndpointOut == null) {
             Log.w(TAG, "Dispositivo USB no configurado. Intentando re-detectar.")
@@ -491,6 +506,7 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
+
     private fun releaseUsbDevice() {
         usbDeviceConnection?.let { conn ->
             usbInterface?.let { intf ->
@@ -506,8 +522,6 @@ class MainActivity : AppCompatActivity() {
         usbDevice = null
     }
 
-    // --- Generación de Ticket y QR ---
-    // La función mostrarQR ahora solo se usa internamente si la necesitas, pero no en el flujo principal.
     private fun mostrarQR(bitmap: Bitmap) {
         imgQR.setImageBitmap(bitmap)
     }
@@ -525,32 +539,26 @@ class MainActivity : AppCompatActivity() {
         return bitmap
     }
 
-    // <<-- AÑADIDO: Nuevas funciones para controlar la visibilidad y el contenido del resumen.
     private fun mostrarResumen(productos: List<Producto>) {
         val sb = StringBuilder()
         var totalGeneral = 0.0
-
         productos.forEach { producto ->
             val totalProducto = producto.cantidad * producto.precio
             totalGeneral += totalProducto
             sb.appendLine("${producto.cantidad} x ${producto.nombre} ... $${"%.2f".format(totalProducto)}")
         }
-
         summaryTextView.text = sb.toString()
         summaryTotalTextView.text = "TOTAL: $${"%.2f".format(totalGeneral)}"
-
-        // Oculta el QR (si estuviera visible) y muestra el contenedor del resumen
         imgQR.visibility = View.GONE
         summaryContainer.visibility = View.VISIBLE
     }
 
     private fun ocultarResumen() {
-        if (::summaryContainer.isInitialized) { // Comprobación de seguridad
+        if (::summaryContainer.isInitialized) {
             summaryContainer.visibility = View.GONE
         }
     }
 
-    // Tu data class no necesita cambios.
     data class ProductData(
         val cantidadTV: TextView,
         val btnMenos: Button,
@@ -566,12 +574,9 @@ class MainActivity : AppCompatActivity() {
         val total: Double get() = precio * cantidad
     }
 
-    // <<-- FUNCIÓN CORREGIDA: Ahora lee del mapa `quantities` que es la fuente de verdad.
     private fun obtenerProductosDesdeInputs(): List<Producto> {
         val listaDeProductos = mutableListOf<Producto>()
-        // Itera sobre el mapa de productos para obtener nombre y precio
         products.forEach { (nombre, data) ->
-            // Obtiene la cantidad desde nuestro mapa de estado 'quantities'
             val cantidad = quantities[nombre] ?: 0
             if (cantidad > 0) {
                 listaDeProductos.add(Producto(nombre, data.precio, cantidad))
@@ -581,7 +586,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun generarTextoTicket(): String {
-        // ... (Tu código original aquí no necesita cambios)
         val fechaHora = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
         val sb = StringBuilder()
         val anchoTotalLinea = 32
@@ -621,7 +625,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun bitmapToEscPosData(bitmap: Bitmap, printerDotsPerLine: Int = 384): ByteArray {
-        // ... (Tu código original sin cambios)
         val outputStream = java.io.ByteArrayOutputStream()
         var scaledBitmap = bitmap
         if (bitmap.width > printerDotsPerLine) {
@@ -663,4 +666,5 @@ class MainActivity : AppCompatActivity() {
         }
         return outputStream.toByteArray()
     }
+
 }

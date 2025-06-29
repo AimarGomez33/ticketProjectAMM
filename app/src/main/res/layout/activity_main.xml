@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:animateLayoutChanges="true">
 
         <TextView
             android:layout_width="wrap_content"
@@ -25,152 +26,41 @@
             android:textSize="30sp"
             android:textStyle="bold" />
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/headerPlatillos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Platillos Principales"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:text="Platillos Principales"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_menu_more"
+                app:tint="?attr/colorAccent" />
+        </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            android:layout_marginBottom="12dp"/>
-
+            android:background="?android:attr/listDivider"/>
         <GridLayout
+            android:id="@+id/gridPlatillos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="3"
-            android:useDefaultMargins="true">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelPozoleGrande"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Pozole Grande"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosPozoleGrande"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_pozole_grande"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadPozoleGrande"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasPozoleGrande"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_pozole_grande"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelPozoleChico"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Pozole Chico"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosPozoleChico"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_pozole_chico"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadPozoleChico"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasPozoleChico"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_pozole_chico"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            android:useDefaultMargins="true"
+            android:visibility="gone">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
@@ -234,7 +124,130 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelPozoleGrande"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Pozole Grande"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosPozoleGrande"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_pozole_grande"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadPozoleGrande"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasPozoleGrande"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_pozole_grande"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelPozoleChico"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Pozole Chico"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosPozoleChico"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_pozole_chico"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadPozoleChico"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasPozoleChico"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_pozole_chico"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -297,7 +310,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -360,7 +372,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -423,7 +434,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -462,7 +472,6 @@
                             android:textSize="18sp"
                             app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
                         <EditText
                             android:id="@+id/cantidadChalupas"
                             android:layout_width="wrap_content"
@@ -494,26 +503,42 @@
 
         </GridLayout>
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/headerPambazos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pambazos"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginTop="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:text="Pambazos"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_menu_more"
+                app:tint="?attr/colorAccent" />
+        </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            android:layout_marginBottom="12dp"/>
-
+            android:background="?android:attr/listDivider"/>
         <GridLayout
+            android:id="@+id/gridPambazos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="3"
-            android:useDefaultMargins="true">
+            android:useDefaultMargins="true"
+            android:visibility="gone">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
@@ -577,196 +602,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelPambazosAdobados"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Pambazos Adobados"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosPambazosAdobados"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_pambazos_adobados"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadPambazosAdobados"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasPambazosAdobados"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_pambazos_adobados"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelPambazosNaturalesCombinados"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Pambazos Naturales Combinados"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosPambazosNaturalesCombinados"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_pambazos_naturales_combinados"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadPambazosNaturalesCombinados"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasPambazosNaturalesCombinados"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_pambazos_naturales_combinados"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelPambazosAdobadosCombinados"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Pambazos Adobados Combinados"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosPambazosAdobadosCombinados"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_pambazos_adobados_combinados"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadPambazosAdobadosCombinados"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasPambazosAdobadosCombinados"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_pambazos_adobados_combinados"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -829,7 +664,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -844,13 +678,13 @@
                     android:orientation="vertical"
                     android:padding="4dp">
                     <TextView
-                        android:id="@+id/labelPambazosAdobadosExtra"
+                        android:id="@+id/labelPambazosNaturalesCombinados"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
                         android:gravity="center"
                         android:minLines="2"
-                        android:text="Pambazos Adobados Queso"
+                        android:text="Pambazos Naturales Combinados"
                         android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
                     <LinearLayout
@@ -859,17 +693,17 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosPambazosAdobadosExtra"
+                            android:id="@+id/btnMenosPambazosNaturalesCombinados"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_pambazos_adobados_extra"
+                            android:contentDescription="@string/decrement_pambazos_naturales_combinados"
                             android:text="-"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
                             app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                         <TextView
-                            android:id="@+id/cantidadPambazosAdobadosExtra"
+                            android:id="@+id/cantidadPambazosNaturalesCombinados"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -880,10 +714,10 @@
                             android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasPambazosAdobadosExtra"
+                            android:id="@+id/btnMasPambazosNaturalesCombinados"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:contentDescription="@string/increment_pambazos_adobados_extra"
+                            android:contentDescription="@string/increment_pambazos_naturales_combinados"
                             android:text="+"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
@@ -892,7 +726,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -955,7 +788,192 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelPambazosAdobados"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Pambazos Adobados"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosPambazosAdobados"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_pambazos_adobados"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadPambazosAdobados"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasPambazosAdobados"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_pambazos_adobados"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelPambazosAdobadosExtra"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Pambazos Adobados Queso"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosPambazosAdobadosExtra"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_pambazos_adobados_extra"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadPambazosAdobadosExtra"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasPambazosAdobadosExtra"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_pambazos_adobados_extra"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelPambazosAdobadosCombinados"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Pambazos Adobados Combinados"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosPambazosAdobadosCombinados"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_pambazos_adobados_combinados"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadPambazosAdobadosCombinados"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasPambazosAdobadosCombinados"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_pambazos_adobados_combinados"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -1021,26 +1039,42 @@
 
         </GridLayout>
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/headerGuajoloyets"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Guajoloyets"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginTop="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:text="Guajoloyets"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_menu_more"
+                app:tint="?attr/colorAccent" />
+        </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            android:layout_marginBottom="12dp"/>
-
+            android:background="?android:attr/listDivider"/>
         <GridLayout
+            android:id="@+id/gridGuajoloyets"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="3"
-            android:useDefaultMargins="true">
+            android:useDefaultMargins="true"
+            android:visibility="gone">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
@@ -1104,70 +1138,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelGuajoloyetAdobado"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Guajoloyets Adobados"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosGuajoloyetAdobado"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_guajoloyet_adobado"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadGuajoloyetAdobado"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasGuajoloyetAdobado"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_guajoloyet_adobado"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -1230,7 +1200,68 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelGuajoloyetAdobado"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Guajoloyets Adobados"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosGuajoloyetAdobado"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_guajoloyet_adobado"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadGuajoloyetAdobado"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasGuajoloyetAdobado"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_guajoloyet_adobado"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -1296,26 +1327,42 @@
 
         </GridLayout>
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/headerEntradas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Entradas"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginTop="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:text="Entradas"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_menu_more"
+                app:tint="?attr/colorAccent" />
+        </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            android:layout_marginBottom="12dp"/>
-
+            android:background="?android:attr/listDivider"/>
         <GridLayout
+            android:id="@+id/gridEntradas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="3"
-            android:useDefaultMargins="true">
+            android:useDefaultMargins="true"
+            android:visibility="gone">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
@@ -1379,7 +1426,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -1442,7 +1488,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -1505,7 +1550,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -1568,7 +1612,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -1634,26 +1677,42 @@
 
         </GridLayout>
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/headerBebidas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bebidas"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginTop="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:text="Bebidas"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_menu_more"
+                app:tint="?attr/colorAccent" />
+        </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            android:layout_marginBottom="12dp"/>
-
+            android:background="?android:attr/listDivider"/>
         <GridLayout
+            android:id="@+id/gridBebidas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="3"
-            android:useDefaultMargins="true">
+            android:useDefaultMargins="true"
+            android:visibility="gone">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
@@ -1717,133 +1776,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelAguas"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Agua Jamaica/Horchata"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosAguas"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_aguas"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadAguas"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasAguas"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_aguas"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelAguasSabor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Aguas de Sabor"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosAguasSabor"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_aguas_sabor"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadAguasSabor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasAguasSabor"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_aguas_sabor"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -1906,7 +1838,130 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelAguas"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Agua Jamaica/Horchata"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosAguas"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_aguas"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadAguas"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasAguas"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_aguas"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelAguasSabor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Aguas de Sabor"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosAguasSabor"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_aguas_sabor"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadAguasSabor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasAguasSabor"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_aguas_sabor"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -1969,7 +2024,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -2035,26 +2089,42 @@
 
         </GridLayout>
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/headerPostres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Postres y Extras"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginTop="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?android:attr/selectableItemBackground">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:text="Postres y Extras"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@android:drawable/ic_menu_more"
+                app:tint="?attr/colorAccent" />
+        </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            android:layout_marginBottom="12dp"/>
-
+            android:background="?android:attr/listDivider"/>
         <GridLayout
+            android:id="@+id/gridPostres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="3"
-            android:useDefaultMargins="true">
+            android:useDefaultMargins="true"
+            android:visibility="gone">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
@@ -2070,13 +2140,13 @@
                     android:orientation="vertical"
                     android:padding="4dp">
                     <TextView
-                        android:id="@+id/labelPostres25"
+                        android:id="@+id/labelExtra10"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
                         android:gravity="center"
                         android:minLines="2"
-                        android:text="Postres 25"
+                        android:text="Extra +10"
                         android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
                     <LinearLayout
@@ -2085,17 +2155,17 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosPostres25"
+                            android:id="@+id/btnMenosExtra10"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_postres25"
+                            android:contentDescription="@string/decrement_extra10"
                             android:text="-"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
                             app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                         <TextView
-                            android:id="@+id/cantidadPostres25"
+                            android:id="@+id/cantidadExtra10"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -2106,10 +2176,10 @@
                             android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasPostres25"
+                            android:id="@+id/btnMasExtra10"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:contentDescription="@string/increment_postres25"
+                            android:contentDescription="@string/increment_extra10"
                             android:text="+"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
@@ -2118,133 +2188,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelPostres30"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Postres 30"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosPostres30"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_postres30"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadPostres30"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasPostres30"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_postres30"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelPostres35"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Postres 35"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosPostres35"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_postres35"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadPostres35"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasPostres35"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_postres35"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -2307,7 +2250,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -2322,13 +2264,13 @@
                     android:orientation="vertical"
                     android:padding="4dp">
                     <TextView
-                        android:id="@+id/labelExtra10"
+                        android:id="@+id/labelPostres25"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
                         android:gravity="center"
                         android:minLines="2"
-                        android:text="Extra +10"
+                        android:text="Postres 25"
                         android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
                     <LinearLayout
@@ -2337,17 +2279,17 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosExtra10"
+                            android:id="@+id/btnMenosPostres25"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_extra10"
+                            android:contentDescription="@string/decrement_postres25"
                             android:text="-"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
                             app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                         <TextView
-                            android:id="@+id/cantidadExtra10"
+                            android:id="@+id/cantidadPostres25"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -2358,10 +2300,134 @@
                             android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasExtra10"
+                            android:id="@+id/btnMasPostres25"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:contentDescription="@string/increment_extra10"
+                            android:contentDescription="@string/increment_postres25"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelPostres30"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Postres 30"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosPostres30"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_postres30"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadPostres30"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasPostres30"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_postres30"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelPostres35"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Postres 35"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosPostres35"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_postres35"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadPostres35"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasPostres35"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_postres35"
                             android:text="+"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
