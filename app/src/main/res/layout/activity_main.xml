@@ -25,74 +25,26 @@
             android:textSize="30sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Platillos Principales"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginBottom="12dp"/>
+
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="3"
             android:useDefaultMargins="true">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelQuesadillas"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Quesadillas"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosQuesadillas"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_quesadillas"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadQuesadillas"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasQuesadillas"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_quesadillas"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
@@ -211,6 +163,69 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_pozole_chico"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelQuesadillas"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Quesadillas"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosQuesadillas"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_quesadillas"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadQuesadillas"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasQuesadillas"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_quesadillas"
                             android:text="+"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
@@ -423,13 +438,13 @@
                     android:orientation="vertical"
                     android:padding="4dp">
                     <TextView
-                        android:id="@+id/labelGuajoloyetNatural"
+                        android:id="@+id/labelChalupas"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
                         android:gravity="center"
                         android:minLines="2"
-                        android:text="Guajoloyets Naturales"
+                        android:text="Chalupas"
                         android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
                     <LinearLayout
@@ -438,17 +453,18 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosGuajoloyetNatural"
+                            android:id="@+id/btnMenosChalupas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_guajoloyet_natural"
+                            android:contentDescription="@string/decrement_chalupas"
                             android:text="-"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
                             app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadGuajoloyetNatural"
+
+                        <EditText
+                            android:id="@+id/cantidadChalupas"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -457,12 +473,16 @@
                             android:paddingEnd="8dp"
                             android:text="0"
                             android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:background="@android:color/transparent"
+                            android:inputType="number"
+                            android:selectAllOnFocus="true"
+                            android:imeOptions="actionDone" />
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasGuajoloyetNatural"
+                            android:id="@+id/btnMasChalupas"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:contentDescription="@string/increment_guajoloyet_natural"
+                            android:contentDescription="@string/increment_chalupas"
                             android:text="+"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
@@ -472,194 +492,28 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelGujoloyetNaturalExtra"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Guajoloyets Naturales Queso/Guisado Extra"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosGujoloyetNaturalExtra"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_guajoloyet_natural_extra"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadGujoloyetNaturalExtra"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasGujoloyetNaturalExtra"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_guajoloyet_natural_extra"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+        </GridLayout>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelGuajoloyetAdobado"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Guajoloyets Adobados"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosGuajoloyetAdobado"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_guajoloyet_adobado"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadGuajoloyetAdobado"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasGuajoloyetAdobado"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_guajoloyet_adobado"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pambazos"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginBottom="12dp"/>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelGujoloyetAdobadoExtra"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Guajoloyets Adobados Queso/Guisado Extra"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosGujoloyetAdobadoExtra"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_guajoloyet_adobado_extra"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadGujoloyetAdobadoExtra"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasGujoloyetAdobadoExtra"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_guajoloyet_adobado_extra"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:useDefaultMargins="true">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
@@ -715,195 +569,6 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_pambazos_naturales"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelPambazosNaturalesQueso"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Pambazos Naturales Queso Extra"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosPambazosNaturalesQueso"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_pambazos_naturales_queso"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadPambazosNaturalesQueso"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasPambazosNaturalesQueso"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_pambazos_naturales_queso"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelPambazosNaturalesCombinados"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Pambazos Naturales Combinados"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosPambazosNaturalesCombinados"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_pambazos_naturales_combinados"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadPambazosNaturalesCombinados"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasPambazosNaturalesCombinados"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_pambazos_naturales_combinados"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelPambazosNaturalesCombinadosQueso"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Pambazos Naturales Combinados con Queso"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosPambazosNaturalesCombinadosQueso"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_pambazos_naturales_combinados_queso"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadPambazosNaturalesCombinadosQueso"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasPambazosNaturalesCombinadosQueso"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_pambazos_naturales_combinados_queso"
                             android:text="+"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
@@ -990,6 +655,69 @@
                     android:orientation="vertical"
                     android:padding="4dp">
                     <TextView
+                        android:id="@+id/labelPambazosNaturalesCombinados"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Pambazos Naturales Combinados"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosPambazosNaturalesCombinados"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_pambazos_naturales_combinados"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadPambazosNaturalesCombinados"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasPambazosNaturalesCombinados"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_pambazos_naturales_combinados"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
                         android:id="@+id/labelPambazosAdobadosCombinados"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -1053,13 +781,13 @@
                     android:orientation="vertical"
                     android:padding="4dp">
                     <TextView
-                        android:id="@+id/labelPambazosAdobadosCombinadosQueso"
+                        android:id="@+id/labelPambazosNaturalesQueso"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
                         android:gravity="center"
                         android:minLines="2"
-                        android:text="Pambazos Adobados Combinados con Queso"
+                        android:text="Pambazos Naturales Queso Extra"
                         android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
                     <LinearLayout
@@ -1068,17 +796,17 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosPambazosAdobadosCombinadosQueso"
+                            android:id="@+id/btnMenosPambazosNaturalesQueso"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_pambazos_adobados_combinados_queso"
+                            android:contentDescription="@string/decrement_pambazos_naturales_queso"
                             android:text="-"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
                             app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
                         <TextView
-                            android:id="@+id/cantidadPambazosAdobadosCombinadosQueso"
+                            android:id="@+id/cantidadPambazosNaturalesQueso"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -1089,10 +817,10 @@
                             android:textColor="@color/text_secondary"
                             android:textSize="18sp" />
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasPambazosAdobadosCombinadosQueso"
+                            android:id="@+id/btnMasPambazosNaturalesQueso"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:contentDescription="@string/increment_pambazos_adobados_combinados_queso"
+                            android:contentDescription="@string/increment_pambazos_naturales_queso"
                             android:text="+"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
@@ -1179,13 +907,13 @@
                     android:orientation="vertical"
                     android:padding="4dp">
                     <TextView
-                        android:id="@+id/labelChalupas"
+                        android:id="@+id/labelPambazosNaturalesCombinadosQueso"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
                         android:gravity="center"
                         android:minLines="2"
-                        android:text="Chalupas"
+                        android:text="Pambazos Naturales Combinados con Queso"
                         android:textColor="@color/text_secondary"
                         android:textSize="16sp" />
                     <LinearLayout
@@ -1194,18 +922,17 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosChalupas"
+                            android:id="@+id/btnMenosPambazosNaturalesCombinadosQueso"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_chalupas"
+                            android:contentDescription="@string/decrement_pambazos_naturales_combinados_queso"
                             android:text="-"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
                             app:backgroundTint="@color/button_accent"
                             app:cornerRadius="24dp" />
-
-                        <EditText
-                            android:id="@+id/cantidadChalupas"
+                        <TextView
+                            android:id="@+id/cantidadPambazosNaturalesCombinadosQueso"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -1214,16 +941,12 @@
                             android:paddingEnd="8dp"
                             android:text="0"
                             android:textColor="@color/text_secondary"
-                            android:textSize="18sp"
-                            android:background="@android:color/transparent"
-                            android:inputType="number"
-                            android:selectAllOnFocus="true"
-                            android:imeOptions="actionDone" />
+                            android:textSize="18sp" />
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasChalupas"
+                            android:id="@+id/btnMasPambazosNaturalesCombinadosQueso"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:contentDescription="@string/increment_chalupas"
+                            android:contentDescription="@string/increment_pambazos_naturales_combinados_queso"
                             android:text="+"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
@@ -1232,6 +955,367 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelPambazosAdobadosCombinadosQueso"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Pambazos Adobados Combinados con Queso"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosPambazosAdobadosCombinadosQueso"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_pambazos_adobados_combinados_queso"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadPambazosAdobadosCombinadosQueso"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasPambazosAdobadosCombinadosQueso"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_pambazos_adobados_combinados_queso"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </GridLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Guajoloyets"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginBottom="12dp"/>
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:useDefaultMargins="true">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelGuajoloyetNatural"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Guajoloyets Naturales"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosGuajoloyetNatural"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_guajoloyet_natural"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadGuajoloyetNatural"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasGuajoloyetNatural"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_guajoloyet_natural"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelGuajoloyetAdobado"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Guajoloyets Adobados"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosGuajoloyetAdobado"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_guajoloyet_adobado"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadGuajoloyetAdobado"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasGuajoloyetAdobado"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_guajoloyet_adobado"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelGujoloyetNaturalExtra"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Guajoloyets Naturales Queso/Guisado Extra"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosGujoloyetNaturalExtra"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_guajoloyet_natural_extra"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadGujoloyetNaturalExtra"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasGujoloyetNaturalExtra"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_guajoloyet_natural_extra"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelGujoloyetAdobadoExtra"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Guajoloyets Adobados Queso/Guisado Extra"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosGujoloyetAdobadoExtra"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_guajoloyet_adobado_extra"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadGujoloyetAdobadoExtra"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasGujoloyetAdobadoExtra"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_guajoloyet_adobado_extra"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </GridLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Entradas"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginBottom="12dp"/>
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:useDefaultMargins="true">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
@@ -1548,6 +1632,29 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+        </GridLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bebidas"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginBottom="12dp"/>
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:useDefaultMargins="true">
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -1602,69 +1709,6 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:contentDescription="@string/increment_refrescos"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelCafe"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Café"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosCafe"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_cafe"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadCafe"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasCafe"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_cafe"
                             android:text="+"
                             android:textColor="@color/text_on_accent"
                             android:textSize="18sp"
@@ -1814,6 +1858,69 @@
                     android:orientation="vertical"
                     android:padding="4dp">
                     <TextView
+                        android:id="@+id/labelCafe"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Café"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosCafe"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_cafe"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadCafe"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasCafe"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_cafe"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
                         android:id="@+id/labelAguasNat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -1926,131 +2033,28 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelExtra10"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Extra +10"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosExtra10"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_extra10"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadExtra10"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasExtra10"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_extra10"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+        </GridLayout>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="4dp">
-                    <TextView
-                        android:id="@+id/labelExtra5"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="center"
-                        android:minLines="2"
-                        android:text="Extra +5"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMenosExtra5"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/decrement_extra5"
-                            android:text="-"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                        <TextView
-                            android:id="@+id/cantidadExtra5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minWidth="40dp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:text="0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="18sp" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMasExtra5"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@string/increment_extra5"
-                            android:text="+"
-                            android:textColor="@color/text_on_accent"
-                            android:textSize="18sp"
-                            app:backgroundTint="@color/button_accent"
-                            app:cornerRadius="24dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Postres y Extras"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginBottom="12dp"/>
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:useDefaultMargins="true">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
@@ -2241,6 +2245,132 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelExtra5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Extra +5"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosExtra5"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_extra5"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadExtra5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasExtra5"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_extra5"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/labelExtra10"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:minLines="2"
+                        android:text="Extra +10"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMenosExtra10"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/decrement_extra10"
+                            android:text="-"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                        <TextView
+                            android:id="@+id/cantidadExtra10"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minWidth="40dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="0"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="18sp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMasExtra10"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:contentDescription="@string/increment_extra10"
+                            android:text="+"
+                            android:textColor="@color/text_on_accent"
+                            android:textSize="18sp"
+                            app:backgroundTint="@color/button_accent"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
         </GridLayout>
 
         <Space
@@ -2294,78 +2424,82 @@
                 android:layout_height="200dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/qr_code_image"
-                android:visibility="gone" /> <LinearLayout
-            android:id="@+id/summaryContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/summary_background"
-            android:padding="16dp"
-            android:visibility="gone"
-            tools:visibility="visible"> <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp">
+                android:visibility="gone" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="Resumen de la Cuenta"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/btnCloseSummary"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                app:icon="@android:drawable/ic_menu_close_clear_cancel"
-                app:iconTint="@color/text_secondary" />
-        </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/button_accent"
-                android:layout_marginBottom="8dp"/>
-
-            <ScrollView
+            <LinearLayout
+                android:id="@+id/summaryContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxHeight="200dp">
+                android:orientation="vertical"
+                android:background="@drawable/summary_background"
+                android:padding="16dp"
+                android:visibility="gone"
+                tools:visibility="visible">
 
-                <TextView
-                    android:id="@+id/summaryTextView"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="16sp"
-                    android:lineSpacingExtra="4dp"
-                    tools:text="2 x Quesadillas... $56.00\n1 x Pozole Grande... $110.00" />
-            </ScrollView>
+                    android:layout_marginBottom="8dp">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/button_accent"
-                android:layout_marginTop="8dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="Resumen de la Cuenta"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/summaryTotalTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:paddingTop="8dp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"
-                android:textSize="20sp"
-                tools:text="TOTAL: $166.00" />
+                    <Button
+                        android:id="@+id/btnCloseSummary"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        app:icon="@android:drawable/ic_menu_close_clear_cancel"
+                        app:iconTint="@color/text_secondary" />
+                </RelativeLayout>
 
-        </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/button_accent"
+                    android:layout_marginBottom="8dp"/>
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="200dp">
+
+                    <TextView
+                        android:id="@+id/summaryTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp"
+                        android:lineSpacingExtra="4dp"
+                        tools:text="2 x Quesadillas... $56.00\n1 x Pozole Grande... $110.00" />
+                </ScrollView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/button_accent"
+                    android:layout_marginTop="8dp"/>
+
+                <TextView
+                    android:id="@+id/summaryTotalTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:paddingTop="8dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:textSize="20sp"
+                    tools:text="TOTAL: $166.00" />
+
+            </LinearLayout>
 
         </FrameLayout>
 
