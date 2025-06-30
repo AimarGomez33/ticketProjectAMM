@@ -64,6 +64,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnEmparejar: Button
     private lateinit var btnLimpiar: Button
     private lateinit var imgQR: ImageView
+    private lateinit var editTextMesa: EditText
+
+    private var isEditMode = false
 
     private lateinit var usbManager: UsbManager
     private var usbDevice: UsbDevice? = null
@@ -246,6 +249,8 @@ class MainActivity : AppCompatActivity() {
         btnEmparejar = findViewById(R.id.btnEmparejar)
         btnLimpiar = findViewById(R.id.btnLimpiar)
         imgQR = findViewById(R.id.imgQR)
+
+        editTextMesa = findViewById(R.id.editMesa)
 
         summaryContainer = findViewById(R.id.summaryContainer)
         summaryTextView = findViewById(R.id.summaryTextView)
@@ -593,7 +598,13 @@ class MainActivity : AppCompatActivity() {
         sb.appendLine("********************************")
         sb.appendLine("     *** TICKET DE COMPRA ***")
         sb.appendLine("********************************")
-        sb.appendLine("Fecha y hora: $fechaHora")
+        sb.appendLine("Fecha y hora: $fechaHora")s
+
+        val mesaInfo = editTextMesa.text.toString().trim()
+        if(mesaInfo.isNotEmpty()){
+            sb.appendLine(String.format("%-32s", "Mesa: ${mesaInfo.uppercase()}"))
+            sb.appendLine("*****************************")
+        }
         val lineaSeparadoraCorta = "-".repeat(anchoTotalLinea)
         sb.appendLine(lineaSeparadoraCorta)
         sb.appendLine(String.format("%-15s %6s %3s %7s", "Producto", "Precio", "Cant", "Total"))

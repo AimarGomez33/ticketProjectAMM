@@ -25,6 +25,20 @@
             android:textColor="@color/text_primary"
             android:textSize="30sp"
             android:textStyle="bold" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editMesa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mesa/Mesero(Opcional)"
+                android:inputType="textCapWords"
+                android:imeOptions="actionDone" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <RelativeLayout
             android:id="@+id/headerPlatillos"
