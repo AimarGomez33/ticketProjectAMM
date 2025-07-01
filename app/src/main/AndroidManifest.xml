@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Requiere soporte para dispositivos USB -->
-    <uses-feature android:name="android.hardware.usb.host" />
-
-    <!-- Permisos Bluetooth -->
+    <uses-feature android:name="android.hardware.usb.host" /> <!-- Permisos Bluetooth -->
     <!-- Android 12+ -->
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-
-    <!-- Android 11 y anteriores -->
-    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
-
-    <!-- Opcional: solo si necesitas escanear dispositivos en Android <= 11 -->
-    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30" /> -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" /> <!-- Android 11 y anteriores -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
 
     <application
         android:allowBackup="true"
@@ -27,7 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TicketApp"
         tools:targetApi="31">
-
+        <activity
+            android:name=".MenuAdminActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -35,12 +35,14 @@
             <!-- Lanzador principal -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
             <!-- Acción personalizada -->
             <intent-filter>
                 <action android:name="com.example.action.APP_ACTION" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -54,7 +56,6 @@
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
-
     </application>
 
 </manifest>
