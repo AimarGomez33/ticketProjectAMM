@@ -3,12 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/productCardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/card_background"
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp"
-    android:layout_margin="6dp">
+    android:layout_margin="6dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground"
+    >
 
     <LinearLayout
         android:id="@+id/cardLayout"
@@ -17,6 +22,8 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="8dp">
+
+
 
         <TextView
             android:id="@+id/productName"
@@ -49,8 +56,13 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:text="-"
+                android:textColor="@color/white"
                 android:textSize="18sp"
-                app:cornerRadius="24dp" />
+                app:cornerRadius="24dp"
+                android:padding="0dp"
+                app:icon="@null"
+                app:iconPadding="0dp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/productQuantity"
@@ -66,8 +78,13 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:text="+"
+                android:textColor="@color/white"
                 android:textSize="18sp"
-                app:cornerRadius="24dp" />
+                app:cornerRadius="24dp"
+                android:padding="0dp"
+                app:icon="@null"
+                app:iconPadding="0dp"
+                tools:ignore="HardcodedText" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

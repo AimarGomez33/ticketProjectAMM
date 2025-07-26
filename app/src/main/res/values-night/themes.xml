@@ -1,7 +1,28 @@
+<!-- res/values-night/themes.xml -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.TicketApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Theme.TicketApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Colores Primarios -->
+        <item name="colorPrimary">@color/verde_oliva_salvia</item> <!-- El oliva/salvia como primario en modo noche -->
+        <item name="colorPrimaryVariant">@color/verde_bosque</item> <!-- El bosque como variante más oscura -->
+        <item name="colorOnPrimary">@color/blanco_hueso</item>
+
+        <!-- Colores Secundarios -->
+        <item name="colorSecondary">@color/beige_arena</item> <!-- Beige como secundario -->
+        <item name="colorSecondaryVariant">@color/beige_arena</item>
+        <item name="colorOnSecondary">@color/verde_bosque</item> <!-- Texto oscuro sobre el beige -->
+
+        <!-- Otros colores importantes del tema -->
+        <item name="android:colorBackground">#121212</item> <!-- Un negro estándar de Material para fondo noche -->
+        <item name="colorSurface">@color/verde_bosque</item> <!-- Superficies con el verde bosque oscuro -->
+        <item name="colorError">@color/app_error</item> <!-- Puedes usar un rojo más brillante para noche si lo deseas -->
+
+        <item name="colorOnBackground">@color/blanco_hueso</item>
+        <item name="colorOnSurface">@color/blanco_hueso</item> <!-- Texto claro sobre las superficies verde bosque -->
+        <item name="colorOnError">@color/black</item>
+
+        <!-- Barra de estado -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSurface</item> <!-- O ?attr/colorPrimaryVariant -->
+        <!-- Para iconos claros en barra de estado -->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
 </resources>

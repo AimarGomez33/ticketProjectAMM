@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
     private lateinit var btnEmparejar: Button
     private lateinit var btnLimpiar: Button
     private lateinit var btnEditarPrecios: Button
+    private lateinit var btnAdministrarMenu: Button
     private lateinit var editTextMesa: EditText
     private lateinit var imgQR: ImageView
 
@@ -158,6 +159,7 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         btnCloseSummary = findViewById(R.id.btnCloseSummary)
         editTextMesa = findViewById(R.id.editMesa)
         btnEditarPrecios = findViewById(R.id.btnEditarPrecios)
+        btnAdministrarMenu = findViewById(R.id.btnAdministrarMenu)
 
         btnImprimir.setOnClickListener { imprimirTicket() }
         btnEmparejar.setOnClickListener {
@@ -167,6 +169,10 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         btnLimpiar.setOnClickListener { limpiarCantidades() }
         btnCloseSummary.setOnClickListener { ocultarResumen() }
         btnEditarPrecios.setOnClickListener { toggleEditMode() }
+        btnAdministrarMenu.setOnClickListener {
+            val intent = Intent(this, MenuAdminActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupRecyclerView() {
@@ -361,16 +367,188 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
     }
 
     // --- Toda la lógica de bajo nivel (Permisos, Bluetooth, USB) se queda igual ---
-    private fun checkAndRequestBluetoothPermissions() { /* ... */ }
-    private fun checkBluetoothPermissions(): Boolean { /* ... */ }
-    @SuppressLint("MissingPermission") private suspend fun connectToBluetoothPrinter(): BluetoothSocket? { /* ... */ }
-    @SuppressLint("MissingPermission") private suspend fun printViaBluetooth(textoTicket: String): Boolean { /* ... */ }
-    private fun closeBluetoothSocket() { /* ... */ }
-    private fun detectAndRequestUsbPermission() { /* ... */ }
-    private fun setupUsbDevice(device: UsbDevice) { /* ... */ }
-    private suspend fun printViaUsb(data: String): Boolean { /* ... */ }
-    private fun releaseUsbDevice() { /* ... */ }
-    private fun generarQR(texto: String): Bitmap { /* ... */ }
-    private fun bitmapToEscPosData(bitmap: Bitmap, printerDotsPerLine: Int): ByteArray { /* ... */ }
+    private fun checkAndRequestBluetoothPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val permissions = arrayOf(
+                Manifest.permission.BLUETOOTH_CONNECT,
+                Manifest.permission.BLUETOOTH_SCAN
+            )
+            requestBluetoothPermissionLauncher.launch(permissions)
+        }
+    }
+
+    private fun checkBluetoothPermissions(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private suspend fun connectToBluetoothPrinter(): BluetoothSocket? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val pairedDevices = bluetoothAdapter?.bondedDevices
+                val printer = pairedDevices?.find { it.name.contains(PRINTER_NAME_BLUETOOTH, ignoreCase = true) }
+                
+                if (printer != null) {
+                    val socket = printer.createRfcommSocketToServiceRecord(PRINTER_UUID)
+                    socket.connect()
+                    socket
+                } else {
+                    Log.e(TAG, "No se encontró impresora Bluetooth emparejada")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error conectando a impresora Bluetooth", e)
+                null
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private suspend fun printViaBluetooth(textoTicket: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                closeBluetoothSocket()
+                bluetoothSocket = connectToBluetoothPrinter()
+                
+                bluetoothSocket?.let { socket ->
+                    val outputStream = socket.outputStream
+                    outputStream.write(textoTicket.toByteArray(StandardCharsets.ISO_8859_1))
+                    outputStream.flush()
+                    true
+                } ?: false
+            } catch (e: Exception) {
+                Log.e(TAG, "Error imprimiendo por Bluetooth", e)
+                false
+            }
+        }
+    }
+
+    private fun closeBluetoothSocket() {
+        try {
+            bluetoothSocket?.close()
+            bluetoothSocket = null
+        } catch (e: Exception) {
+            Log.e(TAG, "Error cerrando socket Bluetooth", e)
+        }
+    }
+
+    private fun detectAndRequestUsbPermission() {
+        val deviceList = usbManager.deviceList
+        if (deviceList.isNotEmpty()) {
+            val device = deviceList.values.first()
+            val permissionIntent = PendingIntent.getBroadcast(
+                this,
+                0,
+                Intent(ACTION_USB_PERMISSION),
+                PendingIntent.FLAG_IMMUTABLE
+            )
+            usbManager.requestPermission(device, permissionIntent)
+        }
+    }
+
+    private fun setupUsbDevice(device: UsbDevice) {
+        try {
+            usbDevice = device
+            usbDeviceConnection = usbManager.openDevice(device)
+            
+            if (device.interfaceCount > 0) {
+                usbInterface = device.getInterface(0)
+                usbDeviceConnection?.claimInterface(usbInterface, true)
+                
+                for (i in 0 until usbInterface!!.endpointCount) {
+                    val endpoint = usbInterface!!.getEndpoint(i)
+                    if (endpoint.direction == UsbConstants.USB_DIR_OUT) {
+                        usbEndpointOut = endpoint
+                        break
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error configurando dispositivo USB", e)
+        }
+    }
+
+    private suspend fun printViaUsb(data: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                usbDeviceConnection?.let { connection ->
+                    usbEndpointOut?.let { endpoint ->
+                        val bytes = data.toByteArray(StandardCharsets.ISO_8859_1)
+                        val result = connection.bulkTransfer(endpoint, bytes, bytes.size, 5000)
+                        result > 0
+                    } ?: false
+                } ?: false
+            } catch (e: Exception) {
+                Log.e(TAG, "Error imprimiendo por USB", e)
+                false
+            }
+        }
+    }
+
+    private fun releaseUsbDevice() {
+        try {
+            usbDeviceConnection?.releaseInterface(usbInterface)
+            usbDeviceConnection?.close()
+            usbDeviceConnection = null
+            usbInterface = null
+            usbEndpointOut = null
+            usbDevice = null
+        } catch (e: Exception) {
+            Log.e(TAG, "Error liberando dispositivo USB", e)
+        }
+    }
+
+    private fun generarQR(texto: String): Bitmap {
+        try {
+            val writer = QRCodeWriter()
+            val bitMatrix = writer.encode(texto, BarcodeFormat.QR_CODE, 512, 512)
+            val width = bitMatrix.width
+            val height = bitMatrix.height
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+            
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    bitmap.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
+                }
+            }
+            return bitmap
+        } catch (e: Exception) {
+            Log.e(TAG, "Error generando código QR", e)
+            return Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565)
+        }
+    }
+
+    private fun bitmapToEscPosData(bitmap: Bitmap, printerDotsPerLine: Int): ByteArray {
+        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, printerDotsPerLine, bitmap.height * printerDotsPerLine / bitmap.width, false)
+        val width = scaledBitmap.width
+        val height = scaledBitmap.height
+        val data = mutableListOf<Byte>()
+        
+        // ESC/POS bitmap command
+        data.addAll(byteArrayOf(0x1B, 0x2A, 0x00, (width / 8).toByte(), (height and 0xFF).toByte()).toList())
+        
+        for (y in 0 until height) {
+            for (x in 0 until width step 8) {
+                var byte = 0
+                for (bit in 0 until 8) {
+                    if (x + bit < width) {
+                        val pixel = scaledBitmap.getPixel(x + bit, y)
+                        val gray = (Color.red(pixel) + Color.green(pixel) + Color.blue(pixel)) / 3
+                        if (gray < 128) {
+                            byte = byte or (1 shl (7 - bit))
+                        }
+                    }
+                }
+                data.add(byte.toByte())
+            }
+        }
+        
+        return data.toByteArray()
+    }
 
 }

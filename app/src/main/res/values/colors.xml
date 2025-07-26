@@ -1,14 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="app_background">#DDDAC9</color>
-    <color name="card_background">#F0EEE5</color>
 
-    <color name="text_primary">#4A3B31</color>
-    <color name="text_secondary">#545454</color>
-    <color name="text_on_accent">#000000</color>
+        <!-- Paleta Principal -->
+        <color name="verde_bosque">#0A400C</color>
+        <color name="verde_oliva_salvia">#819067</color>
+        <color name="beige_arena">#B1AB86</color>
+        <color name="blanco_hueso">#FEFAE0</color>
 
-    <color name="button_accent">#A49A8B</color>
+        <!-- Colores base para el tema (pueden ser los mismos de arriba o derivaciones) -->
+        <color name="app_primary">@color/verde_bosque</color>
+        <color name="app_primary_variant">@color/verde_bosque</color> <!-- O un tono ligeramente más oscuro si se desea -->
+        <color name="app_on_primary">@color/blanco_hueso</color>
 
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+        <color name="app_secondary">@color/verde_oliva_salvia</color>
+        <color name="app_secondary_variant">@color/verde_oliva_salvia</color>
+        <color name="app_on_secondary">@color/blanco_hueso</color>
+
+        <color name="app_background">@color/blanco_hueso</color>
+        <color name="app_surface">@color/blanco_hueso</color> <!-- Mismo que el fondo inicialmente -->
+        <color name="app_on_background">@color/verde_bosque</color>
+        <color name="app_on_surface">@color/verde_bosque</color>
+
+        <color name="app_error">#B00020</color>
+        <color name="app_on_error">#FFFFFF</color>
+
+        <!-- Colores específicos que ya tenías y que podrías querer remapear o mantener -->
+        <color name="card_background">@color/app_surface</color> <!-- Las tarjetas usarán el color de superficie del tema -->
+        <color name="text_primary">@color/app_on_surface</color> <!-- Texto primario general, ahora verde oscuro sobre blanco hueso -->
+        <color name="text_secondary">@color/verde_oliva_salvia</color> <!-- Texto secundario, un tono más suave -->
+
+        <!-- Colores estándar que siempre son útiles -->
+        <color name="black">#FF000000</color>
+        <color name="white">#FFFFFFFF</color>
+
+
+
 </resources>

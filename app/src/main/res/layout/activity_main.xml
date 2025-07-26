@@ -46,9 +46,11 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:padding="8dp"
+            android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="3"
-            tools:listitem="@layout/item_product" />
+            app:spanCount="2"
+        tools:listitem="@layout/item_product" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnImprimir"
@@ -58,9 +60,9 @@
             android:layout_marginTop="24dp"
             android:padding="16dp"
             android:text="Imprimir Ticket"
-            android:textColor="@color/text_on_accent"
+            android:textColor="@color/app_on_primary"
             android:textSize="20sp"
-            app:backgroundTint="@color/button_accent" />
+            app:backgroundTint="@color/text_secondary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEmparejar"
@@ -72,7 +74,7 @@
             android:text="Emparejar Impresora Bluetooth"
             android:textColor="@color/text_primary"
             android:textSize="20sp"
-            app:strokeColor="@color/button_accent" />
+            app:strokeColor="@color/text_secondary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLimpiar"
@@ -95,7 +97,7 @@
             android:text="Editar Precios"
             android:textColor="@color/text_primary"
             android:textSize="18sp"
-            app:strokeColor="@color/button_accent"
+            app:strokeColor="@color/text_secondary"
             app:icon="@android:drawable/ic_menu_edit" />
 
         <com.google.android.material.button.MaterialButton
@@ -108,8 +110,9 @@
             android:text="Administrar Menú"
             android:textColor="@color/text_primary"
             android:textSize="18sp"
-            app:strokeColor="@color/button_accent"
+            app:strokeColor="@color/text_secondary"
             app:icon="@android:drawable/ic_menu_preferences" />
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -153,6 +156,7 @@
                         style="@style/Widget.Material3.Button.IconButton"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
+                        android:text="close"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         app:icon="@android:drawable/ic_menu_close_clear_cancel"
@@ -162,7 +166,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/button_accent"
+                    android:background="@color/app_on_primary"
                     android:layout_marginBottom="8dp"/>
 
                 <ScrollView
@@ -183,7 +187,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/button_accent"
+                    android:background="@color/app_on_primary"
                     android:layout_marginTop="8dp"/>
 
                 <TextView
@@ -198,7 +202,6 @@
                     tools:text="TOTAL: $166.00" />
 
             </LinearLayout>
-
         </FrameLayout>
 
     </LinearLayout>
