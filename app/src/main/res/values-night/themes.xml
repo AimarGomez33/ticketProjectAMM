@@ -1,28 +1,36 @@
-<!-- res/values-night/themes.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme for Night Mode. -->
     <style name="Theme.TicketApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Colores Primarios -->
-        <item name="colorPrimary">@color/verde_oliva_salvia</item> <!-- El oliva/salvia como primario en modo noche -->
-        <item name="colorPrimaryVariant">@color/verde_bosque</item> <!-- El bosque como variante más oscura -->
-        <item name="colorOnPrimary">@color/blanco_hueso</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/app_primary_night</item>
+        <item name="colorPrimaryVariant">@color/app_primary_variant_night</item>
+        <item name="colorOnPrimary">@color/app_on_primary_night</item>
 
-        <!-- Colores Secundarios -->
-        <item name="colorSecondary">@color/beige_arena</item> <!-- Beige como secundario -->
-        <item name="colorSecondaryVariant">@color/beige_arena</item>
-        <item name="colorOnSecondary">@color/verde_bosque</item> <!-- Texto oscuro sobre el beige -->
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/app_secondary_night</item>
+        <item name="colorSecondaryVariant">@color/app_secondary_variant_night</item>
+        <item name="colorOnSecondary">@color/app_on_secondary_night</item>
 
-        <!-- Otros colores importantes del tema -->
-        <item name="android:colorBackground">#121212</item> <!-- Un negro estándar de Material para fondo noche -->
-        <item name="colorSurface">@color/verde_bosque</item> <!-- Superficies con el verde bosque oscuro -->
-        <item name="colorError">@color/app_error</item> <!-- Puedes usar un rojo más brillante para noche si lo deseas -->
+        <!-- Background and Surface colors for the theme -->
+        <item name="android:colorBackground">@color/app_background_night</item>
+        <item name="colorSurface">@color/app_surface_night</item>
+        <item name="colorError">@color/app_error_night</item>
 
-        <item name="colorOnBackground">@color/blanco_hueso</item>
-        <item name="colorOnSurface">@color/blanco_hueso</item> <!-- Texto claro sobre las superficies verde bosque -->
-        <item name="colorOnError">@color/black</item>
+        <!-- Text/Icon colors on background and surface -->
+        <item name="colorOnBackground">@color/app_on_background_night</item>
+        <item name="colorOnSurface">@color/app_on_surface_night</item>
+        <item name="colorOnError">@color/app_on_error_night</item>
 
-        <!-- Barra de estado -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSurface</item> <!-- O ?attr/colorPrimaryVariant -->
-        <!-- Para iconos claros en barra de estado -->
+        <!-- Status bar color -->
+        <!-- For a dark theme, the status bar is usually dark.
+             colorPrimaryVariant or colorSurface are common choices. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSurface</item>
+        <!-- For icons on status bar:
+             If ?attr/colorSurface (your status bar background) is dark,
+             android:windowLightStatusBar should be "false" to make icons (time, battery) light.
+             If ?attr/colorSurface is light, it should be "true" to make icons dark.
+             Assuming app_surface_night is dark: -->
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
 </resources>

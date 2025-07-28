@@ -58,6 +58,11 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
     private lateinit var btnAdministrarMenu: Button
     private lateinit var editTextMesa: EditText
     private lateinit var imgQR: ImageView
+    private lateinit var noCuenta: CheckBox
+    private lateinit var categoryFilterSpinner: android.widget.Spinner // <--- AÑADE ESTO
+    private lateinit var categoriesAdapter: ArrayAdapter<String> // Adaptador para el Spinner
+    private val availableCategories = mutableListOf<String>() // Lista para las categorías
+    private var currentSelectedCategoryFilter: String = "todas" // Lista para las categorías del Spinner
 
     // --- Arquitectura Dinámica: Base de datos y RecyclerView ---
     private lateinit var productsRecyclerView: RecyclerView
@@ -160,6 +165,11 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         editTextMesa = findViewById(R.id.editMesa)
         btnEditarPrecios = findViewById(R.id.btnEditarPrecios)
         btnAdministrarMenu = findViewById(R.id.btnAdministrarMenu)
+        noCuenta = findViewById(R.id.noCuenta)
+        categoryFilterSpinner = findViewById(R.id.categoryFilterSpinner)
+
+
+        setupCategoryFilterSpinner()
 
         btnImprimir.setOnClickListener { imprimirTicket() }
         btnEmparejar.setOnClickListener {
@@ -175,6 +185,143 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         }
     }
 
+    private fun setupCategoryFilterSpinner() {
+        // Asegúrate de que "Todas" (o tu string para "todas las categorías") esté presente.
+        // Sé consistente con el uso de mayúsculas/minúsculas. Usaré "Todas" aquí.
+        if (!availableCategories.contains("Todas")) {
+            availableCategories.add(0, "Todas") // Añade al principio si no está
+        }
+
+        // Inicializa o actualiza el ArrayAdapter
+        if (!::categoriesAdapter.isInitialized) { // Si no está inicializado
+            categoriesAdapter = ArrayAdapter(
+                this,
+
+                R.layout.spinner_dropdown_item, // Layout para el ítem seleccionado
+                availableCategories
+            )
+            categoriesAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item) // Layout para el dropdown
+            categoryFilterSpinner.adapter = categoriesAdapter
+        } else {
+            // Si ya está inicializado (ej. después de una actualización de categorías),
+            // solo notifica al adaptador que los datos han cambiado.
+            // Esto asume que `availableCategories` ya ha sido actualizada por `updateSpinnerCategories`.
+            categoriesAdapter.notifyDataSetChanged()
+        }
+
+        // Establecer la selección actual en el Spinner
+        // Intenta encontrar el índice de la categoría actualmente seleccionada
+        val currentSelectionIndex = availableCategories.indexOf(currentSelectedCategoryFilter)
+
+        if (currentSelectionIndex != -1) {
+            // Si se encuentra la categoría, selecciónala en el Spinner.
+            // El 'false' evita que onItemSelected se dispare en este momento de configuración inicial.
+            categoryFilterSpinner.setSelection(currentSelectionIndex, false)
+        } else {
+            // Si la categoría actual no se encuentra (ej. es la primera vez o la categoría fue eliminada),
+            // selecciona la primera opción ("Todas") por defecto.
+            if (availableCategories.isNotEmpty()) {
+                categoryFilterSpinner.setSelection(0, false)
+                currentSelectedCategoryFilter = availableCategories[0] // Actualiza la variable de filtro
+            } else {
+                // Caso raro: no hay categorías. Podrías querer manejar esto,
+                // por ejemplo, deshabilitando el spinner o mostrando un mensaje.
+                Log.w(TAG, "setupCategoryFilterSpinner: No hay categorías disponibles para el Spinner.")
+            }
+        }
+
+
+
+        // Listener para cuando un ítem es seleccionado en el Spinner
+        categoryFilterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedCategory = parent?.getItemAtPosition(position).toString()
+
+                // Solo actuar si la selección realmente ha cambiado para evitar recargas innecesarias
+                if (currentSelectedCategoryFilter != selectedCategory) {
+                    currentSelectedCategoryFilter = selectedCategory
+                    Log.d(TAG, "Filtro de categoría cambiado a: $currentSelectedCategoryFilter")
+                    observeProducts() // Llama a observeProducts para recargar y filtrar la lista
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                if (currentSelectedCategoryFilter != "Todas" && availableCategories.contains("Todas")) {
+                    val todasPosition = availableCategories.indexOf("Todas")
+                    if (todasPosition != -1) { // Asegurar que "Todas" exista
+                        currentSelectedCategoryFilter = "Todas"
+                        categoryFilterSpinner.setSelection(todasPosition, false) // false para no disparar de nuevo
+                        Log.d(TAG, "Spinner - Nada seleccionado, volviendo a: $currentSelectedCategoryFilter")
+                        observeProducts() // Recargar productos con el filtro "Todas"
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onNothingSelected(parent: AdapterView<*>?) {
+
+        // Solo actuar si el filtro actual no es ya "Todas" para evitar trabajo innecesario.
+        if (currentSelectedCategoryFilter != "Todas") {
+            // Verificar si "Todas" existe en la lista de categorías disponibles.
+            // Esto es importante si la lista de categorías pudiera estar vacía o no contener "Todas".
+            if (availableCategories.contains("Todas")) {
+                val todasPosition = availableCategories.indexOf("Todas")
+                // Aunque `contains` ya lo verificó, `indexOf` podría devolver -1 si hay inconsistencias (raro).
+                // Es una buena práctica verificar de nuevo.
+                if (todasPosition != -1) {
+                    currentSelectedCategoryFilter = "Todas"
+                    // Establece la selección en el Spinner.
+                    // El 'false' como segundo parámetro evita que onItemSelected se dispare
+                    // recursivamente si esta función fue llamada desde el listener.
+                    // Si esta es una implementación directa de la interfaz en la Activity,
+                    // y no dentro de un `object : ...`, entonces `parent` se refiere al Spinner.
+                    // Si `categoryFilterSpinner` es el único Spinner que usa este listener, puedes usarlo directamente.
+                    categoryFilterSpinner.setSelection(todasPosition, false)
+                    Log.d(TAG, "onNothingSelected: No había selección, volviendo al filtro: $currentSelectedCategoryFilter")
+                    // Actualiza la lista de productos para reflejar el cambio de filtro.
+                    observeProducts()
+                } else {
+                    // Caso muy improbable si availableCategories.contains("Todas") fue true.
+                    Log.w(TAG, "onNothingSelected: 'Todas' estaba en availableCategories pero indexOf devolvió -1.")
+                    // Como fallback, si "Todas" no se encuentra por alguna razón pero hay otras categorías,
+                    // podríamos seleccionar la primera disponible.
+                    if (availableCategories.isNotEmpty()) {
+                        currentSelectedCategoryFilter = availableCategories[0]
+                        categoryFilterSpinner.setSelection(0, false)
+                        Log.d(TAG, "onNothingSelected: 'Todas' no encontrada, volviendo a: $currentSelectedCategoryFilter")
+                        observeProducts()
+                    } else {
+                        // Si no hay categorías, no hay nada que seleccionar o filtrar.
+                        Log.w(TAG, "onNothingSelected: No hay categorías disponibles en el Spinner.")
+                        // Podrías querer limpiar la lista de productos si este es el caso.
+                        productsAdapter.submitList(emptyList())
+                    }
+                }
+            } else if (availableCategories.isNotEmpty()) {
+                // Si "Todas" no está, pero hay otras categorías, selecciona la primera.
+                currentSelectedCategoryFilter = availableCategories[0]
+                categoryFilterSpinner.setSelection(0, false)
+                Log.d(TAG, "onNothingSelected: 'Todas' no disponible, volviendo a la primera categoría: $currentSelectedCategoryFilter")
+                observeProducts()
+            } else {
+                // Si no hay ninguna categoría en el spinner.
+                Log.w(TAG, "onNothingSelected: El Spinner no tiene categorías.")
+                // Aquí podrías querer limpiar la UI o mostrar un mensaje.
+                // Si currentSelectedCategoryFilter no se actualiza, y observeProducts() se llama,
+                // usará el último filtro válido. Si queremos limpiar:
+                currentSelectedCategoryFilter = "" // O un valor que indique "sin filtro / vacío"
+                productsAdapter.submitList(emptyList()) // Limpia el RecyclerView
+            }
+        } else {
+            // Si el filtro ya era "Todas", no es necesario hacer nada.
+            // O, si el spinner está vacío y `currentSelectedCategoryFilter` es "Todas" por defecto,
+            // pero `availableCategories` no contiene "Todas", podría entrar aquí.
+            // Si el objetivo es solo re-filtrar si el spinner se vacía y luego se repuebla:
+            // observeProducts() // Descomentar si se quiere forzar un re-filtrado.
+        }
+    }
+
     private fun setupRecyclerView() {
         productsRecyclerView = findViewById(R.id.productsRecyclerView)
         productsAdapter = ProductsAdapter(this)
@@ -183,12 +330,111 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
 
     private fun observeProducts() {
         lifecycleScope.launch {
-            productDao.getAllProducts().collectLatest { productList ->
-                val productsWithQuantities = productList.map { product ->
-                    Pair(product, quantities.getOrDefault(product.id, 0))
+            Log.d(TAG, "observeProducts: Iniciando. Filtro actual: $currentSelectedCategoryFilter")
+            try {
+                productDao.getAllProducts().collectLatest { productList ->
+                    Log.d(TAG, "observeProducts: Recibida lista completa del DAO. Tamaño: ${productList.size}")
+
+                    // Paso 1: Actualizar las categorías del spinner con la lista completa de productos
+                    updateSpinnerCategories(productList)
+
+                    // Paso 2: Manejar lista vacía del DAO
+                    if (productList.isEmpty()) {
+                        Log.w(TAG, "observeProducts: La lista de productos del DAO está VACÍA.")
+                        productsAdapter.submitList(emptyList())
+                        return@collectLatest
+                    }
+
+                    // Paso 3: Filtrar la lista de productos según el filtro del spinner
+                    val itemsToProcess: List<Product>
+                    if (currentSelectedCategoryFilter == "Todas" || currentSelectedCategoryFilter.isBlank()) {
+                        itemsToProcess = productList // Mostrar todos si el filtro es "Todas" o vacío
+                        Log.d(TAG, "observeProducts: Filtro es 'Todas' o vacío. Procesando todos los ${productList.size} productos.")
+                    } else {
+                        itemsToProcess = productList.filter {
+                            (it.category.takeIf { cat -> cat.isNotBlank() } ?: "Sin Categoría") == currentSelectedCategoryFilter
+                        }
+                        Log.d(TAG, "observeProducts: Aplicando filtro para categoría '$currentSelectedCategoryFilter'. Productos después del filtro: ${itemsToProcess.size}")
+                    }
+
+                    // Paso 4: Si después de filtrar no hay productos, actualizar el adaptador y salir
+                    if (itemsToProcess.isEmpty()) {
+                        Log.d(TAG, "observeProducts: No hay productos para mostrar después de aplicar el filtro '$currentSelectedCategoryFilter'.")
+                        productsAdapter.submitList(emptyList())
+                        return@collectLatest
+                    }
+
+                    // Paso 5: Agrupar los productos filtrados (itemsToProcess) por su categoría real
+                    val finalGroupedItems = mutableListOf<GroupedItem>()
+                    val groupedByCategory = itemsToProcess
+                        .groupBy { it.category.takeIf { cat -> cat.isNotBlank() } ?: "Sin Categoría" }
+                        .toSortedMap() // Ordenar las categorías alfabéticamente
+
+                    Log.d(TAG, "observeProducts: Productos (después de filtro) agrupados por categoría. Número de grupos: ${groupedByCategory.size}")
+
+                    for ((category, productsInCategory) in groupedByCategory) {
+                        // Solo añadir el header si el filtro es "Todas" o si la categoría actual coincide con el filtro.
+                        // Si el filtro es específico, solo habrá una categoría en groupedByCategory.
+                        finalGroupedItems.add(GroupedItem.Header(category))
+                        Log.d(TAG, "observeProducts: Agregando Header para categoría: '$category'")
+
+                        productsInCategory.sortedBy { it.name }.forEach { product -> // Ordenar productos dentro de cada categoría
+                            val quantity = quantities.getOrDefault(product.id, 0)
+                            finalGroupedItems.add(GroupedItem.ProductItem(product, quantity))
+                            Log.d(TAG, "observeProducts: Agregando Producto: '${product.name}', Cantidad: $quantity, Categoría (original): '${product.category}' a grupo '$category'")
+                        }
+                    }
+
+                    // Paso 6: Enviar la lista final agrupada y filtrada al adaptador
+                    productsAdapter.submitList(finalGroupedItems)
+                    Log.d(TAG, "observeProducts: Lista final de GroupedItems enviada al adaptador (Filtro: '$currentSelectedCategoryFilter'). Tamaño: ${finalGroupedItems.size}")
+
+                    if (finalGroupedItems.isEmpty() && productList.isNotEmpty() && (currentSelectedCategoryFilter == "Todas" || currentSelectedCategoryFilter.isBlank())) {
+                        // Esta condición solo debería ser preocupante si se esperaban todos los productos
+                        // y aún así la lista agrupada está vacía.
+                        Log.e(TAG, "observeProducts: ALERTA - productList original no estaba vacía y el filtro era 'Todas', pero finalGroupedItems SÍ lo está. Revisa la lógica de agrupación.")
+                    }
                 }
-                productsAdapter.submitList(productsWithQuantities)
+            } catch (e: Exception) {
+                Log.e(TAG, "observeProducts: Error catastrófico durante la observación o agrupación.", e)
+                productsAdapter.submitList(emptyList()) // Limpiar UI en caso de error grave
+                // Considerar resetear el spinner a un estado seguro también
+                availableCategories.clear()
+                availableCategories.add("Todas")
+                categoriesAdapter.notifyDataSetChanged()
+                currentSelectedCategoryFilter = "Todas"
+                if (availableCategories.isNotEmpty()) categoryFilterSpinner.setSelection(0, false)
             }
+        }
+    }
+
+
+    private fun updateSpinnerCategories(productList: List<Product>) {
+        val newCategories = mutableListOf("Todas") // Siempre tener "Todas"
+        val distinctProductCategories = productList
+            .mapNotNull { it.category.takeIf { cat -> cat.isNotBlank() } } // Ignorar categorías vacías/nulas
+            .distinct() // Obtener categorías únicas
+            .sorted()   // Ordenarlas alfabéticamente
+        newCategories.addAll(distinctProductCategories)
+
+        // Solo actualizar si la lista de categorías ha cambiado realmente
+        if (availableCategories != newCategories) {
+            val previousSelection = currentSelectedCategoryFilter // Guardar la selección actual
+            availableCategories.clear()
+            availableCategories.addAll(newCategories)
+            categoriesAdapter.notifyDataSetChanged() // Notificar al adaptador del cambio
+
+            // Intentar restaurar la selección previa si aún existe, sino, seleccionar "Todas"
+            val newPosition = availableCategories.indexOf(previousSelection)
+            if (newPosition != -1) {
+                categoryFilterSpinner.setSelection(newPosition, false) // false para no disparar onItemSelected
+            } else {
+                currentSelectedCategoryFilter = "Todas" // Resetear filtro si la categoría anterior desapareció
+                val todasPosition = availableCategories.indexOf("Todas")
+                if (todasPosition != -1) categoryFilterSpinner.setSelection(todasPosition, false)
+                else if (availableCategories.isNotEmpty()) categoryFilterSpinner.setSelection(0, false) // Fallback al primer item
+            }
+            Log.d(TAG, "Categorías del Spinner actualizadas: $availableCategories. Selección actual: $currentSelectedCategoryFilter")
         }
     }
 
@@ -252,22 +498,42 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
     private fun limpiarCantidades() {
         quantities.clear()
         editTextMesa.text.clear()
-        observeProducts()
+        currentSelectedCategoryFilter = "Todas"
+
+        val todasPosition = availableCategories.indexOf("Todas")
+        if (todasPosition != -1) {
+            categoryFilterSpinner.setSelection(todasPosition) // Esto disparará onItemSelected y observeProducts
+        } else if (availableCategories.isNotEmpty()) {
+            categoryFilterSpinner.setSelection(0)
+        } else {
+            observeProducts() // Si no hay "Todas" y el spinner está vacío, solo re-observar.
+        }
         ocultarResumen()
         Toast.makeText(this, "Cantidades restablecidas a 0", Toast.LENGTH_SHORT).show()
     }
 
-    private fun obtenerProductosDesdeInputs(): List<Producto> {
+
+    private fun obtenerProductosDesdeInputs(): List<Producto> { // Asumo que Producto aquí es tu data class para el ticket
         val listaDeProductos = mutableListOf<Producto>()
-        productsAdapter.currentList.forEach { pair ->
-            val product = pair.first
-            val quantity = pair.second
-            if (quantity > 0) {
-                listaDeProductos.add(Producto(product.name, product.price, quantity))
+        productsAdapter.currentList.forEach { groupedItem ->
+            if (groupedItem is GroupedItem.ProductItem) {
+                val productEntity = groupedItem.product // Este es tu @Entity Product
+                val quantity = quantities.getOrDefault(productEntity.id, 0)
+
+                if (quantity > 0) {
+                    listaDeProductos.add(
+                        Producto( // Esta es la data class para el ticket
+                            nombre = productEntity.name,
+                            precio = productEntity.price,
+                            cantidad = quantity
+                        )
+                    )
+                }
             }
         }
         return listaDeProductos
     }
+
 
     private fun generarTextoTicket(): String {
         val fechaHora = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
@@ -281,7 +547,13 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
 
         val mesaInfo = editTextMesa.text.toString().trim()
         if (mesaInfo.isNotEmpty()) {
-            sb.appendLine(String.format("%-32s", "PARA: ${mesaInfo.uppercase()}"))
+            sb.appendLine(String.format("%-32s", "Mesa: ${mesaInfo.uppercase()}"))
+            sb.appendLine("********************************")
+        }
+        if (noCuenta.isChecked) {
+            sb.appendLine(String.format("%-32s", "4027 6657 8599 1515"))
+            sb.appendLine(String.format("%-32s", "Nombre: Omar Aldair"))
+            sb.appendLine(String.format("%-32s", "Banco: Azteca"))
             sb.appendLine("********************************")
         }
         val lineaSeparadoraCorta = "-".repeat(anchoTotalLinea)
@@ -380,7 +652,7 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
     private fun checkBluetoothPermissions(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED
         } else {
             true
         }
@@ -392,7 +664,7 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
             try {
                 val pairedDevices = bluetoothAdapter?.bondedDevices
                 val printer = pairedDevices?.find { it.name.contains(PRINTER_NAME_BLUETOOTH, ignoreCase = true) }
-                
+
                 if (printer != null) {
                     val socket = printer.createRfcommSocketToServiceRecord(PRINTER_UUID)
                     socket.connect()
@@ -414,7 +686,7 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
             try {
                 closeBluetoothSocket()
                 bluetoothSocket = connectToBluetoothPrinter()
-                
+
                 bluetoothSocket?.let { socket ->
                     val outputStream = socket.outputStream
                     outputStream.write(textoTicket.toByteArray(StandardCharsets.ISO_8859_1))
@@ -455,11 +727,11 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         try {
             usbDevice = device
             usbDeviceConnection = usbManager.openDevice(device)
-            
+
             if (device.interfaceCount > 0) {
                 usbInterface = device.getInterface(0)
                 usbDeviceConnection?.claimInterface(usbInterface, true)
-                
+
                 for (i in 0 until usbInterface!!.endpointCount) {
                     val endpoint = usbInterface!!.getEndpoint(i)
                     if (endpoint.direction == UsbConstants.USB_DIR_OUT) {
@@ -510,7 +782,7 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
             val width = bitMatrix.width
             val height = bitMatrix.height
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-            
+
             for (x in 0 until width) {
                 for (y in 0 until height) {
                     bitmap.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
@@ -528,10 +800,10 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         val width = scaledBitmap.width
         val height = scaledBitmap.height
         val data = mutableListOf<Byte>()
-        
+
         // ESC/POS bitmap command
         data.addAll(byteArrayOf(0x1B, 0x2A, 0x00, (width / 8).toByte(), (height and 0xFF).toByte()).toList())
-        
+
         for (y in 0 until height) {
             for (x in 0 until width step 8) {
                 var byte = 0
@@ -547,7 +819,7 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
                 data.add(byte.toByte())
             }
         }
-        
+
         return data.toByteArray()
     }
 

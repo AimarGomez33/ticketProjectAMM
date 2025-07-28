@@ -1,5 +1,3 @@
-# En el archivo: gradle/libs.versions.toml
-
 [versions]
 # Versiones principales de tu proyecto
 agp = "8.10.1"
@@ -12,6 +10,7 @@ appcompat = "1.6.1"
 material = "1.12.0"
 room = "2.6.1"
 zxing = "4.3.0"
+lifecycle = "2.7.0" # ✅ NUEVO
 
 # Testing
 junit = "4.13.2"
@@ -19,7 +18,6 @@ androidxJunit = "1.1.5"
 espressoCore = "3.5.1"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
-
 
 [libraries]
 # AndroidX Core & Appcompat
@@ -32,6 +30,10 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
+# Lifecycle ✅ NUEVOS
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
+
 # QR Code (ZXing)
 zxing-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxing" }
 
@@ -41,7 +43,6 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "a
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

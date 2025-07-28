@@ -73,5 +73,44 @@
     <string name="increment_postres30">Aumentar cantidad de Postres 30</string>
     <string name="increment_postres35">Aumentar cantidad de Postres 35</string>
 
+
+        <string name="placeholder_select_category">Seleccionar categoría</string>
+        <string name="no_categories_available">No hay categorías disponibles</string>
+        <string name="error_loading_categories">Error al cargar categorías</string>
+
+        <string name="dialog_title_add_product">Añadir Producto</string>
+        <string name="hint_product_name">Nombre del producto</string>
+        <string name="hint_price">Precio</string>
+        <string name="label_existing_category">Categoría Existente:</string>
+        <string name="label_or_create_new_category">O Crear Nueva Categoría:</string>
+        <string name="hint_new_category_name">Nombre de la nueva categoría</string>
+        <string name="button_add">Añadir</string>
+        <string name="button_cancel">Cancelar</string>
+        <string name="button_save">Guardar</string>
+        <string name="button_delete">Eliminar</string>
+
+        <string name="toast_category_required">Debes seleccionar o crear una categoría.</string>
+        <string name="toast_product_name_empty">El nombre del producto no puede estar vacío.</string>
+        <string name="toast_product_name_too_long">El nombre del producto es demasiado largo (máx 50).</string>
+        <string name="toast_invalid_price">El precio no es válido.</string>
+        <string name="toast_price_out_of_range">El precio debe estar entre %1$.2f y %2$.2f.</string>
+        <string name="toast_product_added">Producto \'%1$s\' añadido a \'%2$s\'</string>
+        <string name="toast_error_adding_product">Error al añadir producto</string>
+
+        <string name="dialog_title_edit_product">Editar Producto: %1$s</string>
+        <string name="label_or_change_to_new_category">O Cambiar a Nueva Categoría:</string>
+        <string name="toast_category_empty_kept_original">La categoría no puede estar vacía. Se mantuvo la original.</string>
+        <string name="toast_invalid_data_name_price">Datos inválidos (nombre, precio).</string>
+        <string name="toast_product_updated">Producto actualizado</string>
+        <string name="toast_error_updating_product">Error al actualizar producto</string>
+
+        <string name="dialog_title_delete_product">Eliminar Producto</string>
+        <string name="dialog_message_delete_product">¿Estás seguro de que quieres eliminar \"%1$s\" de la categoría \"%2$s\"?</string>
+        <string name="toast_product_deleted">Producto eliminado</string>
+        <string name="toast_error_deleting_product">Error al eliminar producto</string>
+        <string name="error_initializing_screen">Error inicializando pantalla</string>
+
+
+
     <string name="qr_code_image">Código QR del ticket</string>
 </resources>

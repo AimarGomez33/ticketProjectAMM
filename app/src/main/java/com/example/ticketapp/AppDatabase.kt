@@ -10,9 +10,10 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [Product::class],
-    version = 1,
-    exportSchema = false
+    version = 2, // subir versión a 2
+    exportSchema = true
 )
+
 abstract class AppDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
 
@@ -27,6 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "ticket_database"
                 )
+                    .fallbackToDestructiveMigration() // ✅ destruye y recrea base si hay cambios
                     .addCallback(DatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
@@ -46,26 +48,20 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         suspend fun populateDatabase(productDao: ProductDao) {
-            // Delete all content here.
             productDao.deleteAll()
 
-            // Add sample products
-            val products = listOf(
-                Product(name = "Tacos de Pastor", price = 3.50),
-                Product(name = "Quesadillas", price = 4.00),
-                Product(name = "Tortas", price = 5.50),
-                Product(name = "Agua Fresca", price = 2.00),
-                Product(name = "Refresco", price = 2.50),
-                Product(name = "Cerveza", price = 3.00),
-                Product(name = "Nachos", price = 4.50),
-                Product(name = "Guacamole", price = 3.00),
-                Product(name = "Elote", price = 2.50),
-                Product(name = "Churros", price = 3.50)
-            )
-
-            products.forEach { product ->
-                productDao.insert(product)
-            }
+            var product = Product(name = "Chalupas", price = 5.0, category = "Platillos Principales")
+            productDao.insert(product)
+            product = Product(name = "Pambazos Naturales", price = 34.0, category = "Pambazos")
+            productDao.insert(product)
+            product = Product(name = "Guajoloyet Natural", price = 55.0, category = "Guajoloyets")
+            productDao.insert(product)
+            product = Product(name = "Alones", price = 25.0, category = "Entradas")
+            productDao.insert(product)
+            product = Product(name = "Refrescos", price = 25.0, category = "Bebidas")
+            productDao.insert(product)
+            product = Product(name = "Postres 30", price = 30.0, category = "Postres y extras")
+            productDao.insert(product)
         }
     }
 }

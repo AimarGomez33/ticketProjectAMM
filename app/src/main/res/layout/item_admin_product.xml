@@ -44,8 +44,9 @@
             style="?attr/materialIconButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             app:icon="@android:drawable/ic_menu_delete"
-            app:iconTint="@android:color/holo_red_dark"
+            app:iconTint="@android:color/background_light"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -56,9 +57,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@android:drawable/ic_menu_edit"
+            app:iconTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/deleteButton"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -17,6 +17,12 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas"]
+            }
+        }
+
     }
 
     buildTypes {
@@ -24,6 +30,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        // El bloque ksp no debe estar directamente dentro de buildTypes
+        // a menos que sea para una configuración específica de un buildType,
+        // lo cual no es el caso típico para room.schemaLocation.
     }
 
     compileOptions {
@@ -36,24 +45,38 @@ android {
     }
 }
 
+// Coloca el bloque ksp aquí, fuera del bloque android
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 dependencies {
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
-    implementation libs.google.material // Solo una dependencia de Material
+    implementation libs.google.material // ✅ DEJA solo esta
 
-    // Dependencias de Room (Base de Datos)
+    // Room
     implementation libs.androidx.room.runtime
     implementation libs.androidx.room.ktx
-    implementation libs.androidx.activity
-    implementation libs.androidx.constraintlayout
     ksp libs.androidx.room.compiler
 
-    // QR Code (ZXing)
-    implementation libs.zxing.embedded
-    // Nota: zxing-android-embedded ya incluye 'com.google.zxing:core', no necesitas añadirla por separado.
+    // Lifecycle
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.7.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.7.0"
 
-    // Testing
+    implementation libs.androidx.activity
+    implementation libs.androidx.constraintlayout
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+
+    // QR
+    implementation libs.zxing.embedded
+
+    // Test
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
 }
+

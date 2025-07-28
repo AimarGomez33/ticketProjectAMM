@@ -9,25 +9,59 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
+sealed class GroupedItem {
+    data class Header(val category: String) : GroupedItem()
+    data class ProductItem(val product: Product, val quantity: Int) : GroupedItem()
+}
+
 class ProductsAdapter(
     private val listener: ProductClickListener
-) : ListAdapter<Pair<Product, Int>, ProductsAdapter.ProductViewHolder>(ProductDiffCallback()) {
+) : ListAdapter<GroupedItem, RecyclerView.ViewHolder>(GroupedDiffCallback()) {
 
-    // Interfaz para comunicar los clics a la MainActivity
     interface ProductClickListener {
         fun onQuantityChanged(product: Product, change: Int)
         fun onEditPriceClicked(product: Product)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_product, parent, false)
-        return ProductViewHolder(view)
+    companion object {
+        private const val TYPE_HEADER = 0
+        private const val TYPE_PRODUCT = 1
     }
 
-    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val (product, quantity) = getItem(position)
-        holder.bind(product, quantity, listener)
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is GroupedItem.Header -> TYPE_HEADER
+            is GroupedItem.ProductItem -> TYPE_PRODUCT
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            TYPE_HEADER -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_category_header, parent, false)
+                HeaderViewHolder(view)
+            }
+            else -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_product, parent, false)
+                ProductViewHolder(view)
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (val item = getItem(position)) {
+            is GroupedItem.Header -> (holder as HeaderViewHolder).bind(item)
+            is GroupedItem.ProductItem -> (holder as ProductViewHolder).bind(item.product, item.quantity, listener)
+        }
+    }
+
+    class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val headerText: TextView = itemView.findViewById(R.id.headerText)
+        fun bind(item: GroupedItem.Header) {
+            headerText.text = item.category
+        }
     }
 
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -56,12 +90,12 @@ class ProductsAdapter(
         }
     }
 
-    class ProductDiffCallback : DiffUtil.ItemCallback<Pair<Product, Int>>() {
-        override fun areItemsTheSame(oldItem: Pair<Product, Int>, newItem: Pair<Product, Int>): Boolean {
-            return oldItem.first.id == newItem.first.id
+    class GroupedDiffCallback : DiffUtil.ItemCallback<GroupedItem>() {
+        override fun areItemsTheSame(oldItem: GroupedItem, newItem: GroupedItem): Boolean {
+            return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: Pair<Product, Int>, newItem: Pair<Product, Int>): Boolean {
+        override fun areContentsTheSame(oldItem: GroupedItem, newItem: GroupedItem): Boolean {
             return oldItem == newItem
         }
     }

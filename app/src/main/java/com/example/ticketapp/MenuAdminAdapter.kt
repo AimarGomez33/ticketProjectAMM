@@ -38,7 +38,7 @@ class MenuAdminAdapter(
 
         fun bind(product: Product, listener: AdminProductClickListener) {
             nameTextView.text = product.name
-            priceTextView.text = "$${"%.2f".format(product.price)}"
+            priceTextView.text = String.format("$%.2f", product.price)
 
             editButton.setOnClickListener { listener.onEditClicked(product) }
             deleteButton.setOnClickListener { listener.onDeleteClicked(product) }

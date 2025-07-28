@@ -2,36 +2,67 @@
 <resources>
 
         <!-- Paleta Principal -->
-        <color name="verde_bosque">#0A400C</color>
-        <color name="verde_oliva_salvia">#819067</color>
-        <color name="beige_arena">#B1AB86</color>
-        <color name="blanco_hueso">#FEFAE0</color>
+        <color name="Grey">#819A91</color>
+        <color name="Grayish_lime">#A7C1A8</color>
+        <color name="Grayish_green">#D1D8BE</color>
+        <color name="Light_grayish">#EEEFE0</color>
 
         <!-- Colores base para el tema (pueden ser los mismos de arriba o derivaciones) -->
-        <color name="app_primary">@color/verde_bosque</color>
-        <color name="app_primary_variant">@color/verde_bosque</color> <!-- O un tono ligeramente más oscuro si se desea -->
-        <color name="app_on_primary">@color/blanco_hueso</color>
+        <color name="app_primary">@color/Grey</color>
+        <color name="app_primary_variant">@color/Grey</color> <!-- O un tono ligeramente más oscuro si se desea -->
+        <color name="app_on_primary">@color/Grey</color>
 
-        <color name="app_secondary">@color/verde_oliva_salvia</color>
-        <color name="app_secondary_variant">@color/verde_oliva_salvia</color>
-        <color name="app_on_secondary">@color/blanco_hueso</color>
+        <color name="app_secondary">@color/Grayish_lime</color>
+        <color name="app_secondary_variant">@color/Grayish_lime</color>
+        <color name="app_on_secondary">@color/Grayish_lime</color>
 
-        <color name="app_background">@color/blanco_hueso</color>
-        <color name="app_surface">@color/blanco_hueso</color> <!-- Mismo que el fondo inicialmente -->
-        <color name="app_on_background">@color/verde_bosque</color>
-        <color name="app_on_surface">@color/verde_bosque</color>
+        <color name="app_background">@color/Light_grayish</color>
+        <color name="app_surface">@color/Light_grayish</color> <!-- Mismo que el fondo inicialmente -->
+        <color name="app_on_background">@color/Grayish_lime</color>
+        <color name="app_on_surface">@color/Grayish_lime</color>
 
         <color name="app_error">#B00020</color>
         <color name="app_on_error">#FFFFFF</color>
 
         <!-- Colores específicos que ya tenías y que podrías querer remapear o mantener -->
-        <color name="card_background">@color/app_surface</color> <!-- Las tarjetas usarán el color de superficie del tema -->
-        <color name="text_primary">@color/app_on_surface</color> <!-- Texto primario general, ahora verde oscuro sobre blanco hueso -->
-        <color name="text_secondary">@color/verde_oliva_salvia</color> <!-- Texto secundario, un tono más suave -->
+        <color name="card_background">@color/Grayish_green</color> <!-- Las tarjetas usarán el color de superficie del tema -->
+        <color name="text_primary">@color/Grayish_lime</color> <!-- Texto primario general, ahora verde oscuro sobre blanco hueso -->
+        <color name="text_secondary">@color/Grey</color> <!-- Texto secundario, un tono más suave -->
 
-        <!-- Colores estándar que siempre son útiles -->
-        <color name="black">#FF000000</color>
-        <color name="white">#FFFFFFFF</color>
+
+
+
+        <!-- Paleta de colores Dark mode -->
+        <color name="night_grey">#819A91</color>
+        <color name="night_grayish_lime">#A7C1A8</color>
+        <color name="night_grayish_green">#D1D8BE</color>
+        <color name="night_light_grayish">#303030</color> <!-- Dark background for night -->
+        <color name="night_text_primary">#E0E0E0</color> <!-- Light text for dark background -->
+        <color name="night_text_secondary">#BDBDBD</color> <!-- Slightly dimmer light text -->
+        <color name="white">#FFFFFF</color>
+        <color name="black">#000000</color>
+
+        <!-- Semantic Colors for Night Theme -->
+
+        <!-- Primary Colors -->
+        <color name="app_primary_night">@color/night_grayish_lime</color>
+        <color name="app_primary_variant_night">@color/night_grey</color>
+        <color name="app_on_primary_night">@color/black</color>
+
+        <!-- Secondary Colors -->
+        <color name="app_secondary_night">@color/night_grayish_green</color>
+        <color name="app_secondary_variant_night">@color/night_grayish_lime</color>
+        <color name="app_on_secondary_night">@color/black</color>
+
+        <!-- UI Colors -->
+        <color name="app_background_night">@color/night_light_grayish</color>
+        <color name="app_surface_night">#424242</color>
+        <color name="app_on_background_night">@color/night_text_primary</color>
+        <color name="app_on_surface_night">@color/night_text_primary</color>
+
+        <!-- Error Colors -->
+        <color name="app_error_night">#CF6679</color>
+        <color name="app_on_error_night">@color/white</color>
 
 
 
