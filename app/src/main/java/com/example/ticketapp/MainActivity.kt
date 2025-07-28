@@ -23,6 +23,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
@@ -322,11 +323,35 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         }
     }
 
+    // En MainActivity.kt
     private fun setupRecyclerView() {
         productsRecyclerView = findViewById(R.id.productsRecyclerView)
         productsAdapter = ProductsAdapter(this)
         productsRecyclerView.adapter = productsAdapter
+
+        val layoutManager = productsRecyclerView.layoutManager // Obtén el layout manager definido en XML
+        if (layoutManager is GridLayoutManager) {
+            // Ahora puedes acceder a ProductsAdapter.TYPE_HEADER y ProductsAdapter.TYPE_PRODUCT
+            // porque los hiciste 'internal' en ProductsAdapter.kt
+            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    // Protección contra acceso fuera de límites si la lista está vacía o la posición no es válida
+                    if (productsAdapter.currentList.isEmpty() || position < 0 || position >= productsAdapter.currentList.size) {
+                        return 1 // Fallback a 1 span
+                    }
+                    return when (productsAdapter.getItemViewType(position)) {
+                        ProductsAdapter.TYPE_HEADER -> layoutManager.spanCount // El encabezado ocupa todos los spans
+                        ProductsAdapter.TYPE_PRODUCT -> 1 // El producto ocupa 1 span
+                        else -> 1 // Default a 1 span
+                    }
+                }
+            }
+        } else {
+            // Opcional: Log si no es un GridLayoutManager, aunque tu XML lo define así.
+            Log.w(TAG, "El LayoutManager de productsRecyclerView no es GridLayoutManager. SpanSizeLookup no se aplicará.")
+        }
     }
+
 
     private fun observeProducts() {
         lifecycleScope.launch {
@@ -552,7 +577,7 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         }
         if (noCuenta.isChecked) {
             sb.appendLine(String.format("%-32s", "4027 6657 8599 1515"))
-            sb.appendLine(String.format("%-32s", "Nombre: Omar Aldair"))
+            sb.appendLine(String.format("%-32s", "Nombre: Omar Gomez"))
             sb.appendLine(String.format("%-32s", "Banco: Azteca"))
             sb.appendLine("********************************")
         }

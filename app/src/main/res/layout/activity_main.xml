@@ -30,15 +30,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            style="@style/CardView">
+            style="@style/CardView"
+            android:textColorHint="@color/app_primary">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editMesa"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="match_parent"
                 android:hint="Mesa / Cliente (Opcional)"
+                android:imeOptions="actionDone"
                 android:inputType="textCapWords"
-                android:imeOptions="actionDone" />
+                android:textColor="@color/Grey"
+                android:textColorHint="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <CheckBox
