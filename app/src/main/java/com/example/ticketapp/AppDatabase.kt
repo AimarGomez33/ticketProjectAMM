@@ -7,10 +7,14 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import com.example.ticketapp.OrderEntity
+
+
+
 
 @Database(
-    entities = [Product::class],
-    version = 2, // subir versión a 2
+    entities  = [Product::class, OrderEntity::class, OrderItemEntity::class],
+    version = 3,
     exportSchema = true
 )
 

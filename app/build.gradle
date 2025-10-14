@@ -1,28 +1,24 @@
-// En el archivo: app/build.gradle
+// Corrected app/build.gradle file
 
 plugins {
+    // We keep the aliases which are correctly configured.
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.google.ksp) // Usa el alias limpio del TOML
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp) // KSP is the correct plugin to use
 }
 
 android {
     namespace "com.example.ticketapp"
-    compileSdk 35
+    compileSdkVersion 34
 
     defaultConfig {
         applicationId "com.example.ticketapp"
         minSdk 24
-        targetSdk 34
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas"]
-            }
-        }
-
     }
 
     buildTypes {
@@ -30,53 +26,57 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        // El bloque ksp no debe estar directamente dentro de buildTypes
-        // a menos que sea para una configuración específica de un buildType,
-        // lo cual no es el caso típico para room.schemaLocation.
+    }
+
+    buildFeatures {
+        // This is necessary for Jetpack Compose to work
+        compose true
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
         jvmTarget = '1.8'
     }
-}
 
-// Coloca el bloque ksp aquí, fuera del bloque android
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
+    // ✅ CORRECCIÓN: Se han eliminado los bloques 'composeOptions' duplicados e incorrectos.
+    // El nuevo plugin del compilador de Compose lo gestiona automáticamente con Kotlin 2.0.
 }
 
 dependencies {
-    implementation libs.androidx.core.ktx
-    implementation libs.androidx.appcompat
-    implementation libs.google.material // ✅ DEJA solo esta
+    // Core dependencies
+    implementation 'androidx.core:core-ktx:1.13.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.activity:activity-ktx:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "androidx.recyclerview:recyclerview:1.3.2"
 
-    // Room
+    // ✅ CORRECCIÓN: Room - Limpio y sin duplicados
+    // Usar el alias del catálogo de versiones para mantener la consistencia
     implementation libs.androidx.room.runtime
     implementation libs.androidx.room.ktx
-    ksp libs.androidx.room.compiler
+    ksp libs.androidx.room.compiler // Usar KSP para el compilador
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.7.0"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.7.0"
 
-    implementation libs.androidx.activity
-    implementation libs.androidx.constraintlayout
+    // Jetpack Compose
+    implementation "androidx.compose.ui:ui:1.6.0"
+    implementation "androidx.compose.material:material:1.6.0"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.6.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0"
+    implementation "androidx.activity:activity-compose:1.8.0"
 
-    // Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+    // ✅ CORRECCIÓN: Se eliminaron las dependencias de Room duplicadas
 
-    // QR
-    implementation libs.zxing.embedded
-
-    // Test
-    testImplementation libs.junit
-    androidTestImplementation libs.androidx.junit
-    androidTestImplementation libs.androidx.espresso.core
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
-

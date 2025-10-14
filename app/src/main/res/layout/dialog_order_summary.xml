@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout personalizado para mostrar el resumen de un pedido en un diálogo.
+    Esta vista emplea la misma paleta de colores que el resto de la aplicación
+    y utiliza componentes de Material Design para mantener coherencia visual.
+
+    Contiene etiquetas para mostrar la hora del pedido, el detalle de los
+    productos (con cantidades y totales) y el total general de la orden.
+    Un botón Material al final permite cerrar el diálogo.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/card_background">
+
+    <!-- Encabezado del cuadro de diálogo. Se muestra el título "Resumen del pedido" con un
+         color de fondo diferenciado para destacar el encabezado. El color de fondo utiliza
+         Grayish_green de la paleta y el texto es claro para un buen contraste. -->
+    <TextView
+            android:id="@+id/tvDialogHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:gravity="center"
+            android:text="Resumen del pedido"
+            android:textColor="@color/Light_grayish"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:background="@color/Grayish_green"
+            app:cornerRadius="20dp" />
+
+    <!-- Hora del pedido -->
+    <TextView
+            android:id="@+id/tvDialogHora"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hora: 00:00"
+            android:textSize="18sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp" />
+
+    <!-- Separador -->
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/Grey" />
+
+    <!-- Detalle de los items vendidos -->
+    <TextView
+            android:id="@+id/tvDialogItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1 x Producto ... $0.00"
+            android:textSize="16sp"
+            android:textColor="@color/text_secondary" />
+
+    <!-- Separador -->
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/Grey" />
+
+    <!-- Total general del pedido -->
+    <TextView
+            android:id="@+id/tvDialogTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total: $0.00"
+            android:textSize="18sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold" />
+
+    <!-- Botón para cerrar el diálogo -->
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCloseDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center"
+            android:text="Cerrar"
+            android:textSize="14sp"
+            android:textColor="@color/Grayish_lime"
+            app:iconPadding="0dp"
+            app:backgroundTint="@color/Grayish_green"
+            app:cornerRadius="24dp" />
+
+</LinearLayout>

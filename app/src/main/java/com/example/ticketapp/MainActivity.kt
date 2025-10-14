@@ -2,7 +2,6 @@ package com.example.ticketapp
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.app.PendingIntent
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -15,20 +14,23 @@ import android.graphics.Color
 import android.hardware.usb.*
 import android.os.Build
 import android.os.Bundle
-import android.text.InputType
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.GridLayout // <<-- AÑADIDO: Importación necesaria
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.qrcode.QRCodeWriter
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -38,8 +40,34 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.nio.charset.StandardCharsets
 
-class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
+// Importación para mostrar diálogos
+import androidx.appcompat.app.AlertDialog
 
+
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.core.view.GravityCompat
+import com.google.android.material.button.MaterialButton
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.CheckBox
+import com.example.ticketapp.OrderDatabase
+import com.example.ticketapp.AppDatabase
+import com.example.ticketapp.AdminOrderAdapter
+
+
+
+
+import com.example.ticketapp.OrderEntity
+import com.example.ticketapp.OrderItemEntity
+import com.example.ticketapp.DailySummary
+import com.example.ticketapp.WeeklySummary
+import com.example.ticketapp.MonthlySummary
+
+
+class MainActivity : AppCompatActivity() {
+
+    // --- Constantes y variables de la clase (sin cambios) ---
     private companion object {
         private const val TAG = "MainActivity"
         private const val ACTION_USB_PERMISSION = "com.example.ticketapp.USB_PERMISSION"
@@ -47,58 +75,69 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         private val PRINTER_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
     }
 
-    // --- Vistas de la UI ---
     private lateinit var summaryContainer: View
     private lateinit var summaryTextView: TextView
     private lateinit var summaryTotalTextView: TextView
     private lateinit var btnCloseSummary: Button
+    private lateinit var orderDatabase: OrderDatabase
+    private lateinit var appDatabase: AppDatabase
+
+    private val products = mutableMapOf<String, ProductData>()
+    private val quantities = mutableMapOf<String, Int>()
+
     private lateinit var btnImprimir: Button
     private lateinit var btnEmparejar: Button
     private lateinit var btnLimpiar: Button
-    private lateinit var btnEditarPrecios: Button
-    private lateinit var btnAdministrarMenu: Button
     private lateinit var editTextMesa: EditText
-    private lateinit var imgQR: ImageView
     private lateinit var noCuenta: CheckBox
-    private lateinit var categoryFilterSpinner: android.widget.Spinner // <--- AÑADE ESTO
-    private lateinit var categoriesAdapter: ArrayAdapter<String> // Adaptador para el Spinner
-    private val availableCategories = mutableListOf<String>() // Lista para las categorías
-    private var currentSelectedCategoryFilter: String = "todas" // Lista para las categorías del Spinner
 
-    // --- Arquitectura Dinámica: Base de datos y RecyclerView ---
-    private lateinit var productsRecyclerView: RecyclerView
-    private lateinit var productsAdapter: ProductsAdapter
-    private val database by lazy { AppDatabase.getDatabase(this, lifecycleScope) }
-    private val productDao by lazy { database.productDao() }
 
-    // El mapa de cantidades ahora usa el ID (Int) del producto para mayor robustez
-    private val quantities = mutableMapOf<Int, Int>()
 
-    // Estado para el modo de edición de precios
+
     private var isEditMode = false
 
-    // --- Variables de Conectividad ---
     private lateinit var usbManager: UsbManager
     private var usbDevice: UsbDevice? = null
     private var usbDeviceConnection: UsbDeviceConnection? = null
     private var usbInterface: UsbInterface? = null
     private var usbEndpointOut: UsbEndpoint? = null
-    private val bluetoothManager: BluetoothManager by lazy { getSystemService(BLUETOOTH_SERVICE) as BluetoothManager }
-    private val bluetoothAdapter: BluetoothAdapter? by lazy { bluetoothManager.adapter }
+
+
+    private val bluetoothManager: BluetoothManager by lazy {
+        getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
+    }
+    private val bluetoothAdapter: BluetoothAdapter? by lazy {
+        bluetoothManager.adapter
+    }
     private var bluetoothSocket: BluetoothSocket? = null
 
-    // --- ActivityResultLaunchers para permisos ---
+    // --- Campos relacionados con la base de datos y la pantalla de administración ---
+
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var btnGananciaDiaria: MaterialButton
+    private lateinit var btnGananciaSemanal: MaterialButton
+    private lateinit var btnGananciaMensual: MaterialButton
+    private lateinit var adminSummaryTextView: TextView
+    private lateinit var recyclerViewOrders: RecyclerView
+    private lateinit var adminOrderAdapter: AdminOrderAdapter
+
     private val requestBluetoothPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val granted = permissions.entries.all { it.value }
-            if (!granted) {
+            if (granted) {
+                Log.d(TAG, "Permisos Bluetooth concedidos.")
+                Toast.makeText(this, "Permisos Bluetooth concedidos", Toast.LENGTH_SHORT).show()
+            } else {
+                Log.d(TAG, "Permisos Bluetooth denegados.")
                 Toast.makeText(this, "Se requieren permisos de Bluetooth para imprimir", Toast.LENGTH_LONG).show()
             }
         }
 
     private val enableBluetoothLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode != RESULT_OK) {
+            if (result.resultCode == RESULT_OK) {
+                Toast.makeText(this, "Bluetooth activado", Toast.LENGTH_SHORT).show()
+            } else {
                 Toast.makeText(this, "No se pudo activar Bluetooth", Toast.LENGTH_SHORT).show()
             }
         }
@@ -107,15 +146,14 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (ACTION_USB_PERMISSION == intent?.action) {
                 synchronized(this) {
-                    val device: UsbDevice? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
-                    } else {
-                        @Suppress("DEPRECATION")
-                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
-                    }
+                    val device: UsbDevice? = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-                        device?.let { setupUsbDevice(it) }
+                        if (device != null) {
+                            Log.d(TAG, "Permiso USB concedido para: ${device.deviceName}")
+                            setupUsbDevice(device)
+                        }
                     } else {
+                        Log.d(TAG, "Permiso USB denegado para: ${device?.deviceName}")
                         Toast.makeText(context, "Permiso USB denegado", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -123,18 +161,57 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         }
     }
 
+    fun View.rotateArrow(expanded: Boolean, duration: Long = 200L) {
+        animate()
+            .rotation(if (expanded) 180f else 0f)
+            .setDuration(duration)
+            .setInterpolator(AccelerateDecelerateInterpolator())
+            .start()
+    }
+
+    var isExpanded = false
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Inicialización de la base de datos y la interfaz de administración
+        appDatabase = AppDatabase.getDatabase(this, lifecycleScope)
+        drawerLayout = findViewById(R.id.drawerLayout)
+        btnGananciaDiaria = findViewById(R.id.btnGananciaDiaria)
+        btnGananciaSemanal = findViewById(R.id.btnGananciaSemanal)
+        btnGananciaMensual = findViewById(R.id.btnGananciaMensual)
+        adminSummaryTextView = findViewById(R.id.adminSummaryTextView)
+        recyclerViewOrders = findViewById(R.id.recyclerViewOrders)
+
+        // Configurar RecyclerView para listar pedidos con un layout lineal vertical
+        recyclerViewOrders.layoutManager = LinearLayoutManager(this)
+        adminOrderAdapter = AdminOrderAdapter(
+            mutableListOf<OrderEntity>(),
+            { orderId -> eliminarPedido(orderId) },
+            { order -> mostrarResumenPedido(order) }
+        )
+        recyclerViewOrders.adapter = adminOrderAdapter
+
+        // Asignar listeners para calcular ganancias
+        btnGananciaDiaria.setOnClickListener { generarGananciaDiaria() }
+        btnGananciaSemanal.setOnClickListener { generarGananciaSemanal() }
+        btnGananciaMensual.setOnClickListener { generarGananciaMensual() }
+
+        // Cargar pedidos existentes en la lista al arrancar
+        cargarPedidos()
+
         usbManager = getSystemService(USB_SERVICE) as UsbManager
 
-        // Configuración centralizada de la UI
-        setupViews()
-        setupRecyclerView()
-        observeProducts()
+        setupProductViews()
+        setupButtons()
 
-        // Registro de receivers y permisos
+        // --- INICIO DE CAMBIOS: Lógica para categorías plegables ---
+        setupCollapsibleCategories()
+        // --- FIN DE CAMBIOS ---
+
         val filter = IntentFilter(ACTION_USB_PERMISSION)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(usbReceiver, filter, RECEIVER_NOT_EXPORTED)
@@ -153,412 +230,458 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         closeBluetoothSocket()
     }
 
-    // --- Configuración de la Interfaz de Usuario ---
-    private fun setupViews() {
+    // --- Configuración de la UI (Vistas y Botones) ---
+    private fun setupProductViews() {
+        // ... (tu lista de products[...] se queda igual)
+        products["Quesadillas"] = ProductData(findViewById(R.id.cantidadQuesadillas), findViewById(R.id.btnMenosQuesadillas), findViewById(R.id.btnMasQuesadillas), 30.0)
+        products["Pozole Grande"] = ProductData(findViewById(R.id.cantidadPozoleGrande), findViewById(R.id.btnMenosPozoleGrande), findViewById(R.id.btnMasPozoleGrande), 110.0)
+        products["Pozole Chico"] = ProductData(findViewById(R.id.cantidadPozoleChico), findViewById(R.id.btnMenosPozoleChico), findViewById(R.id.btnMasPozoleChico), 90.0)
+        products["Tostadas"] = ProductData(findViewById(R.id.cantidadTostadas), findViewById(R.id.btnMenosTostadas), findViewById(R.id.btnMasTostadas), 35.0)
+        products["Volcanes"] = ProductData(findViewById(R.id.cantidadVolcanes), findViewById(R.id.btnMenosVolcanes), findViewById(R.id.btnMasVolcanes), 60.0)
+        products["Volcan Queso/Guisado Extra"] = ProductData(findViewById(R.id.cantidadGuajolotaExtra), findViewById(R.id.btnMenosGuajolotaExtra), findViewById(R.id.btnMasGuajolotaExtra), 72.0)
+        products["Guajoloyets Naturales"] = ProductData(findViewById(R.id.cantidadGuajoloyetNatural), findViewById(R.id.btnMenosGuajoloyetNatural), findViewById(R.id.btnMasGuajoloyetNatural), 60.0)
+        products["Guajoloyets Naturales Extra"] = ProductData(findViewById(R.id.cantidadGujoloyetNaturalExtra), findViewById(R.id.btnMenosGujoloyetNaturalExtra), findViewById(R.id.btnMasGujoloyetNaturalExtra), 72.0)
+        products["Guajoloyets Adobados"] = ProductData(findViewById(R.id.cantidadGuajoloyetAdobado), findViewById(R.id.btnMenosGuajoloyetAdobado), findViewById(R.id.btnMasGuajoloyetAdobado), 65.0)
+        products["Guajoloyets Adobados Extra"] = ProductData(findViewById(R.id.cantidadGujoloyetAdobadoExtra), findViewById(R.id.btnMenosGujoloyetAdobadoExtra), findViewById(R.id.btnMasGujoloyetAdobadoExtra), 77.0)
+        products["Pambazos Naturales"] = ProductData(findViewById(R.id.cantidadPambazosNaturales), findViewById(R.id.btnMenosPambazosNaturales), findViewById(R.id.btnMasPambazosNaturales), 35.0)
+        products["Pambazos Naturales Combinados"] = ProductData(findViewById(R.id.cantidadPambazosNaturalesCombinados), findViewById(R.id.btnMenosPambazosNaturalesCombinados), findViewById(R.id.btnMasPambazosNaturalesCombinados), 42.0)
+        products["Pambazos Naturales Combinados con Queso"] = ProductData(findViewById(R.id.cantidadPambazosNaturalesCombinadosQueso), findViewById(R.id.btnMenosPambazosNaturalesCombinadosQueso), findViewById(R.id.btnMasPambazosNaturalesCombinadosQueso), 54.0)
+        products["Pambazos Naturales Extra"] = ProductData(findViewById(R.id.cantidadPambazosNaturalesQueso), findViewById(R.id.btnMenosPambazosNaturalesQueso), findViewById(R.id.btnMasPambazosNaturalesQueso), 47.0)
+        products["Pambazos Adobados"] = ProductData(findViewById(R.id.cantidadPambazosAdobados), findViewById(R.id.btnMenosPambazosAdobados), findViewById(R.id.btnMasPambazosAdobados), 40.0)
+        products["Pambazos Adobados Combinados"] = ProductData(findViewById(R.id.cantidadPambazosAdobadosCombinados), findViewById(R.id.btnMenosPambazosAdobadosCombinados), findViewById(R.id.btnMasPambazosAdobadosCombinados), 47.0)
+        products["Pambazos Adobados Combinados con Queso"] = ProductData(findViewById(R.id.cantidadPambazosAdobadosCombinadosQueso), findViewById(R.id.btnMenosPambazosAdobadosCombinadosQueso), findViewById(R.id.btnMasPambazosAdobadosCombinadosQueso), 59.0)
+        products["Pambazos Adobados Extra"] = ProductData(findViewById(R.id.cantidadPambazosAdobadosExtra), findViewById(R.id.btnMenosPambazosAdobadosExtra), findViewById(R.id.btnMasPambazosAdobadosExtra), 52.0)
+        products["Chalupas"] = ProductData(findViewById(R.id.cantidadChalupas), findViewById(R.id.btnMenosChalupas), findViewById(R.id.btnMasChalupas), 5.0)
+        products["Alones"] = ProductData(findViewById(R.id.cantidadAlones), findViewById(R.id.btnMenosAlones), findViewById(R.id.btnMasAlones), 25.0)
+        products["Mollejas"] = ProductData(findViewById(R.id.cantidadMollejas), findViewById(R.id.btnMenosMollejas), findViewById(R.id.btnMasMollejas), 25.0)
+        products["Higados"] = ProductData(findViewById(R.id.cantidadHigados), findViewById(R.id.btnMenosHigados), findViewById(R.id.btnMasHigados), 22.0)
+        products["Patitas"] = ProductData(findViewById(R.id.cantidadPatitas), findViewById(R.id.btnMenosPatitas), findViewById(R.id.btnMasPatitas), 22.0)
+        products["Huevos"] = ProductData(findViewById(R.id.cantidadHuevos), findViewById(R.id.btnMenosHuevos), findViewById(R.id.btnMasHuevos), 20.0)
+        products["Refrescos"] = ProductData(findViewById(R.id.cantidadRefrescos), findViewById(R.id.btnMenosRefrescos), findViewById(R.id.btnMasRefrescos), 26.0)
+        products["Cafe"] = ProductData(findViewById(R.id.cantidadCafe), findViewById(R.id.btnMenosCafe), findViewById(R.id.btnMasCafe), 22.0)
+        //products["Agua Jamaica/Horchata"] = ProductData(findViewById(R.id.cantidadAguas), findViewById(R.id.btnMenosAguas), findViewById(R.id.btnMasAguas), 25.0)
+        products["Aguas de Sabor"] = ProductData(findViewById(R.id.cantidadAguasSabor), findViewById(R.id.btnMenosAguasSabor), findViewById(R.id.btnMasAguasSabor), 25.0)
+        products["Agua Natural"] = ProductData(findViewById(R.id.cantidadAguasNat), findViewById(R.id.btnMenosAguasNat), findViewById(R.id.btnMasAguasNat), 20.0)
+        products["Agua para Te"] = ProductData(findViewById(R.id.cantidadAguaTe), findViewById(R.id.btnMenosAguaTe), findViewById(R.id.btnMasAguaTe), 20.0)
+        products["Extra +5"] = ProductData(findViewById(R.id.cantidadExtra5), findViewById(R.id.btnMenosExtra5), findViewById(R.id.btnMasExtra5), 5.0)
+        products["Extra +10"] = ProductData(findViewById(R.id.cantidadExtra10), findViewById(R.id.btnMenosExtra10), findViewById(R.id.btnMasExtra10), 10.0)
+        products["Extra +12"] = ProductData(findViewById(R.id.cantidadExtra12), findViewById(R.id.btnMenosExtra12), findViewById(R.id.btnMasExtra12), 12.0)
+        products["Postres 20"] = ProductData(findViewById(R.id.cantidadPostres20), findViewById(R.id.btnMenosPostres20), findViewById(R.id.btnMasPostres20), 20.0)
+        products["Postres 25"] = ProductData(findViewById(R.id.cantidadPostres25), findViewById(R.id.btnMenosPostres25), findViewById(R.id.btnMasPostres25), 25.0)
+        products["Postres 30"] = ProductData(findViewById(R.id.cantidadPostres30), findViewById(R.id.btnMenosPostres30), findViewById(R.id.btnMasPostres30), 30.0)
+        products["Postres 35"] = ProductData(findViewById(R.id.cantidadPostres35), findViewById(R.id.btnMenosPostres35), findViewById(R.id.btnMasPostres35), 35.0)
+
+
+        products.forEach { (productName, productData) ->
+            quantities[productName] = 0
+            productData.btnMas.setOnClickListener {
+                updateQuantity(productName, 1)
+            }
+            productData.btnMenos.setOnClickListener {
+                updateQuantity(productName, -1)
+            }
+
+            if (productName == "Chalupas" && productData.cantidadTV is EditText) {
+                productData.cantidadTV.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                    override fun afterTextChanged(s: Editable?) {
+                        val currentQuantity = quantities[productName] ?: 0
+                        val newValue = s?.toString()?.toIntOrNull() ?: 0
+                        if (currentQuantity != newValue) {
+                            quantities[productName] = newValue
+                        }
+                    }
+                })
+            }
+        }
+    }
+
+    // --- INICIO DE CAMBIOS ---
+    private fun setupCollapsibleCategories() {
+        // Llama a la función de ayuda para cada categoría definida en el XML
+        setupCollapsibleView(
+            findViewById(R.id.headerPlatillos),
+            findViewById(R.id.gridPlatillos),
+            findViewById(R.id.arrowPlatillos)
+        )
+        setupCollapsibleView(
+            findViewById(R.id.headerPambazos),
+            findViewById(R.id.gridPambazos),
+            findViewById(R.id.arrowPambazos)
+        )
+        setupCollapsibleView(
+            findViewById(R.id.headerGuajoloyets),
+            findViewById(R.id.gridGuajoloyets),
+            findViewById(R.id.arrowGuajoloyets)
+        )
+        setupCollapsibleView(
+            findViewById(R.id.headerEntradas),
+            findViewById(R.id.gridEntradas),
+            findViewById(R.id.arrowEntradas)
+        )
+        setupCollapsibleView(
+            findViewById(R.id.headerBebidas),
+            findViewById(R.id.gridBebidas),
+            findViewById(R.id.arrowBebidas)
+        )
+        setupCollapsibleView(
+            findViewById(R.id.headerPostres),
+            findViewById(R.id.gridPostres),
+            findViewById(R.id.arrowPostres)
+        )
+    }
+
+    private fun setupCollapsibleView(header: View, content: View, arrow: ImageView) {
+        // Establece el listener en la cabecera
+        header.setOnClickListener {
+            // Determina si debe expandirse u ocultarse el contenido
+            val expand = content.visibility == View.GONE
+            // Cambia la visibilidad del contenido según corresponda
+            content.visibility = if (expand) View.VISIBLE else View.GONE
+            // Rota la flecha usando la función de extensión
+            arrow.rotateArrow(expand)
+        }
+    }
+    // --- FIN DE CAMBIOS ---
+
+    private fun setupButtons() {
         btnImprimir = findViewById(R.id.btnImprimir)
         btnEmparejar = findViewById(R.id.btnEmparejar)
         btnLimpiar = findViewById(R.id.btnLimpiar)
-        imgQR = findViewById(R.id.imgQR)
+
+
+        editTextMesa = findViewById(R.id.editMesa)
+        noCuenta = findViewById(R.id.noCuenta)
+
         summaryContainer = findViewById(R.id.summaryContainer)
         summaryTextView = findViewById(R.id.summaryTextView)
         summaryTotalTextView = findViewById(R.id.summaryTotalTextView)
         btnCloseSummary = findViewById(R.id.btnCloseSummary)
-        editTextMesa = findViewById(R.id.editMesa)
-        btnEditarPrecios = findViewById(R.id.btnEditarPrecios)
-        btnAdministrarMenu = findViewById(R.id.btnAdministrarMenu)
-        noCuenta = findViewById(R.id.noCuenta)
-        categoryFilterSpinner = findViewById(R.id.categoryFilterSpinner)
 
-
-        setupCategoryFilterSpinner()
-
-        btnImprimir.setOnClickListener { imprimirTicket() }
+        btnImprimir.setOnClickListener {
+            imprimirTicket()
+        }
         btnEmparejar.setOnClickListener {
             val intent = Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS)
-            startActivity(intent)
-        }
-        btnLimpiar.setOnClickListener { limpiarCantidades() }
-        btnCloseSummary.setOnClickListener { ocultarResumen() }
-        btnEditarPrecios.setOnClickListener { toggleEditMode() }
-        btnAdministrarMenu.setOnClickListener {
-            val intent = Intent(this, MenuAdminActivity::class.java)
-            startActivity(intent)
-        }
-    }
-
-    private fun setupCategoryFilterSpinner() {
-        // Asegúrate de que "Todas" (o tu string para "todas las categorías") esté presente.
-        // Sé consistente con el uso de mayúsculas/minúsculas. Usaré "Todas" aquí.
-        if (!availableCategories.contains("Todas")) {
-            availableCategories.add(0, "Todas") // Añade al principio si no está
-        }
-
-        // Inicializa o actualiza el ArrayAdapter
-        if (!::categoriesAdapter.isInitialized) { // Si no está inicializado
-            categoriesAdapter = ArrayAdapter(
-                this,
-
-                R.layout.spinner_dropdown_item, // Layout para el ítem seleccionado
-                availableCategories
-            )
-            categoriesAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item) // Layout para el dropdown
-            categoryFilterSpinner.adapter = categoriesAdapter
-        } else {
-            // Si ya está inicializado (ej. después de una actualización de categorías),
-            // solo notifica al adaptador que los datos han cambiado.
-            // Esto asume que `availableCategories` ya ha sido actualizada por `updateSpinnerCategories`.
-            categoriesAdapter.notifyDataSetChanged()
-        }
-
-        // Establecer la selección actual en el Spinner
-        // Intenta encontrar el índice de la categoría actualmente seleccionada
-        val currentSelectionIndex = availableCategories.indexOf(currentSelectedCategoryFilter)
-
-        if (currentSelectionIndex != -1) {
-            // Si se encuentra la categoría, selecciónala en el Spinner.
-            // El 'false' evita que onItemSelected se dispare en este momento de configuración inicial.
-            categoryFilterSpinner.setSelection(currentSelectionIndex, false)
-        } else {
-            // Si la categoría actual no se encuentra (ej. es la primera vez o la categoría fue eliminada),
-            // selecciona la primera opción ("Todas") por defecto.
-            if (availableCategories.isNotEmpty()) {
-                categoryFilterSpinner.setSelection(0, false)
-                currentSelectedCategoryFilter = availableCategories[0] // Actualiza la variable de filtro
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
             } else {
-                // Caso raro: no hay categorías. Podrías querer manejar esto,
-                // por ejemplo, deshabilitando el spinner o mostrando un mensaje.
-                Log.w(TAG, "setupCategoryFilterSpinner: No hay categorías disponibles para el Spinner.")
+                Toast.makeText(this, "No se pudo abrir la configuración de Bluetooth", Toast.LENGTH_SHORT).show()
             }
         }
+        btnLimpiar.setOnClickListener {
+            limpiarCantidades()
+        }
 
-
-
-        // Listener para cuando un ítem es seleccionado en el Spinner
-        categoryFilterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selectedCategory = parent?.getItemAtPosition(position).toString()
-
-                // Solo actuar si la selección realmente ha cambiado para evitar recargas innecesarias
-                if (currentSelectedCategoryFilter != selectedCategory) {
-                    currentSelectedCategoryFilter = selectedCategory
-                    Log.d(TAG, "Filtro de categoría cambiado a: $currentSelectedCategoryFilter")
-                    observeProducts() // Llama a observeProducts para recargar y filtrar la lista
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                if (currentSelectedCategoryFilter != "Todas" && availableCategories.contains("Todas")) {
-                    val todasPosition = availableCategories.indexOf("Todas")
-                    if (todasPosition != -1) { // Asegurar que "Todas" exista
-                        currentSelectedCategoryFilter = "Todas"
-                        categoryFilterSpinner.setSelection(todasPosition, false) // false para no disparar de nuevo
-                        Log.d(TAG, "Spinner - Nada seleccionado, volviendo a: $currentSelectedCategoryFilter")
-                        observeProducts() // Recargar productos con el filtro "Todas"
-                    }
-                }
-            }
+        btnCloseSummary.setOnClickListener {
+            ocultarResumen()
         }
     }
 
-    private fun onNothingSelected(parent: AdapterView<*>?) {
+    // El resto de tu código (updateQuantity, limpiarCantidades, imprimirTicket, etc.) permanece igual.
+    // ...
+    // --- Tu código original sin cambios desde aquí hacia abajo ---
 
-        // Solo actuar si el filtro actual no es ya "Todas" para evitar trabajo innecesario.
-        if (currentSelectedCategoryFilter != "Todas") {
-            // Verificar si "Todas" existe en la lista de categorías disponibles.
-            // Esto es importante si la lista de categorías pudiera estar vacía o no contener "Todas".
-            if (availableCategories.contains("Todas")) {
-                val todasPosition = availableCategories.indexOf("Todas")
-                // Aunque `contains` ya lo verificó, `indexOf` podría devolver -1 si hay inconsistencias (raro).
-                // Es una buena práctica verificar de nuevo.
-                if (todasPosition != -1) {
-                    currentSelectedCategoryFilter = "Todas"
-                    // Establece la selección en el Spinner.
-                    // El 'false' como segundo parámetro evita que onItemSelected se dispare
-                    // recursivamente si esta función fue llamada desde el listener.
-                    // Si esta es una implementación directa de la interfaz en la Activity,
-                    // y no dentro de un `object : ...`, entonces `parent` se refiere al Spinner.
-                    // Si `categoryFilterSpinner` es el único Spinner que usa este listener, puedes usarlo directamente.
-                    categoryFilterSpinner.setSelection(todasPosition, false)
-                    Log.d(TAG, "onNothingSelected: No había selección, volviendo al filtro: $currentSelectedCategoryFilter")
-                    // Actualiza la lista de productos para reflejar el cambio de filtro.
-                    observeProducts()
-                } else {
-                    // Caso muy improbable si availableCategories.contains("Todas") fue true.
-                    Log.w(TAG, "onNothingSelected: 'Todas' estaba en availableCategories pero indexOf devolvió -1.")
-                    // Como fallback, si "Todas" no se encuentra por alguna razón pero hay otras categorías,
-                    // podríamos seleccionar la primera disponible.
-                    if (availableCategories.isNotEmpty()) {
-                        currentSelectedCategoryFilter = availableCategories[0]
-                        categoryFilterSpinner.setSelection(0, false)
-                        Log.d(TAG, "onNothingSelected: 'Todas' no encontrada, volviendo a: $currentSelectedCategoryFilter")
-                        observeProducts()
-                    } else {
-                        // Si no hay categorías, no hay nada que seleccionar o filtrar.
-                        Log.w(TAG, "onNothingSelected: No hay categorías disponibles en el Spinner.")
-                        // Podrías querer limpiar la lista de productos si este es el caso.
-                        productsAdapter.submitList(emptyList())
-                    }
-                }
-            } else if (availableCategories.isNotEmpty()) {
-                // Si "Todas" no está, pero hay otras categorías, selecciona la primera.
-                currentSelectedCategoryFilter = availableCategories[0]
-                categoryFilterSpinner.setSelection(0, false)
-                Log.d(TAG, "onNothingSelected: 'Todas' no disponible, volviendo a la primera categoría: $currentSelectedCategoryFilter")
-                observeProducts()
-            } else {
-                // Si no hay ninguna categoría en el spinner.
-                Log.w(TAG, "onNothingSelected: El Spinner no tiene categorías.")
-                // Aquí podrías querer limpiar la UI o mostrar un mensaje.
-                // Si currentSelectedCategoryFilter no se actualiza, y observeProducts() se llama,
-                // usará el último filtro válido. Si queremos limpiar:
-                currentSelectedCategoryFilter = "" // O un valor que indique "sin filtro / vacío"
-                productsAdapter.submitList(emptyList()) // Limpia el RecyclerView
-            }
-        } else {
-            // Si el filtro ya era "Todas", no es necesario hacer nada.
-            // O, si el spinner está vacío y `currentSelectedCategoryFilter` es "Todas" por defecto,
-            // pero `availableCategories` no contiene "Todas", podría entrar aquí.
-            // Si el objetivo es solo re-filtrar si el spinner se vacía y luego se repuebla:
-            // observeProducts() // Descomentar si se quiere forzar un re-filtrado.
-        }
-    }
-
-    // En MainActivity.kt
-    private fun setupRecyclerView() {
-        productsRecyclerView = findViewById(R.id.productsRecyclerView)
-        productsAdapter = ProductsAdapter(this)
-        productsRecyclerView.adapter = productsAdapter
-
-        val layoutManager = productsRecyclerView.layoutManager // Obtén el layout manager definido en XML
-        if (layoutManager is GridLayoutManager) {
-            // Ahora puedes acceder a ProductsAdapter.TYPE_HEADER y ProductsAdapter.TYPE_PRODUCT
-            // porque los hiciste 'internal' en ProductsAdapter.kt
-            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    // Protección contra acceso fuera de límites si la lista está vacía o la posición no es válida
-                    if (productsAdapter.currentList.isEmpty() || position < 0 || position >= productsAdapter.currentList.size) {
-                        return 1 // Fallback a 1 span
-                    }
-                    return when (productsAdapter.getItemViewType(position)) {
-                        ProductsAdapter.TYPE_HEADER -> layoutManager.spanCount // El encabezado ocupa todos los spans
-                        ProductsAdapter.TYPE_PRODUCT -> 1 // El producto ocupa 1 span
-                        else -> 1 // Default a 1 span
-                    }
-                }
-            }
-        } else {
-            // Opcional: Log si no es un GridLayoutManager, aunque tu XML lo define así.
-            Log.w(TAG, "El LayoutManager de productsRecyclerView no es GridLayoutManager. SpanSizeLookup no se aplicará.")
-        }
-    }
-
-
-    private fun observeProducts() {
-        lifecycleScope.launch {
-            Log.d(TAG, "observeProducts: Iniciando. Filtro actual: $currentSelectedCategoryFilter")
-            try {
-                productDao.getAllProducts().collectLatest { productList ->
-                    Log.d(TAG, "observeProducts: Recibida lista completa del DAO. Tamaño: ${productList.size}")
-
-                    // Paso 1: Actualizar las categorías del spinner con la lista completa de productos
-                    updateSpinnerCategories(productList)
-
-                    // Paso 2: Manejar lista vacía del DAO
-                    if (productList.isEmpty()) {
-                        Log.w(TAG, "observeProducts: La lista de productos del DAO está VACÍA.")
-                        productsAdapter.submitList(emptyList())
-                        return@collectLatest
-                    }
-
-                    // Paso 3: Filtrar la lista de productos según el filtro del spinner
-                    val itemsToProcess: List<Product>
-                    if (currentSelectedCategoryFilter == "Todas" || currentSelectedCategoryFilter.isBlank()) {
-                        itemsToProcess = productList // Mostrar todos si el filtro es "Todas" o vacío
-                        Log.d(TAG, "observeProducts: Filtro es 'Todas' o vacío. Procesando todos los ${productList.size} productos.")
-                    } else {
-                        itemsToProcess = productList.filter {
-                            (it.category.takeIf { cat -> cat.isNotBlank() } ?: "Sin Categoría") == currentSelectedCategoryFilter
-                        }
-                        Log.d(TAG, "observeProducts: Aplicando filtro para categoría '$currentSelectedCategoryFilter'. Productos después del filtro: ${itemsToProcess.size}")
-                    }
-
-                    // Paso 4: Si después de filtrar no hay productos, actualizar el adaptador y salir
-                    if (itemsToProcess.isEmpty()) {
-                        Log.d(TAG, "observeProducts: No hay productos para mostrar después de aplicar el filtro '$currentSelectedCategoryFilter'.")
-                        productsAdapter.submitList(emptyList())
-                        return@collectLatest
-                    }
-
-                    // Paso 5: Agrupar los productos filtrados (itemsToProcess) por su categoría real
-                    val finalGroupedItems = mutableListOf<GroupedItem>()
-                    val groupedByCategory = itemsToProcess
-                        .groupBy { it.category.takeIf { cat -> cat.isNotBlank() } ?: "Sin Categoría" }
-                        .toSortedMap() // Ordenar las categorías alfabéticamente
-
-                    Log.d(TAG, "observeProducts: Productos (después de filtro) agrupados por categoría. Número de grupos: ${groupedByCategory.size}")
-
-                    for ((category, productsInCategory) in groupedByCategory) {
-                        // Solo añadir el header si el filtro es "Todas" o si la categoría actual coincide con el filtro.
-                        // Si el filtro es específico, solo habrá una categoría en groupedByCategory.
-                        finalGroupedItems.add(GroupedItem.Header(category))
-                        Log.d(TAG, "observeProducts: Agregando Header para categoría: '$category'")
-
-                        productsInCategory.sortedBy { it.name }.forEach { product -> // Ordenar productos dentro de cada categoría
-                            val quantity = quantities.getOrDefault(product.id, 0)
-                            finalGroupedItems.add(GroupedItem.ProductItem(product, quantity))
-                            Log.d(TAG, "observeProducts: Agregando Producto: '${product.name}', Cantidad: $quantity, Categoría (original): '${product.category}' a grupo '$category'")
-                        }
-                    }
-
-                    // Paso 6: Enviar la lista final agrupada y filtrada al adaptador
-                    productsAdapter.submitList(finalGroupedItems)
-                    Log.d(TAG, "observeProducts: Lista final de GroupedItems enviada al adaptador (Filtro: '$currentSelectedCategoryFilter'). Tamaño: ${finalGroupedItems.size}")
-
-                    if (finalGroupedItems.isEmpty() && productList.isNotEmpty() && (currentSelectedCategoryFilter == "Todas" || currentSelectedCategoryFilter.isBlank())) {
-                        // Esta condición solo debería ser preocupante si se esperaban todos los productos
-                        // y aún así la lista agrupada está vacía.
-                        Log.e(TAG, "observeProducts: ALERTA - productList original no estaba vacía y el filtro era 'Todas', pero finalGroupedItems SÍ lo está. Revisa la lógica de agrupación.")
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "observeProducts: Error catastrófico durante la observación o agrupación.", e)
-                productsAdapter.submitList(emptyList()) // Limpiar UI en caso de error grave
-                // Considerar resetear el spinner a un estado seguro también
-                availableCategories.clear()
-                availableCategories.add("Todas")
-                categoriesAdapter.notifyDataSetChanged()
-                currentSelectedCategoryFilter = "Todas"
-                if (availableCategories.isNotEmpty()) categoryFilterSpinner.setSelection(0, false)
-            }
-        }
-    }
-
-
-    private fun updateSpinnerCategories(productList: List<Product>) {
-        val newCategories = mutableListOf("Todas") // Siempre tener "Todas"
-        val distinctProductCategories = productList
-            .mapNotNull { it.category.takeIf { cat -> cat.isNotBlank() } } // Ignorar categorías vacías/nulas
-            .distinct() // Obtener categorías únicas
-            .sorted()   // Ordenarlas alfabéticamente
-        newCategories.addAll(distinctProductCategories)
-
-        // Solo actualizar si la lista de categorías ha cambiado realmente
-        if (availableCategories != newCategories) {
-            val previousSelection = currentSelectedCategoryFilter // Guardar la selección actual
-            availableCategories.clear()
-            availableCategories.addAll(newCategories)
-            categoriesAdapter.notifyDataSetChanged() // Notificar al adaptador del cambio
-
-            // Intentar restaurar la selección previa si aún existe, sino, seleccionar "Todas"
-            val newPosition = availableCategories.indexOf(previousSelection)
-            if (newPosition != -1) {
-                categoryFilterSpinner.setSelection(newPosition, false) // false para no disparar onItemSelected
-            } else {
-                currentSelectedCategoryFilter = "Todas" // Resetear filtro si la categoría anterior desapareció
-                val todasPosition = availableCategories.indexOf("Todas")
-                if (todasPosition != -1) categoryFilterSpinner.setSelection(todasPosition, false)
-                else if (availableCategories.isNotEmpty()) categoryFilterSpinner.setSelection(0, false) // Fallback al primer item
-            }
-            Log.d(TAG, "Categorías del Spinner actualizadas: $availableCategories. Selección actual: $currentSelectedCategoryFilter")
-        }
-    }
-
-    // --- Lógica de la Aplicación ---
-    override fun onQuantityChanged(product: Product, change: Int) {
-        val currentQuantity = quantities.getOrDefault(product.id, 0)
+    private fun updateQuantity(productName: String, change: Int) {
+        val currentQuantity = quantities[productName] ?: 0
         val newQuantity = (currentQuantity + change).coerceAtLeast(0)
-        quantities[product.id] = newQuantity
-        observeProducts() // Refresca la lista para mostrar la nueva cantidad
-    }
-
-    override fun onEditPriceClicked(product: Product) {
-        if (isEditMode) {
-            showEditPriceDialog(product)
-        } else {
-            Toast.makeText(this, "Activa 'Editar Precios' para cambiar.", Toast.LENGTH_SHORT).show()
+        quantities[productName] = newQuantity
+        val view = products[productName]?.cantidadTV
+        view?.text = newQuantity.toString()
+        if (view is EditText) {
+            view.setSelection(view.text.length)
         }
-    }
-
-    private fun toggleEditMode() {
-        isEditMode = !isEditMode
-        if (isEditMode) {
-            btnEditarPrecios.text = "Guardar Cambios"
-            Toast.makeText(this, "MODO EDICIÓN: Haz un clic largo para cambiar el precio.", Toast.LENGTH_LONG).show()
-        } else {
-            btnEditarPrecios.text = "Editar Precios"
-            Toast.makeText(this, "Cambios guardados.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun showEditPriceDialog(product: Product) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Nuevo Precio para: ${product.name}")
-
-        val container = FrameLayout(this).apply {
-            setPadding(50, 20, 50, 20)
-        }
-        val input = EditText(this).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-            setText(product.price.toString())
-            selectAll()
-        }
-        container.addView(input)
-        builder.setView(container)
-
-        builder.setPositiveButton("Guardar") { dialog, _ ->
-            val newPrice = input.text.toString().toDoubleOrNull()
-            if (newPrice != null && newPrice >= 0) {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    productDao.update(product.copy(price = newPrice))
-                }
-                dialog.dismiss()
-            } else {
-                Toast.makeText(this, "Por favor, introduce un precio válido.", Toast.LENGTH_SHORT).show()
-            }
-        }
-        builder.setNegativeButton("Cancelar") { dialog, _ -> dialog.cancel() }
-        builder.show()
     }
 
     private fun limpiarCantidades() {
-        quantities.clear()
-        editTextMesa.text.clear()
-        currentSelectedCategoryFilter = "Todas"
-
-        val todasPosition = availableCategories.indexOf("Todas")
-        if (todasPosition != -1) {
-            categoryFilterSpinner.setSelection(todasPosition) // Esto disparará onItemSelected y observeProducts
-        } else if (availableCategories.isNotEmpty()) {
-            categoryFilterSpinner.setSelection(0)
-        } else {
-            observeProducts() // Si no hay "Todas" y el spinner está vacío, solo re-observar.
+        products.keys.forEach { productName ->
+            quantities[productName] = 0
+            products[productName]?.cantidadTV?.text = "0"
         }
         ocultarResumen()
         Toast.makeText(this, "Cantidades restablecidas a 0", Toast.LENGTH_SHORT).show()
     }
 
-
-    private fun obtenerProductosDesdeInputs(): List<Producto> { // Asumo que Producto aquí es tu data class para el ticket
-        val listaDeProductos = mutableListOf<Producto>()
-        productsAdapter.currentList.forEach { groupedItem ->
-            if (groupedItem is GroupedItem.ProductItem) {
-                val productEntity = groupedItem.product // Este es tu @Entity Product
-                val quantity = quantities.getOrDefault(productEntity.id, 0)
-
-                if (quantity > 0) {
-                    listaDeProductos.add(
-                        Producto( // Esta es la data class para el ticket
-                            nombre = productEntity.name,
-                            precio = productEntity.price,
-                            cantidad = quantity
-                        )
-                    )
+    private fun imprimirTicket() {
+        val productosSeleccionados = obtenerProductosDesdeInputs()
+        if (productosSeleccionados.isEmpty()) {
+            Toast.makeText(this, "No hay productos seleccionados", Toast.LENGTH_SHORT).show()
+            return
+        }
+        // Guardar la venta en la base de datos antes de mostrar el resumen
+        val mesaInfoForDb = editTextMesa.text.toString().trim()
+        guardarOrden(productosSeleccionados, mesaInfoForDb)
+        mostrarResumen(productosSeleccionados)
+        val textoTicket = generarTextoTicket()
+        lifecycleScope.launch {
+            val usbSuccess = printViaUsb(textoTicket)
+            if (!usbSuccess) {
+                Log.w(TAG, "Fallo al imprimir por USB. Intentando Bluetooth...")
+                if (checkBluetoothPermissions()) {
+                    val btSuccess = printViaBluetooth(textoTicket)
+                    if (btSuccess) {
+                        Toast.makeText(this@MainActivity, "Ticket enviado por Bluetooth", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@MainActivity, "Fallo al imprimir por Bluetooth", Toast.LENGTH_LONG).show()
+                    }
+                } else {
+                    Toast.makeText(this@MainActivity, "Permisos de Bluetooth no concedidos.", Toast.LENGTH_LONG).show()
                 }
+            } else {
+                Toast.makeText(this@MainActivity, "Ticket enviado por USB", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun checkAndRequestBluetoothPermissions() {
+        val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            arrayOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)
+        } else {
+            arrayOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
+        }
+        val allPermissionsGranted = permissions.all {
+            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+        }
+        if (!allPermissionsGranted) {
+            requestBluetoothPermissionLauncher.launch(permissions)
+        }
+    }
+
+    private fun checkBluetoothPermissions(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+        } else {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private suspend fun connectToBluetoothPrinter(): BluetoothSocket? = withContext(Dispatchers.IO) {
+        if (bluetoothAdapter == null) {
+            Log.e(TAG, "Adaptador Bluetooth no disponible.")
+            withContext(Dispatchers.Main) { Toast.makeText(this@MainActivity, "Adaptador Bluetooth no disponible", Toast.LENGTH_SHORT).show() }
+            return@withContext null
+        }
+        if (!bluetoothAdapter!!.isEnabled) {
+            Log.i(TAG, "Bluetooth no activado. Solicitando activación.")
+            withContext(Dispatchers.Main) {
+                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                enableBluetoothLauncher.launch(enableBtIntent)
+                Toast.makeText(this@MainActivity, "Activando Bluetooth...", Toast.LENGTH_SHORT).show()
+            }
+            return@withContext null
+        }
+        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter!!.bondedDevices
+        val printerDevice = pairedDevices?.find { it.name.equals(PRINTER_NAME_BLUETOOTH, ignoreCase = true) }
+        if (printerDevice == null) {
+            Log.e(TAG, "Impresora Bluetooth '$PRINTER_NAME_BLUETOOTH' no encontrada entre los dispositivos emparejados.")
+            withContext(Dispatchers.Main) { Toast.makeText(this@MainActivity, "Impresora no emparejada: $PRINTER_NAME_BLUETOOTH", Toast.LENGTH_LONG).show() }
+            return@withContext null
+        }
+        Log.d(TAG, "Intentando conectar con la impresora Bluetooth: ${printerDevice.name} [${printerDevice.address}]")
+        return@withContext try {
+            val socket = printerDevice.createRfcommSocketToServiceRecord(PRINTER_UUID)
+            bluetoothAdapter?.cancelDiscovery()
+            socket.connect()
+            Log.d(TAG, "Conexión Bluetooth establecida con ${printerDevice.name}")
+            withContext(Dispatchers.Main) { Toast.makeText(this@MainActivity, "Conectado a ${printerDevice.name}", Toast.LENGTH_SHORT).show() }
+            socket
+        } catch (e: IOException) {
+            Log.e(TAG, "Error al conectar por Bluetooth con ${printerDevice.name}: ${e.message}", e)
+            try { bluetoothSocket?.close() } catch (closeException: IOException) {}
+            null
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private suspend fun printViaBluetooth(textoTicket: String): Boolean = withContext(Dispatchers.IO) {
+        var success = false
+        try {
+            bluetoothSocket = connectToBluetoothPrinter()
+            val socket = bluetoothSocket
+            if (socket == null || !socket.isConnected) {
+                Log.e(TAG, "No se pudo conectar a la impresora Bluetooth")
+                return@withContext false
+            }
+            val outputStream: OutputStream = socket.outputStream
+            val initPrinter = byteArrayOf(0x1B, 0x40)
+            val cutPaper = byteArrayOf(0x1D, 0x56, 0x42, 0x00)
+            val ticketBytes = textoTicket.toByteArray(Charset.forName("GB18030"))
+            outputStream.write(initPrinter)
+            outputStream.write(ticketBytes)
+            outputStream.write(cutPaper)
+            outputStream.flush()
+            success = true
+        } catch (e: IOException) {
+            Log.e(TAG, "Error de E/S al imprimir por Bluetooth: ${e.message}", e)
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Error de seguridad (permisos) al imprimir por Bluetooth: ${e.message}", e)
+        } finally {
+            closeBluetoothSocket()
+        }
+        return@withContext success
+    }
+
+    private fun closeBluetoothSocket() {
+        try {
+            bluetoothSocket?.close()
+            bluetoothSocket = null
+            Log.d(TAG, "Socket Bluetooth cerrado.")
+        } catch (e: IOException) {
+            Log.e(TAG, "Error al cerrar socket Bluetooth: ${e.message}", e)
+        }
+    }
+
+    private fun detectAndRequestUsbPermission() {
+        val deviceList = usbManager.deviceList
+        val printerDevice = deviceList.values.firstOrNull {
+            it.vendorId == 1155 && it.productId == 22339
+        } ?: deviceList.values.firstOrNull()
+        if (printerDevice == null) {
+            return
+        }
+        if (usbManager.hasPermission(printerDevice)) {
+            Log.d(TAG, "Permiso USB ya concedido para: ${printerDevice.deviceName}")
+            setupUsbDevice(printerDevice)
+        } else {
+            Log.d(TAG, "Solicitando permiso USB para: ${printerDevice.deviceName}")
+            val permissionIntent = PendingIntent.getBroadcast(
+                this, 0, Intent(ACTION_USB_PERMISSION),
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            usbManager.requestPermission(printerDevice, permissionIntent)
+        }
+    }
+
+    private fun setupUsbDevice(device: UsbDevice) {
+        releaseUsbDevice()
+        usbDeviceConnection = usbManager.openDevice(device)
+        if (usbDeviceConnection == null) {
+            Toast.makeText(this, "No se pudo abrir la conexión USB", Toast.LENGTH_SHORT).show()
+            return
+        }
+        for (i in 0 until device.interfaceCount) {
+            val usbIface = device.getInterface(i)
+            if (usbIface.interfaceClass == UsbConstants.USB_CLASS_PRINTER) {
+                usbInterface = usbIface
+                for (j in 0 until usbIface.endpointCount) {
+                    val endpoint = usbIface.getEndpoint(j)
+                    if (endpoint.type == UsbConstants.USB_ENDPOINT_XFER_BULK && endpoint.direction == UsbConstants.USB_DIR_OUT) {
+                        usbEndpointOut = endpoint
+                    }
+                }
+            }
+        }
+        if (usbInterface == null || usbEndpointOut == null) {
+            Toast.makeText(this, "No se encontró interfaz de impresora USB", Toast.LENGTH_SHORT).show()
+            releaseUsbDevice()
+            return
+        }
+        if (!usbDeviceConnection!!.claimInterface(usbInterface, true)) {
+            Toast.makeText(this, "No se pudo reclamar la interfaz USB", Toast.LENGTH_SHORT).show()
+            releaseUsbDevice()
+            return
+        }
+        this.usbDevice = device
+        Toast.makeText(this, "Impresora USB lista: ${device.deviceName}", Toast.LENGTH_SHORT).show()
+    }
+
+    private suspend fun printViaUsb(data: String): Boolean = withContext(Dispatchers.IO) {
+        if (usbDeviceConnection == null || usbEndpointOut == null) {
+            Log.w(TAG, "Dispositivo USB no configurado. Intentando re-detectar.")
+            withContext(Dispatchers.Main) { detectAndRequestUsbPermission() }
+            return@withContext false
+        }
+        return@withContext try {
+            val bytes = data.toByteArray(Charset.forName("GB18030"))
+            val sentBytes = usbDeviceConnection!!.bulkTransfer(usbEndpointOut!!, bytes, bytes.size, 5000)
+            if (sentBytes >= 0) {
+                Log.d(TAG, "Datos ($sentBytes bytes) enviados por USB.")
+                true
+            } else {
+                Log.e(TAG, "Error al enviar datos por USB, sentBytes: $sentBytes")
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MainActivity, "Error de transmisión USB", Toast.LENGTH_SHORT).show()
+                }
+                releaseUsbDevice()
+                false
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Excepción al imprimir por USB: ${e.message}", e)
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@MainActivity, "Excepción de USB: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+            releaseUsbDevice()
+            false
+        }
+    }
+
+    private fun releaseUsbDevice() {
+        usbDeviceConnection?.let { conn ->
+            usbInterface?.let { intf ->
+                conn.releaseInterface(intf)
+                Log.d(TAG, "Interfaz USB liberada.")
+            }
+            conn.close()
+            Log.d(TAG, "Conexión USB cerrada.")
+        }
+        usbDeviceConnection = null
+        usbInterface = null
+        usbEndpointOut = null
+        usbDevice = null
+    }
+
+
+
+
+    private fun mostrarResumen(productos: List<Producto>) {
+        val sb = StringBuilder()
+        var totalGeneral = 0.0
+        productos.forEach { producto ->
+            val totalProducto = producto.cantidad * producto.precio
+            totalGeneral += totalProducto
+            sb.appendLine("${producto.cantidad} x ${producto.nombre} ... $${"%.2f".format(totalProducto)}")
+            if (noCuenta.isChecked){
+                sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)}")
+            }
+        }
+        summaryTextView.text = sb.toString()
+        summaryTotalTextView.text = "TOTAL: $${"%.2f".format(totalGeneral)}"
+        summaryContainer.visibility = View.VISIBLE
+    }
+
+    private fun ocultarResumen() {
+        if (::summaryContainer.isInitialized) {
+            summaryContainer.visibility = View.GONE
+        }
+    }
+
+    data class ProductData(
+        val cantidadTV: TextView,
+        val btnMenos: Button,
+        val btnMas: Button,
+        val precio: Double
+    )
+
+    data class Producto(
+        val nombre: String,
+        val precio: Double,
+        val cantidad: Int
+    ) {
+        val total: Double get() = precio * cantidad
+    }
+
+    private fun obtenerProductosDesdeInputs(): List<Producto> {
+        val listaDeProductos = mutableListOf<Producto>()
+        products.forEach { (nombre, data) ->
+            val cantidad = quantities[nombre] ?: 0
+            if (cantidad > 0) {
+                listaDeProductos.add(Producto(nombre, data.precio, cantidad))
             }
         }
         return listaDeProductos
     }
-
 
     private fun generarTextoTicket(): String {
         val fechaHora = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
@@ -570,16 +693,14 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         sb.appendLine("********************************")
         sb.appendLine("Fecha y hora: $fechaHora")
 
-        val mesaInfo = editTextMesa.text.toString().trim()
-        if (mesaInfo.isNotEmpty()) {
-            sb.appendLine(String.format("%-32s", "Mesa: ${mesaInfo.uppercase()}"))
-            sb.appendLine("********************************")
+        if (noCuenta.isChecked){
+            sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)}")
         }
-        if (noCuenta.isChecked) {
-            sb.appendLine(String.format("%-32s", "4027 6657 8599 1515"))
-            sb.appendLine(String.format("%-32s", "Nombre: Omar Gomez"))
-            sb.appendLine(String.format("%-32s", "Banco: Azteca"))
-            sb.appendLine("********************************")
+
+        val mesaInfo = editTextMesa.text.toString().trim()
+        if(mesaInfo.isNotEmpty()){
+            sb.appendLine(String.format("%-32s", "Mesa: ${mesaInfo.uppercase()}"))
+            sb.appendLine("*****************************")
         }
         val lineaSeparadoraCorta = "-".repeat(anchoTotalLinea)
         sb.appendLine(lineaSeparadoraCorta)
@@ -611,241 +732,268 @@ class MainActivity : AppCompatActivity(), ProductsAdapter.ProductClickListener {
         return sb.toString()
     }
 
-    private fun imprimirTicket() {
-        val productosSeleccionados = obtenerProductosDesdeInputs()
-        if (productosSeleccionados.isEmpty()) {
-            Toast.makeText(this, "No hay productos seleccionados", Toast.LENGTH_SHORT).show()
-            return
+    private fun bitmapToEscPosData(bitmap: Bitmap, printerDotsPerLine: Int = 384): ByteArray {
+        val outputStream = java.io.ByteArrayOutputStream()
+        var scaledBitmap = bitmap
+        if (bitmap.width > printerDotsPerLine) {
+            val newHeight = (bitmap.height.toFloat() * (printerDotsPerLine.toFloat() / bitmap.width.toFloat())).toInt()
+            scaledBitmap = Bitmap.createScaledBitmap(bitmap, printerDotsPerLine, newHeight, true)
         }
-        mostrarResumen(productosSeleccionados)
-        val textoTicket = generarTextoTicket()
-        lifecycleScope.launch {
-            val usbSuccess = printViaUsb(textoTicket)
-            if (!usbSuccess) {
-                if (checkBluetoothPermissions()) {
-                    val btSuccess = printViaBluetooth(textoTicket)
-                    if (btSuccess) {
-                        Toast.makeText(this@MainActivity, "Ticket enviado por Bluetooth", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this@MainActivity, "Fallo al imprimir", Toast.LENGTH_LONG).show()
-                    }
-                } else {
-                    Toast.makeText(this@MainActivity, "Permisos de Bluetooth no concedidos.", Toast.LENGTH_LONG).show()
-                }
-            } else {
-                Toast.makeText(this@MainActivity, "Ticket enviado por USB", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun mostrarResumen(productos: List<Producto>) {
-        val sb = StringBuilder()
-        var totalGeneral = 0.0
-        productos.forEach { producto ->
-            val totalProducto = producto.cantidad * producto.precio
-            totalGeneral += totalProducto
-            sb.appendLine("${producto.cantidad} x ${producto.nombre} ... $${"%.2f".format(totalProducto)}")
-        }
-        summaryTextView.text = sb.toString()
-        summaryTotalTextView.text = "TOTAL: $${"%.2f".format(totalGeneral)}"
-        imgQR.visibility = View.GONE
-        summaryContainer.visibility = View.VISIBLE
-    }
-
-    private fun ocultarResumen() {
-        if (::summaryContainer.isInitialized) {
-            summaryContainer.visibility = View.GONE
-        }
-    }
-
-    // --- Data class para el ticket ---
-    data class Producto(val nombre: String, val precio: Double, val cantidad: Int) {
-        val total: Double get() = precio * cantidad
-    }
-
-    // --- Toda la lógica de bajo nivel (Permisos, Bluetooth, USB) se queda igual ---
-    private fun checkAndRequestBluetoothPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val permissions = arrayOf(
-                Manifest.permission.BLUETOOTH_CONNECT,
-                Manifest.permission.BLUETOOTH_SCAN
-            )
-            requestBluetoothPermissionLauncher.launch(permissions)
-        }
-    }
-
-    private fun checkBluetoothPermissions(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED
-        } else {
-            true
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private suspend fun connectToBluetoothPrinter(): BluetoothSocket? {
-        return withContext(Dispatchers.IO) {
-            try {
-                val pairedDevices = bluetoothAdapter?.bondedDevices
-                val printer = pairedDevices?.find { it.name.contains(PRINTER_NAME_BLUETOOTH, ignoreCase = true) }
-
-                if (printer != null) {
-                    val socket = printer.createRfcommSocketToServiceRecord(PRINTER_UUID)
-                    socket.connect()
-                    socket
-                } else {
-                    Log.e(TAG, "No se encontró impresora Bluetooth emparejada")
-                    null
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error conectando a impresora Bluetooth", e)
-                null
-            }
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private suspend fun printViaBluetooth(textoTicket: String): Boolean {
-        return withContext(Dispatchers.IO) {
-            try {
-                closeBluetoothSocket()
-                bluetoothSocket = connectToBluetoothPrinter()
-
-                bluetoothSocket?.let { socket ->
-                    val outputStream = socket.outputStream
-                    outputStream.write(textoTicket.toByteArray(StandardCharsets.ISO_8859_1))
-                    outputStream.flush()
-                    true
-                } ?: false
-            } catch (e: Exception) {
-                Log.e(TAG, "Error imprimiendo por Bluetooth", e)
-                false
-            }
-        }
-    }
-
-    private fun closeBluetoothSocket() {
-        try {
-            bluetoothSocket?.close()
-            bluetoothSocket = null
-        } catch (e: Exception) {
-            Log.e(TAG, "Error cerrando socket Bluetooth", e)
-        }
-    }
-
-    private fun detectAndRequestUsbPermission() {
-        val deviceList = usbManager.deviceList
-        if (deviceList.isNotEmpty()) {
-            val device = deviceList.values.first()
-            val permissionIntent = PendingIntent.getBroadcast(
-                this,
-                0,
-                Intent(ACTION_USB_PERMISSION),
-                PendingIntent.FLAG_IMMUTABLE
-            )
-            usbManager.requestPermission(device, permissionIntent)
-        }
-    }
-
-    private fun setupUsbDevice(device: UsbDevice) {
-        try {
-            usbDevice = device
-            usbDeviceConnection = usbManager.openDevice(device)
-
-            if (device.interfaceCount > 0) {
-                usbInterface = device.getInterface(0)
-                usbDeviceConnection?.claimInterface(usbInterface, true)
-
-                for (i in 0 until usbInterface!!.endpointCount) {
-                    val endpoint = usbInterface!!.getEndpoint(i)
-                    if (endpoint.direction == UsbConstants.USB_DIR_OUT) {
-                        usbEndpointOut = endpoint
-                        break
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error configurando dispositivo USB", e)
-        }
-    }
-
-    private suspend fun printViaUsb(data: String): Boolean {
-        return withContext(Dispatchers.IO) {
-            try {
-                usbDeviceConnection?.let { connection ->
-                    usbEndpointOut?.let { endpoint ->
-                        val bytes = data.toByteArray(StandardCharsets.ISO_8859_1)
-                        val result = connection.bulkTransfer(endpoint, bytes, bytes.size, 5000)
-                        result > 0
-                    } ?: false
-                } ?: false
-            } catch (e: Exception) {
-                Log.e(TAG, "Error imprimiendo por USB", e)
-                false
-            }
-        }
-    }
-
-    private fun releaseUsbDevice() {
-        try {
-            usbDeviceConnection?.releaseInterface(usbInterface)
-            usbDeviceConnection?.close()
-            usbDeviceConnection = null
-            usbInterface = null
-            usbEndpointOut = null
-            usbDevice = null
-        } catch (e: Exception) {
-            Log.e(TAG, "Error liberando dispositivo USB", e)
-        }
-    }
-
-    private fun generarQR(texto: String): Bitmap {
-        try {
-            val writer = QRCodeWriter()
-            val bitMatrix = writer.encode(texto, BarcodeFormat.QR_CODE, 512, 512)
-            val width = bitMatrix.width
-            val height = bitMatrix.height
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    bitmap.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
-                }
-            }
-            return bitmap
-        } catch (e: Exception) {
-            Log.e(TAG, "Error generando código QR", e)
-            return Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565)
-        }
-    }
-
-    private fun bitmapToEscPosData(bitmap: Bitmap, printerDotsPerLine: Int): ByteArray {
-        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, printerDotsPerLine, bitmap.height * printerDotsPerLine / bitmap.width, false)
         val width = scaledBitmap.width
         val height = scaledBitmap.height
-        val data = mutableListOf<Byte>()
-
-        // ESC/POS bitmap command
-        data.addAll(byteArrayOf(0x1B, 0x2A, 0x00, (width / 8).toByte(), (height and 0xFF).toByte()).toList())
-
+        val pixels = IntArray(width * height)
+        scaledBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+        val threshold = 128
+        val widthBytes = (width + 7) / 8
+        val pL = widthBytes % 256
+        val pH = widthBytes / 256
+        outputStream.write(0x1D)
+        outputStream.write(0x76)
+        outputStream.write(0x30)
+        outputStream.write(0x00)
+        outputStream.write(pL)
+        outputStream.write(pH)
+        outputStream.write(height % 256)
+        outputStream.write(height / 256)
         for (y in 0 until height) {
-            for (x in 0 until width step 8) {
-                var byte = 0
-                for (bit in 0 until 8) {
-                    if (x + bit < width) {
-                        val pixel = scaledBitmap.getPixel(x + bit, y)
-                        val gray = (Color.red(pixel) + Color.green(pixel) + Color.blue(pixel)) / 3
-                        if (gray < 128) {
-                            byte = byte or (1 shl (7 - bit))
-                        }
-                    }
+            var byteVal = 0
+            for (x in 0 until width) {
+                val pixelColor = pixels[y * width + x]
+                val r = Color.red(pixelColor)
+                val g = Color.green(pixelColor)
+                val b = Color.blue(pixelColor)
+                val luminance = (0.299 * r + 0.587 * g + 0.114 * b).toInt()
+                if (luminance < threshold) {
+                    byteVal = byteVal or (1 shl (7 - (x % 8)))
                 }
-                data.add(byte.toByte())
+                if (x % 8 == 7 || x == width - 1) {
+                    outputStream.write(byteVal)
+                    byteVal = 0
+                }
             }
         }
+        return outputStream.toByteArray()
+    }
 
-        return data.toByteArray()
+    // -----------------------------------------------------------------------------------------
+    // Funciones de persistencia y administración
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Persiste una orden y sus productos en la base de datos. Calcula el campo
+     * businessDate aplicando un corte a las 5:00 AM para que las ventas después
+     * de medianoche se asignen al día anterior. También determina el tipo de
+     * orden (DINE_IN o TAKEOUT) según si hay valor en el campo mesa.
+     *
+     * @param productos Lista de productos seleccionados.
+     * @param mesaInfo Texto introducido en el campo mesa; si está vacío se
+     *                 asumirá que es para llevar.
+     */
+    private fun guardarOrden(productos: List<Producto>, mesaInfo: String) {
+        val createdAt = System.currentTimeMillis()
+        // Calcular el start of day considerando un corte a las 5am
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = createdAt
+        val cutoffHour = 5
+        if (cal.get(Calendar.HOUR_OF_DAY) < cutoffHour) {
+            cal.add(Calendar.DAY_OF_MONTH, -1)
+        }
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+        val businessDate = cal.timeInMillis
+
+        val subtotal = productos.sumOf { it.cantidad * it.precio }
+        // No se aplican descuentos ni impuestos adicionales, así que el total coincide con el subtotal
+        val grandTotal = subtotal
+        val orderType = if (mesaInfo.isNotEmpty()) "DINE_IN" else "TAKEOUT"
+        val orderEntity = OrderEntity(
+            orderId = 0,
+            mesa = if (mesaInfo.isNotEmpty()) mesaInfo else null,
+            orderType = orderType,
+            createdAt = createdAt,
+            businessDate = businessDate,
+            subtotal = subtotal,
+            grandTotal = grandTotal
+        )
+        val items = productos.map {
+            OrderItemEntity(
+                itemId = 0,
+                orderId = 0, // se reasignará en insertOrderWithItems
+                name = it.nombre,
+                unitPrice = it.precio,
+                quantity = it.cantidad
+            )
+        }
+        lifecycleScope.launch(Dispatchers.IO) {
+            OrderDatabase.getInstance(applicationContext).OrderDao().insertOrderWithItems(orderEntity, items)
+            // Recargar la lista de pedidos en la interfaz cuando termine la inserción
+            val updatedOrders = OrderDatabase.getInstance(applicationContext).OrderDao().getAllOrders()
+            withContext(Dispatchers.Main) {
+                adminOrderAdapter.updateOrders(updatedOrders)
+            }
+        }
+    }
+
+    /**
+     * Genera un resumen de ventas diarias y lo muestra en el panel de administración. Cada
+     * entrada incluye la fecha, la cantidad de pedidos y el total de ventas de ese día,
+     * seguido de un total acumulado.
+     */
+    private fun generarGananciaDiaria() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val resultados = orderDatabase.OrderDao().getDailySales()
+            val sb = StringBuilder()
+            var totalGeneral = 0.0
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            for (r in resultados) {
+                val date = Date(r.businessDate)
+                val linea = "${sdf.format(date)}: ${r.ordersCount} órdenes, $${"%.2f".format(r.totalSales)}"
+                sb.appendLine(linea)
+                totalGeneral += r.totalSales
+            }
+            sb.appendLine("------------------------------")
+            sb.appendLine("Total acumulado: $${"%.2f".format(totalGeneral)}")
+            withContext(Dispatchers.Main) {
+                adminSummaryTextView.text = sb.toString()
+            }
+        }
+    }
+
+    /**
+     * Genera un resumen de ventas semanales (por semana ISO) y lo muestra en el panel de
+     * administración. Cada entrada se muestra con el formato Año-Semana.
+     */
+    private fun generarGananciaSemanal() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val resultados = orderDatabase.OrderDao().getWeeklySales()
+            val sb = StringBuilder()
+            var totalGeneral = 0.0
+            for (r in resultados) {
+                val linea = "Semana ${r.week}: ${r.ordersCount} órdenes, $${"%.2f".format(r.totalSales)}"
+                sb.appendLine(linea)
+                totalGeneral += r.totalSales
+            }
+            sb.appendLine("------------------------------")
+            sb.appendLine("Total acumulado: $${"%.2f".format(totalGeneral)}")
+            withContext(Dispatchers.Main) {
+                adminSummaryTextView.text = sb.toString()
+            }
+        }
+    }
+
+    /**
+     * Genera un resumen de ventas mensuales y lo muestra en el panel de administración.
+     * Cada entrada usa el formato "YYYY-MM" para identificar el mes.
+     */
+    private fun generarGananciaMensual() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val resultados = orderDatabase.OrderDao().getMonthlySales()
+            val sb = StringBuilder()
+            var totalGeneral = 0.0
+            for (r in resultados) {
+                val linea = "Mes ${r.month}: ${r.ordersCount} órdenes, $${"%.2f".format(r.totalSales)}"
+                sb.appendLine(linea)
+                totalGeneral += r.totalSales
+            }
+            sb.appendLine("------------------------------")
+            sb.appendLine("Total acumulado: $${"%.2f".format(totalGeneral)}")
+            withContext(Dispatchers.Main) {
+                adminSummaryTextView.text = sb.toString()
+            }
+        }
+    }
+
+    /**
+     * Carga todos los pedidos almacenados en la base y actualiza el RecyclerView.
+     * Se utiliza al iniciar la aplicación y después de insertar o eliminar pedidos.
+     */
+    private fun cargarPedidos() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val orders = OrderDatabase.getInstance(applicationContext).OrderDao().getAllOrders()
+            withContext(Dispatchers.Main) {
+                AdminOrderAdapter.updateOrders(orders)
+            }
+        }
+    }
+
+    private fun AdminOrderAdapter.Companion.updateOrders(entities: List<OrderEntity>) {}
+
+    /**
+     * Elimina el pedido con el identificador dado de la base de datos y actualiza la lista
+     * de pedidos en la pantalla de administración. Muestra un toast para informar al
+     * usuario del resultado.
+     *
+     * @param orderId identificador del pedido a eliminar
+     */
+    private fun eliminarPedido(orderId: Long) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            orderDatabase.OrderDao().deleteOrderById(orderId)
+            val updatedOrders = orderDatabase.OrderDao().getAllOrders()
+            withContext(Dispatchers.Main) {
+                adminOrderAdapter.updateOrders(updatedOrders)
+                Toast.makeText(this@MainActivity, "Pedido eliminado", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    /**
+     * Muestra un resumen detallado del pedido seleccionado en la pantalla de
+     * administración. Al pulsar sobre un pedido en el RecyclerView se recuperan
+     * sus artículos de la base de datos y se muestra en un diálogo con la hora
+     * en que se creó la orden y la lista de platillos con sus cantidades y
+     * subtotales. También se incluye el total del pedido.
+     *
+     * @param order La entidad de la orden seleccionada.
+     */
+    private fun mostrarResumenPedido(order: OrderEntity) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            // Obtener todos los artículos de la orden de forma asíncrona
+            val items = orderDatabase.OrderDao().getItemsForOrder(order.orderId)
+            val detalleItems = StringBuilder()
+            var totalCalculado = 0.0
+            for (item in items) {
+                val totalItem = item.unitPrice * item.quantity
+                detalleItems.appendLine("${item.quantity} x ${item.name} ... $${"%.2f".format(totalItem)}")
+                totalCalculado += totalItem
+            }
+
+            // Formatear la hora de creación de la orden
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val horaFormateada = sdf.format(Date(order.createdAt))
+
+            withContext(Dispatchers.Main) {
+                // Inflar el layout personalizado para el diálogo
+                val dialogView = layoutInflater.inflate(R.layout.dialog_order_summary, null)
+                val tvHora = dialogView.findViewById<TextView>(R.id.tvDialogHora)
+                val tvItems = dialogView.findViewById<TextView>(R.id.tvDialogItems)
+                val tvTotal = dialogView.findViewById<TextView>(R.id.tvDialogTotal)
+                val btnClose = dialogView.findViewById<MaterialButton>(R.id.btnCloseDialog)
+
+                // Asignar los valores a las vistas del diálogo
+                // Asignar valores directamente. Formateamos las cadenas sin depender de resources
+                tvHora.text = "Hora: $horaFormateada"
+                tvItems.text = detalleItems.toString().trim()
+                tvTotal.text = "Total: $${"%.2f".format(order.grandTotal)}"
+
+                // Crear y mostrar el diálogo utilizando el layout personalizado
+                val dialog = AlertDialog.Builder(this@MainActivity)
+                    .setView(dialogView)
+                    .create()
+                btnClose.setOnClickListener { dialog.dismiss() }
+                dialog.show()
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        // Si el cajón de administración está abierto, ciérralo en lugar de salir de la actividad
+        if (::drawerLayout.isInitialized && drawerLayout.isDrawerOpen(GravityCompat.END)) {
+            drawerLayout.closeDrawer(GravityCompat.END)
+        } else {
+            super.onBackPressed()
+        }
     }
 
 }
