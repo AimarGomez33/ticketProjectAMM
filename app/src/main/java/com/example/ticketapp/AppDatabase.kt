@@ -7,19 +7,24 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import com.example.ticketapp.ProductDao
+import com.example.ticketapp.AdminOrderAdapter
 import com.example.ticketapp.OrderEntity
 
 
 
 
 @Database(
-    entities  = [Product::class, OrderEntity::class, OrderItemEntity::class],
+    //  CORRECCIÓN: Lista SOLAMENTE las clases anotadas con @Entity
+    entities = [Product::class, OrderEntity::class, OrderItemEntity::class],
+    //  IMPORTANTE: Sube la versión porque has cambiado el esquema
     version = 3,
-    exportSchema = true
+    exportSchema = false
 )
 
 abstract class AppDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
+    abstract fun OrderDao(): OrderDao
 
     companion object {
         @Volatile

@@ -51,7 +51,6 @@ import androidx.core.view.GravityCompat
 import com.google.android.material.button.MaterialButton
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.CheckBox
-import com.example.ticketapp.OrderDatabase
 import com.example.ticketapp.AppDatabase
 import com.example.ticketapp.AdminOrderAdapter
 
@@ -63,6 +62,8 @@ import com.example.ticketapp.OrderItemEntity
 import com.example.ticketapp.DailySummary
 import com.example.ticketapp.WeeklySummary
 import com.example.ticketapp.MonthlySummary
+import java.util.Calendar
+import java.util.Date
 
 
 class MainActivity : AppCompatActivity() {
@@ -79,7 +80,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var summaryTextView: TextView
     private lateinit var summaryTotalTextView: TextView
     private lateinit var btnCloseSummary: Button
-    private lateinit var orderDatabase: OrderDatabase
+
     private lateinit var appDatabase: AppDatabase
 
     private val products = mutableMapOf<String, ProductData>()
@@ -90,8 +91,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnLimpiar: Button
     private lateinit var editTextMesa: EditText
     private lateinit var noCuenta: CheckBox
-
-
 
 
     private var isEditMode = false
@@ -129,7 +128,11 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Permisos Bluetooth concedidos", Toast.LENGTH_SHORT).show()
             } else {
                 Log.d(TAG, "Permisos Bluetooth denegados.")
-                Toast.makeText(this, "Se requieren permisos de Bluetooth para imprimir", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "Se requieren permisos de Bluetooth para imprimir",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
 
@@ -170,7 +173,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     var isExpanded = false
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -233,43 +235,223 @@ class MainActivity : AppCompatActivity() {
     // --- Configuración de la UI (Vistas y Botones) ---
     private fun setupProductViews() {
         // ... (tu lista de products[...] se queda igual)
-        products["Quesadillas"] = ProductData(findViewById(R.id.cantidadQuesadillas), findViewById(R.id.btnMenosQuesadillas), findViewById(R.id.btnMasQuesadillas), 30.0)
-        products["Pozole Grande"] = ProductData(findViewById(R.id.cantidadPozoleGrande), findViewById(R.id.btnMenosPozoleGrande), findViewById(R.id.btnMasPozoleGrande), 110.0)
-        products["Pozole Chico"] = ProductData(findViewById(R.id.cantidadPozoleChico), findViewById(R.id.btnMenosPozoleChico), findViewById(R.id.btnMasPozoleChico), 90.0)
-        products["Tostadas"] = ProductData(findViewById(R.id.cantidadTostadas), findViewById(R.id.btnMenosTostadas), findViewById(R.id.btnMasTostadas), 35.0)
-        products["Volcanes"] = ProductData(findViewById(R.id.cantidadVolcanes), findViewById(R.id.btnMenosVolcanes), findViewById(R.id.btnMasVolcanes), 60.0)
-        products["Volcan Queso/Guisado Extra"] = ProductData(findViewById(R.id.cantidadGuajolotaExtra), findViewById(R.id.btnMenosGuajolotaExtra), findViewById(R.id.btnMasGuajolotaExtra), 72.0)
-        products["Guajoloyets Naturales"] = ProductData(findViewById(R.id.cantidadGuajoloyetNatural), findViewById(R.id.btnMenosGuajoloyetNatural), findViewById(R.id.btnMasGuajoloyetNatural), 60.0)
-        products["Guajoloyets Naturales Extra"] = ProductData(findViewById(R.id.cantidadGujoloyetNaturalExtra), findViewById(R.id.btnMenosGujoloyetNaturalExtra), findViewById(R.id.btnMasGujoloyetNaturalExtra), 72.0)
-        products["Guajoloyets Adobados"] = ProductData(findViewById(R.id.cantidadGuajoloyetAdobado), findViewById(R.id.btnMenosGuajoloyetAdobado), findViewById(R.id.btnMasGuajoloyetAdobado), 65.0)
-        products["Guajoloyets Adobados Extra"] = ProductData(findViewById(R.id.cantidadGujoloyetAdobadoExtra), findViewById(R.id.btnMenosGujoloyetAdobadoExtra), findViewById(R.id.btnMasGujoloyetAdobadoExtra), 77.0)
-        products["Pambazos Naturales"] = ProductData(findViewById(R.id.cantidadPambazosNaturales), findViewById(R.id.btnMenosPambazosNaturales), findViewById(R.id.btnMasPambazosNaturales), 35.0)
-        products["Pambazos Naturales Combinados"] = ProductData(findViewById(R.id.cantidadPambazosNaturalesCombinados), findViewById(R.id.btnMenosPambazosNaturalesCombinados), findViewById(R.id.btnMasPambazosNaturalesCombinados), 42.0)
-        products["Pambazos Naturales Combinados con Queso"] = ProductData(findViewById(R.id.cantidadPambazosNaturalesCombinadosQueso), findViewById(R.id.btnMenosPambazosNaturalesCombinadosQueso), findViewById(R.id.btnMasPambazosNaturalesCombinadosQueso), 54.0)
-        products["Pambazos Naturales Extra"] = ProductData(findViewById(R.id.cantidadPambazosNaturalesQueso), findViewById(R.id.btnMenosPambazosNaturalesQueso), findViewById(R.id.btnMasPambazosNaturalesQueso), 47.0)
-        products["Pambazos Adobados"] = ProductData(findViewById(R.id.cantidadPambazosAdobados), findViewById(R.id.btnMenosPambazosAdobados), findViewById(R.id.btnMasPambazosAdobados), 40.0)
-        products["Pambazos Adobados Combinados"] = ProductData(findViewById(R.id.cantidadPambazosAdobadosCombinados), findViewById(R.id.btnMenosPambazosAdobadosCombinados), findViewById(R.id.btnMasPambazosAdobadosCombinados), 47.0)
-        products["Pambazos Adobados Combinados con Queso"] = ProductData(findViewById(R.id.cantidadPambazosAdobadosCombinadosQueso), findViewById(R.id.btnMenosPambazosAdobadosCombinadosQueso), findViewById(R.id.btnMasPambazosAdobadosCombinadosQueso), 59.0)
-        products["Pambazos Adobados Extra"] = ProductData(findViewById(R.id.cantidadPambazosAdobadosExtra), findViewById(R.id.btnMenosPambazosAdobadosExtra), findViewById(R.id.btnMasPambazosAdobadosExtra), 52.0)
-        products["Chalupas"] = ProductData(findViewById(R.id.cantidadChalupas), findViewById(R.id.btnMenosChalupas), findViewById(R.id.btnMasChalupas), 5.0)
-        products["Alones"] = ProductData(findViewById(R.id.cantidadAlones), findViewById(R.id.btnMenosAlones), findViewById(R.id.btnMasAlones), 25.0)
-        products["Mollejas"] = ProductData(findViewById(R.id.cantidadMollejas), findViewById(R.id.btnMenosMollejas), findViewById(R.id.btnMasMollejas), 25.0)
-        products["Higados"] = ProductData(findViewById(R.id.cantidadHigados), findViewById(R.id.btnMenosHigados), findViewById(R.id.btnMasHigados), 22.0)
-        products["Patitas"] = ProductData(findViewById(R.id.cantidadPatitas), findViewById(R.id.btnMenosPatitas), findViewById(R.id.btnMasPatitas), 22.0)
-        products["Huevos"] = ProductData(findViewById(R.id.cantidadHuevos), findViewById(R.id.btnMenosHuevos), findViewById(R.id.btnMasHuevos), 20.0)
-        products["Refrescos"] = ProductData(findViewById(R.id.cantidadRefrescos), findViewById(R.id.btnMenosRefrescos), findViewById(R.id.btnMasRefrescos), 26.0)
-        products["Cafe"] = ProductData(findViewById(R.id.cantidadCafe), findViewById(R.id.btnMenosCafe), findViewById(R.id.btnMasCafe), 22.0)
-        //products["Agua Jamaica/Horchata"] = ProductData(findViewById(R.id.cantidadAguas), findViewById(R.id.btnMenosAguas), findViewById(R.id.btnMasAguas), 25.0)
-        products["Aguas de Sabor"] = ProductData(findViewById(R.id.cantidadAguasSabor), findViewById(R.id.btnMenosAguasSabor), findViewById(R.id.btnMasAguasSabor), 25.0)
-        products["Agua Natural"] = ProductData(findViewById(R.id.cantidadAguasNat), findViewById(R.id.btnMenosAguasNat), findViewById(R.id.btnMasAguasNat), 20.0)
-        products["Agua para Te"] = ProductData(findViewById(R.id.cantidadAguaTe), findViewById(R.id.btnMenosAguaTe), findViewById(R.id.btnMasAguaTe), 20.0)
-        products["Extra +5"] = ProductData(findViewById(R.id.cantidadExtra5), findViewById(R.id.btnMenosExtra5), findViewById(R.id.btnMasExtra5), 5.0)
-        products["Extra +10"] = ProductData(findViewById(R.id.cantidadExtra10), findViewById(R.id.btnMenosExtra10), findViewById(R.id.btnMasExtra10), 10.0)
-        products["Extra +12"] = ProductData(findViewById(R.id.cantidadExtra12), findViewById(R.id.btnMenosExtra12), findViewById(R.id.btnMasExtra12), 12.0)
-        products["Postres 20"] = ProductData(findViewById(R.id.cantidadPostres20), findViewById(R.id.btnMenosPostres20), findViewById(R.id.btnMasPostres20), 20.0)
-        products["Postres 25"] = ProductData(findViewById(R.id.cantidadPostres25), findViewById(R.id.btnMenosPostres25), findViewById(R.id.btnMasPostres25), 25.0)
-        products["Postres 30"] = ProductData(findViewById(R.id.cantidadPostres30), findViewById(R.id.btnMenosPostres30), findViewById(R.id.btnMasPostres30), 30.0)
-        products["Postres 35"] = ProductData(findViewById(R.id.cantidadPostres35), findViewById(R.id.btnMenosPostres35), findViewById(R.id.btnMasPostres35), 35.0)
+        products["Quesadillas"] = ProductData(
+            findViewById(R.id.cantidadQuesadillas),
+            findViewById(R.id.btnMenosQuesadillas),
+            findViewById(R.id.btnMasQuesadillas),
+            30.0
+        )
+        products["Pozole Grande"] = ProductData(
+            findViewById(R.id.cantidadPozoleGrande),
+            findViewById(R.id.btnMenosPozoleGrande),
+            findViewById(R.id.btnMasPozoleGrande),
+            110.0
+        )
+        products["Pozole Chico"] = ProductData(
+            findViewById(R.id.cantidadPozoleChico),
+            findViewById(R.id.btnMenosPozoleChico),
+            findViewById(R.id.btnMasPozoleChico),
+            90.0
+        )
+        products["Tostadas"] = ProductData(
+            findViewById(R.id.cantidadTostadas),
+            findViewById(R.id.btnMenosTostadas),
+            findViewById(R.id.btnMasTostadas),
+            35.0
+        )
+        products["Volcanes"] = ProductData(
+            findViewById(R.id.cantidadVolcanes),
+            findViewById(R.id.btnMenosVolcanes),
+            findViewById(R.id.btnMasVolcanes),
+            60.0
+        )
+        products["Volcan Queso/Guisado Extra"] = ProductData(
+            findViewById(R.id.cantidadGuajolotaExtra),
+            findViewById(R.id.btnMenosGuajolotaExtra),
+            findViewById(R.id.btnMasGuajolotaExtra),
+            72.0
+        )
+        products["Guajoloyets Naturales"] = ProductData(
+            findViewById(R.id.cantidadGuajoloyetNatural),
+            findViewById(R.id.btnMenosGuajoloyetNatural),
+            findViewById(R.id.btnMasGuajoloyetNatural),
+            60.0
+        )
+        products["Guajoloyets Naturales Extra"] = ProductData(
+            findViewById(R.id.cantidadGujoloyetNaturalExtra),
+            findViewById(R.id.btnMenosGujoloyetNaturalExtra),
+            findViewById(R.id.btnMasGujoloyetNaturalExtra),
+            72.0
+        )
+        products["Guajoloyets Adobados"] = ProductData(
+            findViewById(R.id.cantidadGuajoloyetAdobado),
+            findViewById(R.id.btnMenosGuajoloyetAdobado),
+            findViewById(R.id.btnMasGuajoloyetAdobado),
+            65.0
+        )
+        products["Guajoloyets Adobados Extra"] = ProductData(
+            findViewById(R.id.cantidadGujoloyetAdobadoExtra),
+            findViewById(R.id.btnMenosGujoloyetAdobadoExtra),
+            findViewById(R.id.btnMasGujoloyetAdobadoExtra),
+            77.0
+        )
+        products["Pambazos Naturales"] = ProductData(
+            findViewById(R.id.cantidadPambazosNaturales),
+            findViewById(R.id.btnMenosPambazosNaturales),
+            findViewById(R.id.btnMasPambazosNaturales),
+            35.0
+        )
+        products["Pambazos Naturales Combinados"] = ProductData(
+            findViewById(R.id.cantidadPambazosNaturalesCombinados),
+            findViewById(R.id.btnMenosPambazosNaturalesCombinados),
+            findViewById(R.id.btnMasPambazosNaturalesCombinados),
+            42.0
+        )
+        products["Pambazos Naturales Combinados con Queso"] = ProductData(
+            findViewById(R.id.cantidadPambazosNaturalesCombinadosQueso),
+            findViewById(R.id.btnMenosPambazosNaturalesCombinadosQueso),
+            findViewById(R.id.btnMasPambazosNaturalesCombinadosQueso),
+            54.0
+        )
+        products["Pambazos Naturales Extra"] = ProductData(
+            findViewById(R.id.cantidadPambazosNaturalesQueso),
+            findViewById(R.id.btnMenosPambazosNaturalesQueso),
+            findViewById(R.id.btnMasPambazosNaturalesQueso),
+            47.0
+        )
+        products["Pambazos Adobados"] = ProductData(
+            findViewById(R.id.cantidadPambazosAdobados),
+            findViewById(R.id.btnMenosPambazosAdobados),
+            findViewById(R.id.btnMasPambazosAdobados),
+            40.0
+        )
+        products["Pambazos Adobados Combinados"] = ProductData(
+            findViewById(R.id.cantidadPambazosAdobadosCombinados),
+            findViewById(R.id.btnMenosPambazosAdobadosCombinados),
+            findViewById(R.id.btnMasPambazosAdobadosCombinados),
+            47.0
+        )
+        products["Pambazos Adobados Combinados con Queso"] = ProductData(
+            findViewById(R.id.cantidadPambazosAdobadosCombinadosQueso),
+            findViewById(R.id.btnMenosPambazosAdobadosCombinadosQueso),
+            findViewById(R.id.btnMasPambazosAdobadosCombinadosQueso),
+            59.0
+        )
+        products["Pambazos Adobados Extra"] = ProductData(
+            findViewById(R.id.cantidadPambazosAdobadosExtra),
+            findViewById(R.id.btnMenosPambazosAdobadosExtra),
+            findViewById(R.id.btnMasPambazosAdobadosExtra),
+            52.0
+        )
+        products["Chalupas"] = ProductData(
+            findViewById(R.id.cantidadChalupas),
+            findViewById(R.id.btnMenosChalupas),
+            findViewById(R.id.btnMasChalupas),
+            5.0
+        )
+        products["Alones"] = ProductData(
+            findViewById(R.id.cantidadAlones),
+            findViewById(R.id.btnMenosAlones),
+            findViewById(R.id.btnMasAlones),
+            25.0
+        )
+        products["Mollejas"] = ProductData(
+            findViewById(R.id.cantidadMollejas),
+            findViewById(R.id.btnMenosMollejas),
+            findViewById(R.id.btnMasMollejas),
+            25.0
+        )
+        products["Higados"] = ProductData(
+            findViewById(R.id.cantidadHigados),
+            findViewById(R.id.btnMenosHigados),
+            findViewById(R.id.btnMasHigados),
+            22.0
+        )
+        products["Patitas"] = ProductData(
+            findViewById(R.id.cantidadPatitas),
+            findViewById(R.id.btnMenosPatitas),
+            findViewById(R.id.btnMasPatitas),
+            22.0
+        )
+        products["Huevos"] = ProductData(
+            findViewById(R.id.cantidadHuevos),
+            findViewById(R.id.btnMenosHuevos),
+            findViewById(R.id.btnMasHuevos),
+            20.0
+        )
+        products["Refrescos"] = ProductData(
+            findViewById(R.id.cantidadRefrescos),
+            findViewById(R.id.btnMenosRefrescos),
+            findViewById(R.id.btnMasRefrescos),
+            26.0
+        )
+        products["Cafe"] = ProductData(
+            findViewById(R.id.cantidadCafe),
+            findViewById(R.id.btnMenosCafe),
+            findViewById(R.id.btnMasCafe),
+            22.0
+        )
+
+        products["Aguas de Sabor"] = ProductData(
+            findViewById(R.id.cantidadAguasSabor),
+            findViewById(R.id.btnMenosAguasSabor),
+            findViewById(R.id.btnMasAguasSabor),
+            25.0
+        )
+        products["Agua Natural"] = ProductData(
+            findViewById(R.id.cantidadAguasNat),
+            findViewById(R.id.btnMenosAguasNat),
+            findViewById(R.id.btnMasAguasNat),
+            20.0
+        )
+        products["Agua para Te"] = ProductData(
+            findViewById(R.id.cantidadAguaTe),
+            findViewById(R.id.btnMenosAguaTe),
+            findViewById(R.id.btnMasAguaTe),
+            20.0
+        )
+        products["Extra +5"] = ProductData(
+            findViewById(R.id.cantidadExtra5),
+            findViewById(R.id.btnMenosExtra5),
+            findViewById(R.id.btnMasExtra5),
+            5.0
+        )
+        products["Extra +10"] = ProductData(
+            findViewById(R.id.cantidadExtra10),
+            findViewById(R.id.btnMenosExtra10),
+            findViewById(R.id.btnMasExtra10),
+            10.0
+        )
+        products["Extra +12"] = ProductData(
+            findViewById(R.id.cantidadExtra12),
+            findViewById(R.id.btnMenosExtra12),
+            findViewById(R.id.btnMasExtra12),
+            12.0
+        )
+        products["Postres 20"] = ProductData(
+            findViewById(R.id.cantidadPostres20),
+            findViewById(R.id.btnMenosPostres20),
+            findViewById(R.id.btnMasPostres20),
+            20.0
+        )
+        products["Postres 25"] = ProductData(
+            findViewById(R.id.cantidadPostres25),
+            findViewById(R.id.btnMenosPostres25),
+            findViewById(R.id.btnMasPostres25),
+            25.0
+        )
+        products["Postres 30"] = ProductData(
+            findViewById(R.id.cantidadPostres30),
+            findViewById(R.id.btnMenosPostres30),
+            findViewById(R.id.btnMasPostres30),
+            30.0
+        )
+        products["Postres 35"] = ProductData(
+            findViewById(R.id.cantidadPostres35),
+            findViewById(R.id.btnMenosPostres35),
+            findViewById(R.id.btnMasPostres35),
+            35.0
+        )
 
 
         products.forEach { (productName, productData) ->
@@ -283,8 +465,22 @@ class MainActivity : AppCompatActivity() {
 
             if (productName == "Chalupas" && productData.cantidadTV is EditText) {
                 productData.cantidadTV.addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                    }
+
                     override fun afterTextChanged(s: Editable?) {
                         val currentQuantity = quantities[productName] ?: 0
                         val newValue = s?.toString()?.toIntOrNull() ?: 0
@@ -367,7 +563,11 @@ class MainActivity : AppCompatActivity() {
             if (intent.resolveActivity(packageManager) != null) {
                 startActivity(intent)
             } else {
-                Toast.makeText(this, "No se pudo abrir la configuración de Bluetooth", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "No se pudo abrir la configuración de Bluetooth",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         btnLimpiar.setOnClickListener {
@@ -421,15 +621,28 @@ class MainActivity : AppCompatActivity() {
                 if (checkBluetoothPermissions()) {
                     val btSuccess = printViaBluetooth(textoTicket)
                     if (btSuccess) {
-                        Toast.makeText(this@MainActivity, "Ticket enviado por Bluetooth", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Ticket enviado por Bluetooth",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        Toast.makeText(this@MainActivity, "Fallo al imprimir por Bluetooth", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Fallo al imprimir por Bluetooth",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 } else {
-                    Toast.makeText(this@MainActivity, "Permisos de Bluetooth no concedidos.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Permisos de Bluetooth no concedidos.",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             } else {
-                Toast.makeText(this@MainActivity, "Ticket enviado por USB", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Ticket enviado por USB", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
@@ -450,78 +663,123 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkBluetoothPermissions(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) == PackageManager.PERMISSION_GRANTED
         } else {
-            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH
+            ) == PackageManager.PERMISSION_GRANTED
         }
     }
 
     @SuppressLint("MissingPermission")
-    private suspend fun connectToBluetoothPrinter(): BluetoothSocket? = withContext(Dispatchers.IO) {
-        if (bluetoothAdapter == null) {
-            Log.e(TAG, "Adaptador Bluetooth no disponible.")
-            withContext(Dispatchers.Main) { Toast.makeText(this@MainActivity, "Adaptador Bluetooth no disponible", Toast.LENGTH_SHORT).show() }
-            return@withContext null
-        }
-        if (!bluetoothAdapter!!.isEnabled) {
-            Log.i(TAG, "Bluetooth no activado. Solicitando activación.")
-            withContext(Dispatchers.Main) {
-                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                enableBluetoothLauncher.launch(enableBtIntent)
-                Toast.makeText(this@MainActivity, "Activando Bluetooth...", Toast.LENGTH_SHORT).show()
+    private suspend fun connectToBluetoothPrinter(): BluetoothSocket? =
+        withContext(Dispatchers.IO) {
+            if (bluetoothAdapter == null) {
+                Log.e(TAG, "Adaptador Bluetooth no disponible.")
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Adaptador Bluetooth no disponible",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                return@withContext null
             }
-            return@withContext null
+            if (!bluetoothAdapter!!.isEnabled) {
+                Log.i(TAG, "Bluetooth no activado. Solicitando activación.")
+                withContext(Dispatchers.Main) {
+                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                    enableBluetoothLauncher.launch(enableBtIntent)
+                    Toast.makeText(this@MainActivity, "Activando Bluetooth...", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                return@withContext null
+            }
+            val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter!!.bondedDevices
+            val printerDevice =
+                pairedDevices?.find { it.name.equals(PRINTER_NAME_BLUETOOTH, ignoreCase = true) }
+            if (printerDevice == null) {
+                Log.e(
+                    TAG,
+                    "Impresora Bluetooth '$PRINTER_NAME_BLUETOOTH' no encontrada entre los dispositivos emparejados."
+                )
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Impresora no emparejada: $PRINTER_NAME_BLUETOOTH",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                return@withContext null
+            }
+            Log.d(
+                TAG,
+                "Intentando conectar con la impresora Bluetooth: ${printerDevice.name} [${printerDevice.address}]"
+            )
+            return@withContext try {
+                val socket = printerDevice.createRfcommSocketToServiceRecord(PRINTER_UUID)
+                bluetoothAdapter?.cancelDiscovery()
+                socket.connect()
+                Log.d(TAG, "Conexión Bluetooth establecida con ${printerDevice.name}")
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Conectado a ${printerDevice.name}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                socket
+            } catch (e: IOException) {
+                Log.e(
+                    TAG,
+                    "Error al conectar por Bluetooth con ${printerDevice.name}: ${e.message}",
+                    e
+                )
+                try {
+                    bluetoothSocket?.close()
+                } catch (closeException: IOException) {
+                }
+                null
+            }
         }
-        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter!!.bondedDevices
-        val printerDevice = pairedDevices?.find { it.name.equals(PRINTER_NAME_BLUETOOTH, ignoreCase = true) }
-        if (printerDevice == null) {
-            Log.e(TAG, "Impresora Bluetooth '$PRINTER_NAME_BLUETOOTH' no encontrada entre los dispositivos emparejados.")
-            withContext(Dispatchers.Main) { Toast.makeText(this@MainActivity, "Impresora no emparejada: $PRINTER_NAME_BLUETOOTH", Toast.LENGTH_LONG).show() }
-            return@withContext null
-        }
-        Log.d(TAG, "Intentando conectar con la impresora Bluetooth: ${printerDevice.name} [${printerDevice.address}]")
-        return@withContext try {
-            val socket = printerDevice.createRfcommSocketToServiceRecord(PRINTER_UUID)
-            bluetoothAdapter?.cancelDiscovery()
-            socket.connect()
-            Log.d(TAG, "Conexión Bluetooth establecida con ${printerDevice.name}")
-            withContext(Dispatchers.Main) { Toast.makeText(this@MainActivity, "Conectado a ${printerDevice.name}", Toast.LENGTH_SHORT).show() }
-            socket
-        } catch (e: IOException) {
-            Log.e(TAG, "Error al conectar por Bluetooth con ${printerDevice.name}: ${e.message}", e)
-            try { bluetoothSocket?.close() } catch (closeException: IOException) {}
-            null
-        }
-    }
 
     @SuppressLint("MissingPermission")
-    private suspend fun printViaBluetooth(textoTicket: String): Boolean = withContext(Dispatchers.IO) {
-        var success = false
-        try {
-            bluetoothSocket = connectToBluetoothPrinter()
-            val socket = bluetoothSocket
-            if (socket == null || !socket.isConnected) {
-                Log.e(TAG, "No se pudo conectar a la impresora Bluetooth")
-                return@withContext false
+    private suspend fun printViaBluetooth(textoTicket: String): Boolean =
+        withContext(Dispatchers.IO) {
+            var success = false
+            try {
+                bluetoothSocket = connectToBluetoothPrinter()
+                val socket = bluetoothSocket
+                if (socket == null || !socket.isConnected) {
+                    Log.e(TAG, "No se pudo conectar a la impresora Bluetooth")
+                    return@withContext false
+                }
+                val outputStream: OutputStream = socket.outputStream
+                val initPrinter = byteArrayOf(0x1B, 0x40)
+                val cutPaper = byteArrayOf(0x1D, 0x56, 0x42, 0x00)
+                val ticketBytes = textoTicket.toByteArray(Charset.forName("GB18030"))
+                outputStream.write(initPrinter)
+                outputStream.write(ticketBytes)
+                outputStream.write(cutPaper)
+                outputStream.flush()
+                success = true
+            } catch (e: IOException) {
+                Log.e(TAG, "Error de E/S al imprimir por Bluetooth: ${e.message}", e)
+            } catch (e: SecurityException) {
+                Log.e(
+                    TAG,
+                    "Error de seguridad (permisos) al imprimir por Bluetooth: ${e.message}",
+                    e
+                )
+            } finally {
+                closeBluetoothSocket()
             }
-            val outputStream: OutputStream = socket.outputStream
-            val initPrinter = byteArrayOf(0x1B, 0x40)
-            val cutPaper = byteArrayOf(0x1D, 0x56, 0x42, 0x00)
-            val ticketBytes = textoTicket.toByteArray(Charset.forName("GB18030"))
-            outputStream.write(initPrinter)
-            outputStream.write(ticketBytes)
-            outputStream.write(cutPaper)
-            outputStream.flush()
-            success = true
-        } catch (e: IOException) {
-            Log.e(TAG, "Error de E/S al imprimir por Bluetooth: ${e.message}", e)
-        } catch (e: SecurityException) {
-            Log.e(TAG, "Error de seguridad (permisos) al imprimir por Bluetooth: ${e.message}", e)
-        } finally {
-            closeBluetoothSocket()
+            return@withContext success
         }
-        return@withContext success
-    }
 
     private fun closeBluetoothSocket() {
         try {
@@ -574,7 +832,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
         if (usbInterface == null || usbEndpointOut == null) {
-            Toast.makeText(this, "No se encontró interfaz de impresora USB", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "No se encontró interfaz de impresora USB", Toast.LENGTH_SHORT)
+                .show()
             releaseUsbDevice()
             return
         }
@@ -595,14 +854,19 @@ class MainActivity : AppCompatActivity() {
         }
         return@withContext try {
             val bytes = data.toByteArray(Charset.forName("GB18030"))
-            val sentBytes = usbDeviceConnection!!.bulkTransfer(usbEndpointOut!!, bytes, bytes.size, 5000)
+            val sentBytes =
+                usbDeviceConnection!!.bulkTransfer(usbEndpointOut!!, bytes, bytes.size, 5000)
             if (sentBytes >= 0) {
                 Log.d(TAG, "Datos ($sentBytes bytes) enviados por USB.")
                 true
             } else {
                 Log.e(TAG, "Error al enviar datos por USB, sentBytes: $sentBytes")
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, "Error de transmisión USB", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Error de transmisión USB",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 releaseUsbDevice()
                 false
@@ -610,7 +874,11 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.e(TAG, "Excepción al imprimir por USB: ${e.message}", e)
             withContext(Dispatchers.Main) {
-                Toast.makeText(this@MainActivity, "Excepción de USB: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Excepción de USB: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             releaseUsbDevice()
             false
@@ -633,22 +901,28 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-
     private fun mostrarResumen(productos: List<Producto>) {
         val sb = StringBuilder()
         var totalGeneral = 0.0
         productos.forEach { producto ->
             val totalProducto = producto.cantidad * producto.precio
             totalGeneral += totalProducto
-            sb.appendLine("${producto.cantidad} x ${producto.nombre} ... $${"%.2f".format(totalProducto)}")
-            if (noCuenta.isChecked){
-                sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)}")
-            }
+            sb.appendLine(
+                "${producto.cantidad} x ${producto.nombre} ... $${
+                    "%.2f".format(
+                        totalProducto
+                    )
+                }"
+            )
+
         }
+
         summaryTextView.text = sb.toString()
         summaryTotalTextView.text = "TOTAL: $${"%.2f".format(totalGeneral)}"
         summaryContainer.visibility = View.VISIBLE
+        if (noCuenta.isChecked) {
+            sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)}")
+        }
     }
 
     private fun ocultarResumen() {
@@ -693,12 +967,15 @@ class MainActivity : AppCompatActivity() {
         sb.appendLine("********************************")
         sb.appendLine("Fecha y hora: $fechaHora")
 
-        if (noCuenta.isChecked){
-            sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)}")
+        if (noCuenta.isChecked) {
+            sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)} ")
+            sb.appendLine("Nombre: Margarita Daniel Perez")
+            sb.appendLine("Banco: BBVA")
+
         }
 
         val mesaInfo = editTextMesa.text.toString().trim()
-        if(mesaInfo.isNotEmpty()){
+        if (mesaInfo.isNotEmpty()) {
             sb.appendLine(String.format("%-32s", "Mesa: ${mesaInfo.uppercase()}"))
             sb.appendLine("*****************************")
         }
@@ -714,10 +991,19 @@ class MainActivity : AppCompatActivity() {
         } else {
             for (p in productos) {
                 totalGeneral += p.total
-                val nombreProducto = if (p.nombre.length > 15) p.nombre.substring(0, 12) + "..." else p.nombre
+                val nombreProducto =
+                    if (p.nombre.length > 15) p.nombre.substring(0, 12) + "..." else p.nombre
                 val precioConSimbolo = String.format("$%.2f", p.precio)
                 val totalConSimbolo = String.format("$%.2f", p.total)
-                sb.appendLine(String.format("%-15s %6s %3d %7s", nombreProducto, precioConSimbolo, p.cantidad, totalConSimbolo))
+                sb.appendLine(
+                    String.format(
+                        "%-15s %6s %3d %7s",
+                        nombreProducto,
+                        precioConSimbolo,
+                        p.cantidad,
+                        totalConSimbolo
+                    )
+                )
             }
         }
         sb.appendLine(lineaSeparadoraCorta)
@@ -732,48 +1018,6 @@ class MainActivity : AppCompatActivity() {
         return sb.toString()
     }
 
-    private fun bitmapToEscPosData(bitmap: Bitmap, printerDotsPerLine: Int = 384): ByteArray {
-        val outputStream = java.io.ByteArrayOutputStream()
-        var scaledBitmap = bitmap
-        if (bitmap.width > printerDotsPerLine) {
-            val newHeight = (bitmap.height.toFloat() * (printerDotsPerLine.toFloat() / bitmap.width.toFloat())).toInt()
-            scaledBitmap = Bitmap.createScaledBitmap(bitmap, printerDotsPerLine, newHeight, true)
-        }
-        val width = scaledBitmap.width
-        val height = scaledBitmap.height
-        val pixels = IntArray(width * height)
-        scaledBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
-        val threshold = 128
-        val widthBytes = (width + 7) / 8
-        val pL = widthBytes % 256
-        val pH = widthBytes / 256
-        outputStream.write(0x1D)
-        outputStream.write(0x76)
-        outputStream.write(0x30)
-        outputStream.write(0x00)
-        outputStream.write(pL)
-        outputStream.write(pH)
-        outputStream.write(height % 256)
-        outputStream.write(height / 256)
-        for (y in 0 until height) {
-            var byteVal = 0
-            for (x in 0 until width) {
-                val pixelColor = pixels[y * width + x]
-                val r = Color.red(pixelColor)
-                val g = Color.green(pixelColor)
-                val b = Color.blue(pixelColor)
-                val luminance = (0.299 * r + 0.587 * g + 0.114 * b).toInt()
-                if (luminance < threshold) {
-                    byteVal = byteVal or (1 shl (7 - (x % 8)))
-                }
-                if (x % 8 == 7 || x == width - 1) {
-                    outputStream.write(byteVal)
-                    byteVal = 0
-                }
-            }
-        }
-        return outputStream.toByteArray()
-    }
 
     // -----------------------------------------------------------------------------------------
     // Funciones de persistencia y administración
@@ -789,211 +1033,156 @@ class MainActivity : AppCompatActivity() {
      * @param mesaInfo Texto introducido en el campo mesa; si está vacío se
      *                 asumirá que es para llevar.
      */
+
+
+
+// === BLOQUE CORREGIDO Y OPTIMIZADO — PÉGALO AL FINAL DE TU MainActivity.kt ===
+
+    /** Formatea un Double como dinero con 2 decimales. */
+    private fun Double.formatMoney(): String = "$" + String.format("%.2f", this)
+
+    /** Refresca el listado de órdenes en el panel administrador. */
+    private fun refreshOrders() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val updated = appDatabase.OrderDao().getAllOrders()
+            withContext(Dispatchers.Main) { adminOrderAdapter.updateOrders(updated) }
+        }
+    }
+
+    /** Persiste una orden y refresca la lista del panel de administración. */
     private fun guardarOrden(productos: List<Producto>, mesaInfo: String) {
         val createdAt = System.currentTimeMillis()
-        // Calcular el start of day considerando un corte a las 5am
-        val cal = Calendar.getInstance()
-        cal.timeInMillis = createdAt
-        val cutoffHour = 5
-        if (cal.get(Calendar.HOUR_OF_DAY) < cutoffHour) {
-            cal.add(Calendar.DAY_OF_MONTH, -1)
-        }
-        cal.set(Calendar.HOUR_OF_DAY, 0)
-        cal.set(Calendar.MINUTE, 0)
-        cal.set(Calendar.SECOND, 0)
-        cal.set(Calendar.MILLISECOND, 0)
-        val businessDate = cal.timeInMillis
+
+        // businessDate con corte 5:00 AM (misma lógica, solo más clara)
+        val businessDate = Calendar.getInstance().apply {
+            timeInMillis = createdAt
+            if (get(Calendar.HOUR_OF_DAY) < 5) add(Calendar.DAY_OF_MONTH, -1)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
 
         val subtotal = productos.sumOf { it.cantidad * it.precio }
-        // No se aplican descuentos ni impuestos adicionales, así que el total coincide con el subtotal
-        val grandTotal = subtotal
-        val orderType = if (mesaInfo.isNotEmpty()) "DINE_IN" else "TAKEOUT"
+        val grandTotal = subtotal // (misma lógica: sin propinas/iva/etc.)
+
         val orderEntity = OrderEntity(
             orderId = 0,
-            mesa = if (mesaInfo.isNotEmpty()) mesaInfo else null,
-            orderType = orderType,
+            mesa = mesaInfo.ifBlank { null },
             createdAt = createdAt,
             businessDate = businessDate,
-            subtotal = subtotal,
             grandTotal = grandTotal
         )
+
         val items = productos.map {
             OrderItemEntity(
                 itemId = 0,
-                orderId = 0, // se reasignará en insertOrderWithItems
+                orderId = 0, // se asigna en la transacción
                 name = it.nombre,
                 unitPrice = it.precio,
                 quantity = it.cantidad
             )
         }
+
         lifecycleScope.launch(Dispatchers.IO) {
-            OrderDatabase.getInstance(applicationContext).OrderDao().insertOrderWithItems(orderEntity, items)
-            // Recargar la lista de pedidos en la interfaz cuando termine la inserción
-            val updatedOrders = OrderDatabase.getInstance(applicationContext).OrderDao().getAllOrders()
-            withContext(Dispatchers.Main) {
-                adminOrderAdapter.updateOrders(updatedOrders)
-            }
+            appDatabase.OrderDao().insertOrderWithItems(orderEntity, items)
+            withContext(Dispatchers.Main) { refreshOrders() }
         }
     }
 
-    /**
-     * Genera un resumen de ventas diarias y lo muestra en el panel de administración. Cada
-     * entrada incluye la fecha, la cantidad de pedidos y el total de ventas de ese día,
-     * seguido de un total acumulado.
-     */
+    /** Construye el texto de resumen (reutilizado por diario/semanal/mensual). */
+    private inline fun <T> buildResumen(
+        resultados: List<T>,
+        crossinline line: (T) -> String
+    ): String {
+        val sb = StringBuilder()
+        var totalGeneral = 0.0
+        resultados.forEach { r ->
+            sb.appendLine(line(r))
+            // Los tipos DailySummary/WeeklySummary/MonthlySummary exponen totalSales
+            val total = when (r) {
+                is DailySummary -> r.totalSales
+                is WeeklySummary -> r.totalSales
+                is MonthlySummary -> r.totalSales
+                else -> 0.0
+            }
+            totalGeneral += total
+        }
+        sb.appendLine("------------------------------")
+        sb.appendLine("Total acumulado: ${totalGeneral.formatMoney()}")
+        return sb.toString()
+    }
+
+    /** Calcula y muestra la ganancia DIARIA. */
     private fun generarGananciaDiaria() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val resultados = orderDatabase.OrderDao().getDailySales()
-            val sb = StringBuilder()
-            var totalGeneral = 0.0
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            for (r in resultados) {
-                val date = Date(r.businessDate)
-                val linea = "${sdf.format(date)}: ${r.ordersCount} órdenes, $${"%.2f".format(r.totalSales)}"
-                sb.appendLine(linea)
-                totalGeneral += r.totalSales
+            val resultados = appDatabase.OrderDao().getDailySales()
+            val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+            val texto = buildResumen(resultados) { r ->
+                "${sdf.format(Date(r.businessDate))}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
             }
-            sb.appendLine("------------------------------")
-            sb.appendLine("Total acumulado: $${"%.2f".format(totalGeneral)}")
-            withContext(Dispatchers.Main) {
-                adminSummaryTextView.text = sb.toString()
-            }
+            withContext(Dispatchers.Main) { adminSummaryTextView.text = texto }
         }
     }
 
-    /**
-     * Genera un resumen de ventas semanales (por semana ISO) y lo muestra en el panel de
-     * administración. Cada entrada se muestra con el formato Año-Semana.
-     */
+    /** Calcula y muestra la ganancia SEMANAL (YYYY-WW). */
     private fun generarGananciaSemanal() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val resultados = orderDatabase.OrderDao().getWeeklySales()
-            val sb = StringBuilder()
-            var totalGeneral = 0.0
-            for (r in resultados) {
-                val linea = "Semana ${r.week}: ${r.ordersCount} órdenes, $${"%.2f".format(r.totalSales)}"
-                sb.appendLine(linea)
-                totalGeneral += r.totalSales
+            val resultados = appDatabase.OrderDao().getWeeklySales()
+            val texto = buildResumen(resultados) { r ->
+                "Semana ${r.week}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
             }
-            sb.appendLine("------------------------------")
-            sb.appendLine("Total acumulado: $${"%.2f".format(totalGeneral)}")
-            withContext(Dispatchers.Main) {
-                adminSummaryTextView.text = sb.toString()
-            }
+            withContext(Dispatchers.Main) { adminSummaryTextView.text = texto }
         }
     }
 
-    /**
-     * Genera un resumen de ventas mensuales y lo muestra en el panel de administración.
-     * Cada entrada usa el formato "YYYY-MM" para identificar el mes.
-     */
+    /** Calcula y muestra la ganancia MENSUAL (YYYY-MM). */
     private fun generarGananciaMensual() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val resultados = orderDatabase.OrderDao().getMonthlySales()
-            val sb = StringBuilder()
-            var totalGeneral = 0.0
-            for (r in resultados) {
-                val linea = "Mes ${r.month}: ${r.ordersCount} órdenes, $${"%.2f".format(r.totalSales)}"
-                sb.appendLine(linea)
-                totalGeneral += r.totalSales
+            val resultados = appDatabase.OrderDao().getMonthlySales()
+            val texto = buildResumen(resultados) { r ->
+                "Mes ${r.month}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
             }
-            sb.appendLine("------------------------------")
-            sb.appendLine("Total acumulado: $${"%.2f".format(totalGeneral)}")
-            withContext(Dispatchers.Main) {
-                adminSummaryTextView.text = sb.toString()
-            }
+            withContext(Dispatchers.Main) { adminSummaryTextView.text = texto }
         }
     }
 
-    /**
-     * Carga todos los pedidos almacenados en la base y actualiza el RecyclerView.
-     * Se utiliza al iniciar la aplicación y después de insertar o eliminar pedidos.
-     */
-    private fun cargarPedidos() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val orders = OrderDatabase.getInstance(applicationContext).OrderDao().getAllOrders()
-            withContext(Dispatchers.Main) {
-                AdminOrderAdapter.updateOrders(orders)
-            }
-        }
-    }
+    /** Carga todas las órdenes (llamar en onCreate). */
+    private fun cargarPedidos() = refreshOrders()
 
-    private fun AdminOrderAdapter.Companion.updateOrders(entities: List<OrderEntity>) {}
-
-    /**
-     * Elimina el pedido con el identificador dado de la base de datos y actualiza la lista
-     * de pedidos en la pantalla de administración. Muestra un toast para informar al
-     * usuario del resultado.
-     *
-     * @param orderId identificador del pedido a eliminar
-     */
+    /** Elimina una orden y refresca la lista. */
     private fun eliminarPedido(orderId: Long) {
         lifecycleScope.launch(Dispatchers.IO) {
-            orderDatabase.OrderDao().deleteOrderById(orderId)
-            val updatedOrders = orderDatabase.OrderDao().getAllOrders()
+            appDatabase.OrderDao().deleteOrderById(orderId)
             withContext(Dispatchers.Main) {
-                adminOrderAdapter.updateOrders(updatedOrders)
+                refreshOrders()
                 Toast.makeText(this@MainActivity, "Pedido eliminado", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    /**
-     * Muestra un resumen detallado del pedido seleccionado en la pantalla de
-     * administración. Al pulsar sobre un pedido en el RecyclerView se recuperan
-     * sus artículos de la base de datos y se muestra en un diálogo con la hora
-     * en que se creó la orden y la lista de platillos con sus cantidades y
-     * subtotales. También se incluye el total del pedido.
-     *
-     * @param order La entidad de la orden seleccionada.
-     */
+    /** Muestra un diálogo con el detalle de artículos de la orden. */
     private fun mostrarResumenPedido(order: OrderEntity) {
         lifecycleScope.launch(Dispatchers.IO) {
-            // Obtener todos los artículos de la orden de forma asíncrona
-            val items = orderDatabase.OrderDao().getItemsForOrder(order.orderId)
-            val detalleItems = StringBuilder()
-            var totalCalculado = 0.0
-            for (item in items) {
-                val totalItem = item.unitPrice * item.quantity
-                detalleItems.appendLine("${item.quantity} x ${item.name} ... $${"%.2f".format(totalItem)}")
-                totalCalculado += totalItem
+            val items = appDatabase.OrderDao().getItemsForOrder(order.orderId)
+            val detalle = buildString {
+                items.forEach { it ->
+                    val total = it.unitPrice * it.quantity
+                    appendLine("${it.quantity} x ${it.name} ... ${total.formatMoney()}")
+                }
+                appendLine("------------------------------")
+                appendLine("TOTAL: ${order.grandTotal.formatMoney()}")
             }
-
-            // Formatear la hora de creación de la orden
-            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val horaFormateada = sdf.format(Date(order.createdAt))
-
             withContext(Dispatchers.Main) {
-                // Inflar el layout personalizado para el diálogo
-                val dialogView = layoutInflater.inflate(R.layout.dialog_order_summary, null)
-                val tvHora = dialogView.findViewById<TextView>(R.id.tvDialogHora)
-                val tvItems = dialogView.findViewById<TextView>(R.id.tvDialogItems)
-                val tvTotal = dialogView.findViewById<TextView>(R.id.tvDialogTotal)
-                val btnClose = dialogView.findViewById<MaterialButton>(R.id.btnCloseDialog)
-
-                // Asignar los valores a las vistas del diálogo
-                // Asignar valores directamente. Formateamos las cadenas sin depender de resources
-                tvHora.text = "Hora: $horaFormateada"
-                tvItems.text = detalleItems.toString().trim()
-                tvTotal.text = "Total: $${"%.2f".format(order.grandTotal)}"
-
-                // Crear y mostrar el diálogo utilizando el layout personalizado
-                val dialog = AlertDialog.Builder(this@MainActivity)
-                    .setView(dialogView)
-                    .create()
-                btnClose.setOnClickListener { dialog.dismiss() }
-                dialog.show()
+                androidx.appcompat.app.AlertDialog.Builder(this@MainActivity)
+                    .setTitle("Pedido ${order.orderId} - ${order.mesa ?: "Para llevar"}")
+                    .setMessage(detalle)
+                    .setPositiveButton("Cerrar", null)
+                    .show()
             }
         }
     }
 
-    override fun onBackPressed() {
-        // Si el cajón de administración está abierto, ciérralo en lugar de salir de la actividad
-        if (::drawerLayout.isInitialized && drawerLayout.isDrawerOpen(GravityCompat.END)) {
-            drawerLayout.closeDrawer(GravityCompat.END)
-        } else {
-            super.onBackPressed()
-        }
-    }
+// === FIN DEL BLOQUE CORREGIDO Y OPTIMIZADO ===
 
 }
