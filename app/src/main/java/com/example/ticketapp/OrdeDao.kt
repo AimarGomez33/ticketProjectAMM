@@ -13,60 +13,85 @@ import androidx.room.Transaction
 interface OrderDao {
 
     /**
-     * Inserta una orden y sus artículos de forma atómica (transaccional).
-     * Primero inserta la OrderEntity para generar su ID, luego asigna ese ID
-     * a cada OrderItemEntity y los inserta todos. Si algo falla, se deshace todo.
+     * Inserts an order and its items transactionally.
+     * First inserts the OrderEntity to generate its ID, then assigns that ID
+     * to each OrderItemEntity and inserts them all. If anything fails, the transaction rolls back.
      */
     @Transaction
     suspend fun insertOrderWithItems(order: OrderEntity, items: List<OrderItemEntity>) {
-        val orderId = insertOrder(order) // Inserta la orden y obtiene el ID generado
-        val itemsWithOrderId = items.map { it.copy(orderId = orderId) } // Asigna el ID a cada artículo
-        insertOrderItems(itemsWithOrderId) // Inserta todos los artículos
+        val orderId = insertOrder(order)
+        val itemsWithOrderId = items.map { it.copy(orderId = orderId) }
+        insertOrderItems(itemsWithOrderId)
     }
 
-    /** Inserta una sola entidad de orden. Usado internamente por la transacción. */
+    /** Inserts a single order entity (used internally by the transaction). */
     @Insert
     suspend fun insertOrder(order: OrderEntity): Long
 
-    /** Inserta una lista de artículos de la orden. Usado internamente por la transacción. */
+    /** Inserts a list of order items (used internally by the transaction). */
     @Insert
     suspend fun insertOrderItems(items: List<OrderItemEntity>)
 
-    /**
-     * Devuelve todas las órdenes guardadas, ordenadas por fecha de creación descendente.
-     * Se usa para mostrar la lista de pedidos en la pantalla de administración.
-     */
+
+    /** Returns all saved orders, ordered by creation date (descending). */
     @Query("SELECT * FROM orders ORDER BY created_at DESC")
     suspend fun getAllOrders(): List<OrderEntity>
 
-    /**
-     * Recupera todos los artículos asociados a un ID de orden específico.
-     * Útil para mostrar el detalle de un pedido.
-     */
+    // ------------------- DELETE THIS BLOCK AS WELL -------------------
+
+    // -----------------------------------------------------------------
+
+
+    /** Retrieves all items associated with a specific order ID. */
     @Query("SELECT * FROM order_items WHERE order_id = :orderId")
     suspend fun getItemsForOrder(orderId: Long): List<OrderItemEntity>
 
-    /**
-     * Elimina una orden por su ID. Gracias a la configuración `onDelete = ForeignKey.CASCADE`
-     * en la entidad OrderItemEntity, todos sus artículos asociados se borrarán automáticamente.
-     */
+    @Query("SELECT * FROM products WHERE name = :nombre LIMIT 1")
+    suspend fun getProductByName(nombre: String): Product?
+
+    @Query("SELECT * FROM products WHERE name IN (:nombres)")
+    suspend fun getProductsByNames(nombres: List<String>): List<Product>
+
+    @Insert
+    suspend fun insert(order: OrderEntity)
+
+    // ✅ ADD THIS CORRECT VERSION
+    /** Retrieves all orders created within a specific time range. */
+    @Query("SELECT * FROM orders WHERE created_at BETWEEN :startTime AND :endTime ORDER BY created_at DESC")
+    suspend fun getOrdersBetweenDates(startTime: Long, endTime: Long): List<OrderEntity>
+
+
+
+    /** Deletes an order by its ID (its items are automatically deleted due to CASCADE). */
     @Query("DELETE FROM orders WHERE orderId = :orderId")
     suspend fun deleteOrderById(orderId: Long)
 
-    /**
-     * Devuelve las ventas totales y el número de órdenes agrupadas por día contable.
-     * El resultado se mapea a la clase de datos DailySummary.
-     */
+
+    // 🔹 Combo-specific filters
+    /** Returns all orders marked as combos. */
+    @Query("SELECT * FROM orders WHERE esCombo = 1")
+    suspend fun getComboOrders(): List<OrderEntity>
+
+    /** Returns all items that are combos (across any order). */
+    @Query("SELECT * FROM order_items WHERE combo = 1")
+    suspend fun getComboItems(): List<OrderItemEntity>
+
+    /** Counts how many combo items have been sold across all orders. */
+    @Query("SELECT SUM(quantity) FROM order_items WHERE Combo = 1")
+    suspend fun countComboItemsSold(): Int?
+
+    /** Calculates total revenue generated from combos. */
+    @Query("SELECT SUM(quantity * unit_price) FROM order_items WHERE Combo = 1")
+    suspend fun getTotalComboRevenue(): Double?
+
+    /** Returns daily sales summary grouped by business_date. */
     @Query(
         "SELECT business_date AS businessDate, SUM(grand_total) AS totalSales, COUNT(orderId) AS ordersCount " +
                 "FROM orders GROUP BY business_date ORDER BY business_date DESC"
     )
     suspend fun getDailySales(): List<DailySummary>
 
-    /**
-     * Devuelve las ventas totales y el número de órdenes agrupadas por semana (formato 'YYYY-WW').
-     * El resultado se mapea a la clase de datos WeeklySummary.
-     */
+    /** Returns weekly sales summary grouped by year-week (format 'YYYY-WW'). */
     @Query(
         "SELECT strftime('%Y-%W', business_date / 1000, 'unixepoch') AS week, " +
                 "SUM(grand_total) AS totalSales, COUNT(orderId) AS ordersCount " +
@@ -74,10 +99,7 @@ interface OrderDao {
     )
     suspend fun getWeeklySales(): List<WeeklySummary>
 
-    /**
-     * Devuelve las ventas totales y el número de órdenes agrupadas por mes (formato 'YYYY-MM').
-     * El resultado se mapea a la clase de datos MonthlySummary.
-     */
+    /** Returns monthly sales summary grouped by year-month (format 'YYYY-MM'). */
     @Query(
         "SELECT strftime('%Y-%m', business_date / 1000, 'unixepoch') AS month, " +
                 "SUM(grand_total) AS totalSales, COUNT(orderId) AS ordersCount " +

@@ -4,27 +4,27 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import com.example.ticketapp.ProductDao
-import com.example.ticketapp.AdminOrderAdapter
-import com.example.ticketapp.OrderEntity
-
-
-
+import com.example.ticketapp.Converters
 
 @Database(
-    //  CORRECCIÓN: Lista SOLAMENTE las clases anotadas con @Entity
-    entities = [Product::class, OrderEntity::class, OrderItemEntity::class],
-    //  IMPORTANTE: Sube la versión porque has cambiado el esquema
-    version = 3,
+    entities = [
+        Product::class,
+        OrderEntity::class,
+        OrderItemEntity::class
+    ],
+    version = 12,
     exportSchema = false
 )
 
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
+
     abstract fun productDao(): ProductDao
-    abstract fun OrderDao(): OrderDao
+    abstract fun orderDao(): OrderDao
 
     companion object {
         @Volatile
@@ -37,8 +37,9 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "ticket_database"
                 )
-                    .fallbackToDestructiveMigration() // ✅ destruye y recrea base si hay cambios
+                    .fallbackToDestructiveMigration()
                     .addCallback(DatabaseCallback(scope))
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance
@@ -58,19 +59,15 @@ abstract class AppDatabase : RoomDatabase() {
 
         suspend fun populateDatabase(productDao: ProductDao) {
             productDao.deleteAll()
-
-            var product = Product(name = "Chalupas", price = 5.0, category = "Platillos Principales")
-            productDao.insert(product)
-            product = Product(name = "Pambazos Naturales", price = 34.0, category = "Pambazos")
-            productDao.insert(product)
-            product = Product(name = "Guajoloyet Natural", price = 55.0, category = "Guajoloyets")
-            productDao.insert(product)
-            product = Product(name = "Alones", price = 25.0, category = "Entradas")
-            productDao.insert(product)
-            product = Product(name = "Refrescos", price = 25.0, category = "Bebidas")
-            productDao.insert(product)
-            product = Product(name = "Postres 30", price = 30.0, category = "Postres y extras")
-            productDao.insert(product)
+            val defaultProducts = listOf(
+                Product(name = "Chalupas", price = 5.0, category = "Platillos Principales"),
+                Product(name = "Pambazos Naturales", price = 34.0, category = "Pambazos"),
+                Product(name = "Guajoloyet Natural", price = 55.0, category = "Guajoloyets"),
+                Product(name = "Alones", price = 25.0, category = "Entradas"),
+                Product(name = "Refrescos", price = 25.0, category = "Bebidas"),
+                Product(name = "Postres", price = 30.0, category = "Postres y Extras")
+            )
+            defaultProducts.forEach { productDao.insert(it) }
         }
     }
 }

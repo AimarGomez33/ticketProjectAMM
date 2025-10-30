@@ -10,19 +10,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * RecyclerView adapter for displaying a list of recorded orders in the
- * administration screen. Each row shows the table (or take‑out), the
- * timestamp when the order was created, the total amount and a delete button.
- *
- * @param orders    Mutable list backing the adapter; contents can be
- *                  replaced via [updateOrders].
- * @param onDelete  Callback invoked when the delete button for an order is
- *                  tapped. The long parameter is the orderId to remove.
+ * Adaptador para mostrar la lista de órdenes guardadas en la pantalla de administración.
+ * Cada elemento muestra la mesa o tipo (para llevar), fecha/hora y total.
+ * Incluye botones para eliminar y un clic general para ver el resumen.
  */
 class AdminOrderAdapter(
     private val orders: MutableList<OrderEntity>,
     private val onDelete: (Long) -> Unit,
-    private val onOrderClick: (OrderEntity) -> Unit
+    private val onOrderClick: (OrderEntity) -> Unit   ,
+    private val onPrint: (OrderEntity) -> Unit
 ) : RecyclerView.Adapter<AdminOrderAdapter.AdminOrderViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdminOrderViewHolder {
@@ -34,21 +30,24 @@ class AdminOrderAdapter(
     override fun onBindViewHolder(holder: AdminOrderViewHolder, position: Int) {
         val order = orders[position]
         holder.bind(order)
+
+        // 🔹 Botón para eliminar orden
         holder.btnDelete.setOnClickListener {
             onDelete(order.orderId)
         }
-        // Llama al callback de clic cuando se pulsa en el elemento completo
+
+        // 🔹 Clic para mostrar el resumen del pedido
         holder.itemView.setOnClickListener {
             onOrderClick(order)
         }
+
+        holder.btnPrint.setOnClickListener { onPrint(order) }
     }
 
     override fun getItemCount(): Int = orders.size
 
     /**
-     * Replaces the contents of the adapter with the provided list and
-     * notifies that the data set has changed. This method should be
-     * called from the main thread.
+     * Reemplaza la lista de órdenes con una nueva y refresca la vista.
      */
     fun updateOrders(newOrders: List<OrderEntity>) {
         orders.clear()
@@ -56,26 +55,30 @@ class AdminOrderAdapter(
         notifyDataSetChanged()
     }
 
+    /**
+     * ViewHolder para representar una orden en la lista.
+     */
     inner class AdminOrderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvOrderInfo: TextView = itemView.findViewById(R.id.tvOrderInfo)
         val tvOrderTotal: TextView = itemView.findViewById(R.id.tvOrderTotal)
         val btnDelete: MaterialButton = itemView.findViewById(R.id.btnDeleteOrder)
+        val btnPrint: MaterialButton = itemView.findViewById(R.id.btnprintOrder)
+
 
         /**
-         * Binds the order data to the UI elements. Formats the createdAt
-         * timestamp into a human readable date and time string and sets
-         * the total with a currency symbol.
+         * Asigna los datos de la orden a la UI.
          */
         fun bind(order: OrderEntity) {
-            // Format timestamp for display
             val date = Date(order.createdAt)
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
             val mesaText = order.mesa ?: "Para llevar"
-            val orderInfoText = "$mesaText - ${sdf.format(date)}"
-            tvOrderInfo.text = orderInfoText
+
+            // 🔹 Muestra un indicador si la orden incluye combos
+            val comboLabel = if (order.esCombo) " 🧃 (Combo)" else ""
+
+            tvOrderInfo.text = "$mesaText - ${sdf.format(date)}$comboLabel"
             tvOrderTotal.text = "Total: $${"%.2f".format(order.grandTotal)}"
         }
-    }
 
-    companion object
+    }
 }

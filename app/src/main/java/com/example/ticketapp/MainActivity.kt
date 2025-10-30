@@ -9,27 +9,30 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
 import android.content.*
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.hardware.usb.*
+import android.hardware.usb.UsbConstants
+import android.hardware.usb.UsbDevice
+import android.hardware.usb.UsbDeviceConnection
+import android.hardware.usb.UsbEndpoint
+import android.hardware.usb.UsbInterface
+import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.GridLayout // <<-- AÑADIDO: Importación necesaria
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresPermission
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,80 +41,70 @@ import java.io.OutputStream
 import java.nio.charset.Charset
 import java.text.SimpleDateFormat
 import java.util.*
-import java.nio.charset.StandardCharsets
-
-// Importación para mostrar diálogos
-import androidx.appcompat.app.AlertDialog
-
-
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.core.view.GravityCompat
-import com.google.android.material.button.MaterialButton
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.CheckBox
-import com.example.ticketapp.AppDatabase
-import com.example.ticketapp.AdminOrderAdapter
-
-
-
-
-import com.example.ticketapp.OrderEntity
-import com.example.ticketapp.OrderItemEntity
-import com.example.ticketapp.DailySummary
-import com.example.ticketapp.WeeklySummary
-import com.example.ticketapp.MonthlySummary
-import java.util.Calendar
+import kotlinx.coroutines.CoroutineScope
 import java.util.Date
+import kotlin.collections.List
 
 
 class MainActivity : AppCompatActivity() {
 
-    // --- Constantes y variables de la clase (sin cambios) ---
+    // --- Constantes ---
     private companion object {
         private const val TAG = "MainActivity"
         private const val ACTION_USB_PERMISSION = "com.example.ticketapp.USB_PERMISSION"
-        private const val PRINTER_NAME_BLUETOOTH = "BlueTooth Printer"
-        private val PRINTER_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+
+        // Nombres comunes de impresoras POS-58 / 5890A-L vía Bluetooth.
+        private val PRINTER_BT_NAMES = listOf("POS-58", "5890", "BlueTooth Printer")
+
+        // SPP UUID clásico (Serial Port Profile)
+        private val PRINTER_UUID: UUID =
+            UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+
+        // Vendor/Product IDs comunes de la POS-5890 y clones.
+        // 1155 / 22339 corresponde a controladores tipo USB-Serial genéricos (0x0483/0x5743).
+        // 1659 / 8963 es otro ID de muchas térmicas chinas.
+        private val PRINTER_USB_IDS = setOf(
+            Pair(1155, 22339),
+            Pair(1659, 8963)
+        )
+
+        private const val EXTRA_COMBO = 30.0
     }
+
+    private lateinit var txtTotal: TextView
+    private lateinit var txtNormales: Map<String, TextView>
+    private lateinit var txtCombos: Map<String, TextView>
+
+    private val preciosHamburguesas = mapOf(
+        "Hamburguesa Clasica" to 65.0,
+        "Hamburguesa Hawaiana" to 80.0,
+        "Hamburguesa Pollo" to 70.0,
+        "Hamburguesa Champinones" to 90.0,
+        "Hamburguesa Arrachera" to 105.0,
+        "Hamburguesa Magey" to 100.0,
+        "Hamburguesa Doble" to 110.0
+    )
+
+    private val extraCombo = 30.0
+    private val cantidadesNormales = mutableMapOf<String, Int>()
+    private val cantidadesCombo = mutableMapOf<String, Int>()
+
 
     private lateinit var summaryContainer: View
     private lateinit var summaryTextView: TextView
     private lateinit var summaryTotalTextView: TextView
     private lateinit var btnCloseSummary: Button
-
-    private lateinit var appDatabase: AppDatabase
-
-    private val products = mutableMapOf<String, ProductData>()
-    private val quantities = mutableMapOf<String, Int>()
-
     private lateinit var btnImprimir: Button
     private lateinit var btnEmparejar: Button
     private lateinit var btnLimpiar: Button
     private lateinit var editTextMesa: EditText
     private lateinit var noCuenta: CheckBox
 
+    private val products = mutableMapOf<String, ProductData>()
+    private val quantities = mutableMapOf<String, Int>()
 
-    private var isEditMode = false
-
-    private lateinit var usbManager: UsbManager
-    private var usbDevice: UsbDevice? = null
-    private var usbDeviceConnection: UsbDeviceConnection? = null
-    private var usbInterface: UsbInterface? = null
-    private var usbEndpointOut: UsbEndpoint? = null
-
-
-    private val bluetoothManager: BluetoothManager by lazy {
-        getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
-    }
-    private val bluetoothAdapter: BluetoothAdapter? by lazy {
-        bluetoothManager.adapter
-    }
-    private var bluetoothSocket: BluetoothSocket? = null
-
-    // --- Campos relacionados con la base de datos y la pantalla de administración ---
-
+    private lateinit var appDatabase: AppDatabase
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var btnGananciaDiaria: MaterialButton
     private lateinit var btnGananciaSemanal: MaterialButton
@@ -120,14 +113,30 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerViewOrders: RecyclerView
     private lateinit var adminOrderAdapter: AdminOrderAdapter
 
+    private var isEditMode = false
+
+
+    // --- Hardware & Permissions ---
+    private lateinit var usbManager: UsbManager
+    private var usbDevice: UsbDevice? = null
+    private var usbDeviceConnection: UsbDeviceConnection? = null
+    private var usbInterface: UsbInterface? = null
+    private var usbEndpointOut: UsbEndpoint? = null
+
+    private val bluetoothManager: BluetoothManager by lazy {
+        getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
+    }
+    private val bluetoothAdapter: BluetoothAdapter? by lazy { bluetoothManager.adapter }
+    private var bluetoothSocket: BluetoothSocket? = null
+
+
+
+
     private val requestBluetoothPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            val granted = permissions.entries.all { it.value }
-            if (granted) {
-                Log.d(TAG, "Permisos Bluetooth concedidos.")
+            if (permissions.entries.all { it.value }) {
                 Toast.makeText(this, "Permisos Bluetooth concedidos", Toast.LENGTH_SHORT).show()
             } else {
-                Log.d(TAG, "Permisos Bluetooth denegados.")
                 Toast.makeText(
                     this,
                     "Se requieren permisos de Bluetooth para imprimir",
@@ -149,21 +158,31 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (ACTION_USB_PERMISSION == intent?.action) {
                 synchronized(this) {
-                    val device: UsbDevice? = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
+                    val device: UsbDevice? =
+                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-                        if (device != null) {
-                            Log.d(TAG, "Permiso USB concedido para: ${device.deviceName}")
-                            setupUsbDevice(device)
+                        device?.let {
+                            Log.d(TAG, "Permiso USB concedido para: ${it.deviceName}")
+                            setupUsbDevice(it)
                         }
                     } else {
-                        Log.d(TAG, "Permiso USB denegado para: ${device?.deviceName}")
-                        Toast.makeText(context, "Permiso USB denegado", Toast.LENGTH_SHORT).show()
+                        Log.d(
+                            TAG,
+                            "Permiso USB denegado para: ${device?.deviceName}"
+                        )
+                        Toast.makeText(
+                            context,
+                            "Permiso USB denegado",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
         }
     }
 
+
+    // animación de flechitas para colapsar categorías
     fun View.rotateArrow(expanded: Boolean, duration: Long = 200L) {
         animate()
             .rotation(if (expanded) 180f else 0f)
@@ -175,11 +194,93 @@ class MainActivity : AppCompatActivity() {
     var isExpanded = false
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Inicialización de la base de datos y la interfaz de administración
+
+        txtTotal = findViewById(R.id.textViewTotal)
+
+        txtNormales = mapOf(
+            "Hamburguesa Clasica" to findViewById(R.id.cantidadHamburguesaClasicaNormal),
+            "Hamburguesa Hawaiana" to findViewById(R.id.cantidadHamburguesaHawaianaNormal),
+            "Hamburguesa Pollo" to findViewById(R.id.cantidadHamburguesaPolloNormal),
+            "Hamburguesa Champinones" to findViewById(R.id.cantidadHamburguesaChampinonesNormal),
+            "Hamburguesa Arrachera" to findViewById(R.id.cantidadHamburguesaArracheraNormal),
+            "Hamburguesa Magey" to findViewById(R.id.cantidadHamburguesaMageyNormal),
+            "Hamburguesa Doble" to findViewById(R.id.cantidadHamburguesaDobleNormal)
+        )
+
+        txtCombos = mapOf(
+            "Hamburguesa Clasica" to findViewById(R.id.cantidadHamburguesaClasicaCombo),
+            "Hamburguesa Hawaiana" to findViewById(R.id.cantidadHamburguesaHawaianaCombo),
+            "Hamburguesa Pollo" to findViewById(R.id.cantidadHamburguesaPolloCombo),
+            "Hamburguesa Champinones" to findViewById(R.id.cantidadHamburguesaChampinonesCombo),
+            "Hamburguesa Arrachera" to findViewById(R.id.cantidadHamburguesaArracheraCombo),
+            "Hamburguesa Magey" to findViewById(R.id.cantidadHamburguesaMageyCombo),
+            "Hamburguesa Doble" to findViewById(R.id.cantidadHamburguesaDobleCombo)
+        )
+
+// Inicializa cantidades
+        for (nombre in preciosHamburguesas.keys) {
+            cantidadesNormales[nombre] = 0
+            cantidadesCombo[nombre] = 0
+        }
+
+
+        fun recalcularTotal() {
+            var total = 0.0
+            for ((nombre, precioBase) in preciosHamburguesas) {
+                val normales = cantidadesNormales[nombre] ?: 0
+                val combos = cantidadesCombo[nombre] ?: 0
+                total += (precioBase * normales) + ((precioBase + extraCombo) * combos)
+            }
+            txtTotal.text = "Total: $%.2f".format(total)
+        }
+
+        val botonesNormal = mapOf(
+            "Hamburguesa Clasica" to findViewById<Button>(R.id.btnMasHamburguesaClasicaNormal),
+            "Hamburguesa Hawaiana" to findViewById<Button>(R.id.btnMasHamburguesaHawaianaNormal),
+            "Hamburguesa Pollo" to findViewById<Button>(R.id.btnMasHamburguesaPolloNormal),
+            "Hamburguesa Champinones" to findViewById<Button>(R.id.btnMasHamburguesaChampinonesNormal),
+            "Hamburguesa Arrachera" to findViewById<Button>(R.id.btnMasHamburguesaArracheraNormal),
+            "Hamburguesa Magey" to findViewById<Button>(R.id.btnMasHamburguesaMageyNormal),
+            "Hamburguesa Doble" to findViewById<Button>(R.id.btnMasHamburguesaDobleNormal)
+        )
+
+        val botonesCombo = mapOf(
+            "Hamburguesa Clasica" to findViewById<Button>(R.id.btnMasHamburguesaClasicaCombo),
+            "Hamburguesa Hawaiana" to findViewById<Button>(R.id.btnMasHamburguesaHawaianaCombo),
+            "Hamburguesa Pollo" to findViewById<Button>(R.id.btnMasHamburguesaPolloCombo),
+            "Hamburguesa Champinones" to findViewById<Button>(R.id.btnMasHamburguesaChampinonesCombo),
+            "Hamburguesa Arrachera" to findViewById<Button>(R.id.btnMasHamburguesaArracheraCombo),
+            "Hamburguesa Magey" to findViewById<Button>(R.id.btnMasHamburguesaMageyCombo),
+            "Hamburguesa Doble" to findViewById<Button>(R.id.btnMasHamburguesaDobleCombo)
+        )
+
+        for ((nombre, boton) in botonesNormal) {
+            boton.setOnClickListener {
+                val actual = (cantidadesNormales[nombre] ?: 0) + 1
+                cantidadesNormales[nombre] = actual
+                txtNormales[nombre]?.text = "Normales: $actual"
+                recalcularTotal()
+            }
+        }
+
+        for ((nombre, boton) in botonesCombo) {
+            boton.setOnClickListener {
+                val actual = (cantidadesCombo[nombre] ?: 0) + 1
+                cantidadesCombo[nombre] = actual
+                txtCombos[nombre]?.text = "Combos: $actual"
+                recalcularTotal()
+            }
+        }
+
+
+
+
+        // DB y panel admin
         appDatabase = AppDatabase.getDatabase(this, lifecycleScope)
         drawerLayout = findViewById(R.id.drawerLayout)
         btnGananciaDiaria = findViewById(R.id.btnGananciaDiaria)
@@ -188,32 +289,52 @@ class MainActivity : AppCompatActivity() {
         adminSummaryTextView = findViewById(R.id.adminSummaryTextView)
         recyclerViewOrders = findViewById(R.id.recyclerViewOrders)
 
-        // Configurar RecyclerView para listar pedidos con un layout lineal vertical
         recyclerViewOrders.layoutManager = LinearLayoutManager(this)
+
         adminOrderAdapter = AdminOrderAdapter(
-            mutableListOf<OrderEntity>(),
-            { orderId -> eliminarPedido(orderId) },
-            { order -> mostrarResumenPedido(order) }
+            mutableListOf(),
+            { orderId -> Eli(orderId) },
+            { order -> mostrarResumen(obtenerProductosDesdeInputs()) },
+            { order ->reimprimirTicket(order) }
         )
+
         recyclerViewOrders.adapter = adminOrderAdapter
 
-        // Asignar listeners para calcular ganancias
+         fun reimprimirTicket(order: OrderEntity) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val items = appDatabase.orderDao().getItemsForOrder(order.orderId)
+                val ticket = generarTextoTicket(order = obtenerProductosDesdeInputs(), obtenerProductosDesdeInputs())
+                withContext(Dispatchers.Main) {
+                    AlertDialog.Builder(this@MainActivity)
+                        .setTitle("Reimprimir ticket")
+                        .setMessage(ticket)
+                        .setPositiveButton("Imprimir") { _, _ ->
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                printViaUsb(ticket) || printViaBluetooth(ticket)
+                            }
+                        }
+                        .setNegativeButton("Cancelar", null)
+                        .show()
+                }
+            }
+        }
+
+
+
         btnGananciaDiaria.setOnClickListener { generarGananciaDiaria() }
         btnGananciaSemanal.setOnClickListener { generarGananciaSemanal() }
         btnGananciaMensual.setOnClickListener { generarGananciaMensual() }
 
-        // Cargar pedidos existentes en la lista al arrancar
+        // cargar pedidos al inicio
         cargarPedidos()
 
         usbManager = getSystemService(USB_SERVICE) as UsbManager
 
         setupProductViews()
         setupButtons()
-
-        // --- INICIO DE CAMBIOS: Lógica para categorías plegables ---
         setupCollapsibleCategories()
-        // --- FIN DE CAMBIOS ---
 
+        // registrar receiver USB
         val filter = IntentFilter(ACTION_USB_PERMISSION)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(usbReceiver, filter, RECEIVER_NOT_EXPORTED)
@@ -221,10 +342,44 @@ class MainActivity : AppCompatActivity() {
             @Suppress("UnspecifiedRegisterReceiverFlag")
             registerReceiver(usbReceiver, filter)
         }
+
+
+
+
+
+        // permisos y detección inicial
         checkAndRequestBluetoothPermissions()
         detectAndRequestUsbPermission()
     }
 
+    // --- HAMBURGUESAS (a nivel de clase) ---
+
+
+
+
+
+
+
+// ... (rest of MainActivity.kt)
+
+    fun reimprimirTicket(order: OrderEntity) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val items = appDatabase.orderDao().getItemsForOrder(order.orderId)
+            val ticket = generarTextoTicket(order = obtenerProductosDesdeInputs(), productosSeleccionados1 = obtenerProductosDesdeInputs())
+            withContext(Dispatchers.Main) {
+                AlertDialog.Builder(this@MainActivity)
+                    .setTitle("Reimprimir ticket")
+                    .setMessage(ticket)
+                    .setPositiveButton("Imprimir") { _, _ ->
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            printViaUsb(ticket) || printViaBluetooth(ticket)
+                        }
+                    }
+                    .setNegativeButton("Cancelar", null)
+                    .show()
+            }
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(usbReceiver)
@@ -232,9 +387,10 @@ class MainActivity : AppCompatActivity() {
         closeBluetoothSocket()
     }
 
-    // --- Configuración de la UI (Vistas y Botones) ---
+    // --- Configuración de la UI (productos, botones, secciones colapsables) ---
+
     private fun setupProductViews() {
-        // ... (tu lista de products[...] se queda igual)
+        // Mapeo de productos (nombre lógico -> views + precio)
         products["Quesadillas"] = ProductData(
             findViewById(R.id.cantidadQuesadillas),
             findViewById(R.id.btnMenosQuesadillas),
@@ -391,7 +547,6 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.btnMasCafe),
             22.0
         )
-
         products["Aguas de Sabor"] = ProductData(
             findViewById(R.id.cantidadAguasSabor),
             findViewById(R.id.btnMenosAguasSabor),
@@ -454,8 +609,69 @@ class MainActivity : AppCompatActivity() {
         )
 
 
+// ===== PAPAS =====
+        products["Orden de Papas Sencillas"] = ProductData(
+            findViewById(R.id.cantidadPapasSencillas),
+            findViewById(R.id.btnMenosPapasSencillas),
+            findViewById(R.id.btnMasPapasSencillas),
+            50.0
+        )
+
+        products["Orden de Papas Queso y Tocino"] = ProductData(
+            findViewById(R.id.cantidadPapasQuesoTocino),
+            findViewById(R.id.btnMenosPapasQuesoTocino),
+            findViewById(R.id.btnMasPapasQuesoTocino),
+            65.0
+        )
+
+// ===== TACOS (precio por pieza) =====
+        products["Taco (c/u)"] = ProductData(
+            findViewById(R.id.cantidadTacoUnitario),
+            findViewById(R.id.btnMenosTacoUnitario),
+            findViewById(R.id.btnMasTacoUnitario),
+            25.0
+        )
+
+        products["Taco con Queso (c/u)"] = ProductData(
+            findViewById(R.id.cantidadTacoConQueso),
+            findViewById(R.id.btnMenosTacoConQueso),
+            findViewById(R.id.btnMasTacoConQueso),
+            30.0
+        )
+
+// ===== ALITAS =====
+        products["Alitas 6 pzas"] = ProductData(
+            findViewById(R.id.cantidadAlitas6),
+            findViewById(R.id.btnMenosAlitas6),
+            findViewById(R.id.btnMasAlitas6),
+            65.0
+        )
+
+        products["Alitas 10 pzas"] = ProductData(
+            findViewById(R.id.cantidadAlitas10),
+            findViewById(R.id.btnMenosAlitas10),
+            findViewById(R.id.btnMasAlitas10),
+            100.0
+        )
+
+        products["Alitas 15 pzas"] = ProductData(
+            findViewById(R.id.cantidadAlitas15),
+            findViewById(R.id.btnMenosAlitas15),
+            findViewById(R.id.btnMasAlitas15),
+            140.0
+        )
+        products["Combo"] = ProductData(
+            findViewById(R.id.cantidadCombo),
+            findViewById(R.id.btnMenosCombo),
+            findViewById(R.id.btnMasCombo),
+            30.0
+        )
+
+
+
         products.forEach { (productName, productData) ->
             quantities[productName] = 0
+
             productData.btnMas.setOnClickListener {
                 updateQuantity(productName, 1)
             }
@@ -463,21 +679,16 @@ class MainActivity : AppCompatActivity() {
                 updateQuantity(productName, -1)
             }
 
+            // chalupas es EditText libre
             if (productName == "Chalupas" && productData.cantidadTV is EditText) {
                 productData.cantidadTV.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        count: Int,
-                        after: Int
+                        s: CharSequence?, start: Int, count: Int, after: Int
                     ) {
                     }
 
                     override fun onTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        before: Int,
-                        count: Int
+                        s: CharSequence?, start: Int, before: Int, count: Int
                     ) {
                     }
 
@@ -493,9 +704,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // --- INICIO DE CAMBIOS ---
+    // plegables por categoría
     private fun setupCollapsibleCategories() {
-        // Llama a la función de ayuda para cada categoría definida en el XML
         setupCollapsibleView(
             findViewById(R.id.headerPlatillos),
             findViewById(R.id.gridPlatillos),
@@ -522,6 +732,21 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.arrowBebidas)
         )
         setupCollapsibleView(
+            findViewById(R.id.headerHamburguesas),
+            findViewById(R.id.gridHamburguesas),
+            findViewById(R.id.arrowHamburguesas)
+        )
+        setupCollapsibleView(
+            findViewById(R.id.headerTacos),
+            findViewById(R.id.gridTacos),
+            findViewById(R.id.arrowTacos)
+        )
+        setupCollapsibleView(
+            findViewById(R.id.headerAlitas),
+            findViewById(R.id.gridAlitas),
+            findViewById(R.id.arrowAlitas)
+        )
+        setupCollapsibleView(
             findViewById(R.id.headerPostres),
             findViewById(R.id.gridPostres),
             findViewById(R.id.arrowPostres)
@@ -529,23 +754,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupCollapsibleView(header: View, content: View, arrow: ImageView) {
-        // Establece el listener en la cabecera
         header.setOnClickListener {
-            // Determina si debe expandirse u ocultarse el contenido
             val expand = content.visibility == View.GONE
-            // Cambia la visibilidad del contenido según corresponda
             content.visibility = if (expand) View.VISIBLE else View.GONE
-            // Rota la flecha usando la función de extensión
             arrow.rotateArrow(expand)
         }
     }
-    // --- FIN DE CAMBIOS ---
 
     private fun setupButtons() {
         btnImprimir = findViewById(R.id.btnImprimir)
         btnEmparejar = findViewById(R.id.btnEmparejar)
         btnLimpiar = findViewById(R.id.btnLimpiar)
-
 
         editTextMesa = findViewById(R.id.editMesa)
         noCuenta = findViewById(R.id.noCuenta)
@@ -556,10 +775,47 @@ class MainActivity : AppCompatActivity() {
         btnCloseSummary = findViewById(R.id.btnCloseSummary)
 
         btnImprimir.setOnClickListener {
-            imprimirTicket()
+            lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    // 1️⃣ Obtener los productos seleccionados (incluye combos)
+                    val productosSeleccionados = obtenerProductosDesdeInputs()
+
+                    // 2️⃣ Generar el texto del ticket
+
+                    val textoTicket = generarTextoTicket(obtenerProductosDesdeInputs(), obtenerProductosDesdeInputs())
+
+
+                    // 3️⃣ Guardar la orden en la base de datos
+                    val mesaInfo = editTextMesa.text.toString().trim()
+                    guardarOrden(productosSeleccionados, mesaInfo)
+
+                    // 4️⃣ Imprimir el ticket
+                    imprimirTicket(textoTicket)
+
+                    // 5️⃣ Mostrar el resumen en la UI
+                    withContext(Dispatchers.Main) {
+                        mostrarResumen(productosSeleccionados)
+                        Toast.makeText(this@MainActivity, "Ticket generado correctamente", Toast.LENGTH_SHORT).show()
+                    }
+
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Error al generar ticket: ${e.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
         }
+
+
+
+
+
         btnEmparejar.setOnClickListener {
-            val intent = Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS)
+            val intent = Intent(Settings.ACTION_BLUETOOTH_SETTINGS)
             if (intent.resolveActivity(packageManager) != null) {
                 startActivity(intent)
             } else {
@@ -570,18 +826,18 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }
+
         btnLimpiar.setOnClickListener {
             limpiarCantidades()
         }
 
-        btnCloseSummary.setOnClickListener {
-            ocultarResumen()
-        }
+
+        btnCloseSummary.setOnClickListener { ocultarResumen() }
     }
 
-    // El resto de tu código (updateQuantity, limpiarCantidades, imprimirTicket, etc.) permanece igual.
-    // ...
-    // --- Tu código original sin cambios desde aquí hacia abajo ---
+    // -------------------------------------------------------------------------
+    // Lógica de cantidades / impresión / resumen en pantalla
+    // -------------------------------------------------------------------------
 
     private fun updateQuantity(productName: String, change: Int) {
         val currentQuantity = quantities[productName] ?: 0
@@ -594,54 +850,108 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun limpiarCantidades() {
-        products.keys.forEach { productName ->
-            quantities[productName] = 0
-            products[productName]?.cantidadTV?.text = "0"
+        // 🔹 1) Reiniciar todos los productos del mapa general
+        for ((nombre, data) in products) {
+            quantities[nombre] = 0
+            data.cantidadTV.text = "0"
         }
-        ocultarResumen()
-        Toast.makeText(this, "Cantidades restablecidas a 0", Toast.LENGTH_SHORT).show()
+
+        // 🔹 2) Reiniciar hamburguesas (normales y combos)
+        for (nombre in preciosHamburguesas.keys) {
+            cantidadesNormales[nombre] = 0
+            cantidadesCombo[nombre] = 0
+        }
+
+        // 🔹 3) TextViews de hamburguesas normales
+        val idsNormales = listOf(
+            R.id.cantidadHamburguesaClasicaNormal,
+            R.id.cantidadHamburguesaHawaianaNormal,
+            R.id.cantidadHamburguesaPolloNormal,
+            R.id.cantidadHamburguesaChampinonesNormal,
+            R.id.cantidadHamburguesaArracheraNormal,
+            R.id.cantidadHamburguesaMageyNormal,
+            R.id.cantidadHamburguesaDobleNormal
+        )
+
+        // 🔹 4) TextViews de hamburguesas combo
+        val idsCombos = listOf(
+            R.id.cantidadHamburguesaClasicaCombo,
+            R.id.cantidadHamburguesaHawaianaCombo,
+            R.id.cantidadHamburguesaPolloCombo,
+            R.id.cantidadHamburguesaChampinonesCombo,
+            R.id.cantidadHamburguesaArracheraCombo,
+            R.id.cantidadHamburguesaMageyCombo,
+            R.id.cantidadHamburguesaDobleCombo
+        )
+
+        // 🔹 5) Establecer textos en “Normales: 0” y “Combos: 0”
+        idsNormales.forEach { id ->
+            findViewById<TextView>(id)?.text = "Normales: 0"
+        }
+
+        idsCombos.forEach { id ->
+            findViewById<TextView>(id)?.text = "Combos: 0"
+        }
+
+        // 🔹 6) Limpiar campo de mesa y resumen
+        editTextMesa.setText("")
+        summaryTextView.text = ""
+        summaryTotalTextView.text = "TOTAL: $0.00"
+        summaryContainer.visibility = View.GONE
+
+        // 🔹 7) Confirmación visual
+        Toast.makeText(this, "Todas las cantidades se han restablecido a 0", Toast.LENGTH_SHORT).show()
     }
 
-    private fun imprimirTicket() {
-        val productosSeleccionados = obtenerProductosDesdeInputs()
-        if (productosSeleccionados.isEmpty()) {
-            Toast.makeText(this, "No hay productos seleccionados", Toast.LENGTH_SHORT).show()
-            return
-        }
-        // Guardar la venta en la base de datos antes de mostrar el resumen
-        val mesaInfoForDb = editTextMesa.text.toString().trim()
-        guardarOrden(productosSeleccionados, mesaInfoForDb)
-        mostrarResumen(productosSeleccionados)
-        val textoTicket = generarTextoTicket()
-        lifecycleScope.launch {
-            val usbSuccess = printViaUsb(textoTicket)
-            if (!usbSuccess) {
-                Log.w(TAG, "Fallo al imprimir por USB. Intentando Bluetooth...")
-                if (checkBluetoothPermissions()) {
-                    val btSuccess = printViaBluetooth(textoTicket)
-                    if (btSuccess) {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Ticket enviado por Bluetooth",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Fallo al imprimir por Bluetooth",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                } else {
+
+
+
+
+    fun imprimirTicket(textoTicket: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val productosSeleccionados = obtenerProductosDesdeInputs()
+
+            withContext(Dispatchers.Main) {
+                if (productosSeleccionados.isEmpty()) {
                     Toast.makeText(
                         this@MainActivity,
-                        "Permisos de Bluetooth no concedidos.",
-                        Toast.LENGTH_LONG
+                        "No hay productos seleccionados",
+                        Toast.LENGTH_SHORT
                     ).show()
+                    return@withContext
                 }
-            } else {
-                Toast.makeText(this@MainActivity, "Ticket enviado por USB", Toast.LENGTH_SHORT)
+            }
+
+            // 🔹 Generar texto del ticket
+            val ticketTexto = generarTextoTicket(order = obtenerProductosDesdeInputs(), productosSeleccionados)
+
+            withContext(Dispatchers.Main) {
+                AlertDialog.Builder(this@MainActivity)
+                    .setTitle("Vista previa del ticket")
+                    .setMessage(ticketTexto)
+                    .setPositiveButton("Imprimir") { _, _ ->
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            val printed = printViaUsb(ticketTexto) || printViaBluetooth(ticketTexto)
+                            withContext(Dispatchers.Main) {
+                                if (printed) {
+                                    Toast.makeText(
+                                        this@MainActivity,
+                                        "Ticket impreso correctamente",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        this@MainActivity,
+                                        "No se pudo imprimir el ticket",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        }
+                    }
+                    .setNegativeButton("Cancelar", null)
                     .show()
             }
         }
@@ -649,13 +959,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkAndRequestBluetoothPermissions() {
         val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            arrayOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)
+            arrayOf(
+                Manifest.permission.BLUETOOTH_CONNECT,
+                Manifest.permission.BLUETOOTH_SCAN
+            )
         } else {
-            arrayOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
+            arrayOf(
+                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_ADMIN
+            )
         }
+
         val allPermissionsGranted = permissions.all {
-            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(this, it) ==
+                    PackageManager.PERMISSION_GRANTED
         }
+
         if (!allPermissionsGranted) {
             requestBluetoothPermissionLauncher.launch(permissions)
         }
@@ -675,56 +994,88 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // -------------------------------------------------------------------------
+    // *** BLUETOOTH PRINT ***
+    // -------------------------------------------------------------------------
+
     @SuppressLint("MissingPermission")
     private suspend fun connectToBluetoothPrinter(): BluetoothSocket? =
         withContext(Dispatchers.IO) {
-            if (bluetoothAdapter == null) {
+            val adapter = bluetoothAdapter
+            if (adapter == null) {
                 Log.e(TAG, "Adaptador Bluetooth no disponible.")
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@MainActivity,
-                        "Adaptador Bluetooth no disponible",
+                        "Bluetooth no disponible en este dispositivo",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
                 return@withContext null
             }
-            if (!bluetoothAdapter!!.isEnabled) {
+
+            if (!adapter.isEnabled) {
                 Log.i(TAG, "Bluetooth no activado. Solicitando activación.")
                 withContext(Dispatchers.Main) {
-                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                    val enableBtIntent =
+                        Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                     enableBluetoothLauncher.launch(enableBtIntent)
-                    Toast.makeText(this@MainActivity, "Activando Bluetooth...", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Activando Bluetooth...",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 return@withContext null
             }
-            val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter!!.bondedDevices
-            val printerDevice =
-                pairedDevices?.find { it.name.equals(PRINTER_NAME_BLUETOOTH, ignoreCase = true) }
-            if (printerDevice == null) {
-                Log.e(
-                    TAG,
-                    "Impresora Bluetooth '$PRINTER_NAME_BLUETOOTH' no encontrada entre los dispositivos emparejados."
-                )
+
+            val pairedDevices: Set<BluetoothDevice>? = adapter.bondedDevices
+            if (pairedDevices.isNullOrEmpty()) {
+                Log.e(TAG, "No hay dispositivos emparejados")
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@MainActivity,
-                        "Impresora no emparejada: $PRINTER_NAME_BLUETOOTH",
+                        "No hay dispositivos Bluetooth emparejados",
                         Toast.LENGTH_LONG
                     ).show()
                 }
                 return@withContext null
             }
+
+            // Buscar impresora cuyo nombre contenga "POS-58", "5890", etc.
+            val printerDevice = pairedDevices.firstOrNull { device ->
+                val name = device.name ?: ""
+                PRINTER_BT_NAMES.any { sig ->
+                    name.contains(sig, ignoreCase = true)
+                }
+            }
+
+            if (printerDevice == null) {
+                Log.e(TAG, "No encontré impresora tipo POS-58 entre los emparejados")
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "No encontré impresora POS-58 emparejada",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                return@withContext null
+            }
+
             Log.d(
                 TAG,
                 "Intentando conectar con la impresora Bluetooth: ${printerDevice.name} [${printerDevice.address}]"
             )
+
             return@withContext try {
-                val socket = printerDevice.createRfcommSocketToServiceRecord(PRINTER_UUID)
-                bluetoothAdapter?.cancelDiscovery()
+                val socket =
+                    printerDevice.createRfcommSocketToServiceRecord(PRINTER_UUID)
+                adapter.cancelDiscovery()
                 socket.connect()
-                Log.d(TAG, "Conexión Bluetooth establecida con ${printerDevice.name}")
+                Log.d(
+                    TAG,
+                    "Conexión Bluetooth establecida con ${printerDevice.name}"
+                )
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@MainActivity,
@@ -732,6 +1083,7 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+                bluetoothSocket = socket
                 socket
             } catch (e: IOException) {
                 Log.e(
@@ -741,8 +1093,9 @@ class MainActivity : AppCompatActivity() {
                 )
                 try {
                     bluetoothSocket?.close()
-                } catch (closeException: IOException) {
+                } catch (_: IOException) {
                 }
+                bluetoothSocket = null
                 null
             }
         }
@@ -750,35 +1103,52 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     private suspend fun printViaBluetooth(textoTicket: String): Boolean =
         withContext(Dispatchers.IO) {
-            var success = false
             try {
-                bluetoothSocket = connectToBluetoothPrinter()
-                val socket = bluetoothSocket
+                val socket = bluetoothSocket ?: connectToBluetoothPrinter()
                 if (socket == null || !socket.isConnected) {
                     Log.e(TAG, "No se pudo conectar a la impresora Bluetooth")
                     return@withContext false
                 }
+
                 val outputStream: OutputStream = socket.outputStream
+
+                // ESC @ -> reset impresora
                 val initPrinter = byteArrayOf(0x1B, 0x40)
-                val cutPaper = byteArrayOf(0x1D, 0x56, 0x42, 0x00)
-                val ticketBytes = textoTicket.toByteArray(Charset.forName("GB18030"))
+
+                // Texto del ticket con codificación occidental
+                // (windows-1252 imprime bien ñ, acentos en muchas POS 58mm)
+                val ticketBytes =
+                    textoTicket.toByteArray(Charset.forName("windows-1252"))
+
+                // Alimentar papel y comando de corte (ignorado si no tiene cortador)
+                val feedAndCut = byteArrayOf(
+                    0x0A, 0x0A, 0x0A, 0x0A,
+                    0x1D, 0x56, 0x42, 0x00
+                )
+
                 outputStream.write(initPrinter)
                 outputStream.write(ticketBytes)
-                outputStream.write(cutPaper)
+                outputStream.write(feedAndCut)
                 outputStream.flush()
-                success = true
+
+                true
             } catch (e: IOException) {
-                Log.e(TAG, "Error de E/S al imprimir por Bluetooth: ${e.message}", e)
+                Log.e(
+                    TAG,
+                    "Error de E/S al imprimir por Bluetooth: ${e.message}",
+                    e
+                )
+                false
             } catch (e: SecurityException) {
                 Log.e(
                     TAG,
-                    "Error de seguridad (permisos) al imprimir por Bluetooth: ${e.message}",
+                    "Error de permisos BT al imprimir: ${e.message}",
                     e
                 )
+                false
             } finally {
                 closeBluetoothSocket()
             }
-            return@withContext success
         }
 
     private fun closeBluetoothSocket() {
@@ -791,21 +1161,51 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // -------------------------------------------------------------------------
+    // *** USB PRINT ***
+    // -------------------------------------------------------------------------
+
     private fun detectAndRequestUsbPermission() {
-        val deviceList = usbManager.deviceList
-        val printerDevice = deviceList.values.firstOrNull {
-            it.vendorId == 1155 && it.productId == 22339
-        } ?: deviceList.values.firstOrNull()
-        if (printerDevice == null) {
+        val deviceList = usbManager.deviceList.values
+        if (deviceList.isEmpty()) {
+            Log.d(TAG, "No hay dispositivos USB conectados")
             return
         }
+
+        // 1. Buscar vendor/product conocidos
+        var printerDevice = deviceList.firstOrNull { dev ->
+            PRINTER_USB_IDS.contains(Pair(dev.vendorId, dev.productId))
+        }
+
+        // 2. Si no, buscar interfaz con clase PRINTER
+        if (printerDevice == null) {
+            printerDevice = deviceList.firstOrNull { dev ->
+                (0 until dev.interfaceCount).any { idx ->
+                    dev.getInterface(idx).interfaceClass ==
+                            UsbConstants.USB_CLASS_PRINTER
+                }
+            }
+        }
+
+        // 3. Fallback: primero disponible
+        if (printerDevice == null) {
+            printerDevice = deviceList.firstOrNull()
+        }
+
+        if (printerDevice == null) {
+            Log.d(TAG, "No se detectó impresora USB compatible")
+            return
+        }
+
         if (usbManager.hasPermission(printerDevice)) {
             Log.d(TAG, "Permiso USB ya concedido para: ${printerDevice.deviceName}")
             setupUsbDevice(printerDevice)
         } else {
             Log.d(TAG, "Solicitando permiso USB para: ${printerDevice.deviceName}")
             val permissionIntent = PendingIntent.getBroadcast(
-                this, 0, Intent(ACTION_USB_PERMISSION),
+                this,
+                0,
+                Intent(ACTION_USB_PERMISSION),
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
             usbManager.requestPermission(printerDevice, permissionIntent)
@@ -814,76 +1214,141 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupUsbDevice(device: UsbDevice) {
         releaseUsbDevice()
+
         usbDeviceConnection = usbManager.openDevice(device)
         if (usbDeviceConnection == null) {
-            Toast.makeText(this, "No se pudo abrir la conexión USB", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "No se pudo abrir la conexión USB",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
+
+        // buscar interfaz tipo impresora + endpoint bulk OUT
         for (i in 0 until device.interfaceCount) {
             val usbIface = device.getInterface(i)
             if (usbIface.interfaceClass == UsbConstants.USB_CLASS_PRINTER) {
                 usbInterface = usbIface
                 for (j in 0 until usbIface.endpointCount) {
                     val endpoint = usbIface.getEndpoint(j)
-                    if (endpoint.type == UsbConstants.USB_ENDPOINT_XFER_BULK && endpoint.direction == UsbConstants.USB_DIR_OUT) {
+                    if (
+                        endpoint.type == UsbConstants.USB_ENDPOINT_XFER_BULK &&
+                        endpoint.direction == UsbConstants.USB_DIR_OUT
+                    ) {
                         usbEndpointOut = endpoint
                     }
                 }
             }
         }
+
         if (usbInterface == null || usbEndpointOut == null) {
-            Toast.makeText(this, "No se encontró interfaz de impresora USB", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(
+                this,
+                "No se encontró interfaz de impresora USB",
+                Toast.LENGTH_SHORT
+            ).show()
             releaseUsbDevice()
             return
         }
+
         if (!usbDeviceConnection!!.claimInterface(usbInterface, true)) {
-            Toast.makeText(this, "No se pudo reclamar la interfaz USB", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "No se pudo reclamar la interfaz USB",
+                Toast.LENGTH_SHORT
+            ).show()
             releaseUsbDevice()
             return
         }
+
         this.usbDevice = device
-        Toast.makeText(this, "Impresora USB lista: ${device.deviceName}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            this,
+            "Impresora USB lista: ${device.deviceName}",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
-    private suspend fun printViaUsb(data: String): Boolean = withContext(Dispatchers.IO) {
-        if (usbDeviceConnection == null || usbEndpointOut == null) {
-            Log.w(TAG, "Dispositivo USB no configurado. Intentando re-detectar.")
-            withContext(Dispatchers.Main) { detectAndRequestUsbPermission() }
-            return@withContext false
-        }
-        return@withContext try {
-            val bytes = data.toByteArray(Charset.forName("GB18030"))
-            val sentBytes =
-                usbDeviceConnection!!.bulkTransfer(usbEndpointOut!!, bytes, bytes.size, 5000)
-            if (sentBytes >= 0) {
-                Log.d(TAG, "Datos ($sentBytes bytes) enviados por USB.")
-                true
-            } else {
-                Log.e(TAG, "Error al enviar datos por USB, sentBytes: $sentBytes")
+    private suspend fun printViaUsb(data: String): Boolean =
+        withContext(Dispatchers.IO) {
+            if (usbDeviceConnection == null || usbEndpointOut == null) {
+                Log.w(TAG, "Dispositivo USB no configurado. Reintentando detección.")
+                withContext(Dispatchers.Main) { detectAndRequestUsbPermission() }
+                return@withContext false
+            }
+
+            try {
+                // ESC @ -> reset impresora
+                val initPrinter = byteArrayOf(0x1B, 0x40)
+
+                // Ticket con acentos correcto
+                val ticketBytes =
+                    data.toByteArray(Charset.forName("windows-1252"))
+
+                // Alimentación y corte opcional
+                val feedAndCut = byteArrayOf(
+                    0x0A, 0x0A, 0x0A, 0x0A,
+                    0x1D, 0x56, 0x42, 0x00
+                )
+
+                val fullJob = ByteArray(
+                    initPrinter.size + ticketBytes.size + feedAndCut.size
+                )
+                System.arraycopy(initPrinter, 0, fullJob, 0, initPrinter.size)
+                System.arraycopy(
+                    ticketBytes,
+                    0,
+                    fullJob,
+                    initPrinter.size,
+                    ticketBytes.size
+                )
+                System.arraycopy(
+                    feedAndCut,
+                    0,
+                    fullJob,
+                    initPrinter.size + ticketBytes.size,
+                    feedAndCut.size
+                )
+
+                val sentBytes = usbDeviceConnection!!.bulkTransfer(
+                    usbEndpointOut!!,
+                    fullJob,
+                    fullJob.size,
+                    5000
+                )
+
+                if (sentBytes >= 0) {
+                    Log.d(TAG, "Enviados $sentBytes bytes vía USB.")
+                    true
+                } else {
+                    Log.e(
+                        TAG,
+                        "Error al enviar datos USB, sentBytes=$sentBytes"
+                    )
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Error de transmisión USB",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    releaseUsbDevice()
+                    false
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Excepción USB al imprimir: ${e.message}", e)
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@MainActivity,
-                        "Error de transmisión USB",
+                        "Excepción de USB: ${e.message}",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
                 releaseUsbDevice()
                 false
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Excepción al imprimir por USB: ${e.message}", e)
-            withContext(Dispatchers.Main) {
-                Toast.makeText(
-                    this@MainActivity,
-                    "Excepción de USB: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            releaseUsbDevice()
-            false
         }
-    }
 
     private fun releaseUsbDevice() {
         usbDeviceConnection?.let { conn ->
@@ -900,36 +1365,68 @@ class MainActivity : AppCompatActivity() {
         usbDevice = null
     }
 
-
     private fun mostrarResumen(productos: List<Producto>) {
+        // Referencias al layout
+        val summaryContainer = findViewById<View>(R.id.summaryContainer)
+        val summaryTextView = findViewById<TextView>(R.id.summaryTextView)
+        val summaryTotalTextView = findViewById<TextView>(R.id.summaryTotalTextView)
+        val btnCloseSummary = findViewById<Button>(R.id.btnCloseSummary)
+
         val sb = StringBuilder()
         var totalGeneral = 0.0
-        productos.forEach { producto ->
-            val totalProducto = producto.cantidad * producto.precio
-            totalGeneral += totalProducto
-            sb.appendLine(
-                "${producto.cantidad} x ${producto.nombre} ... $${
-                    "%.2f".format(
-                        totalProducto
-                    )
-                }"
-            )
 
+        // Separar normales vs combos (requiere Producto.esCombo)
+        val combos = mutableListOf<Producto>()
+        val normales = mutableListOf<Producto>()
+        for (p in productos) if (p.esCombo) combos.add(p) else normales.add(p)
+
+        if (normales.isNotEmpty()) {
+            sb.appendLine(" PRODUCTOS")
+            for (p in normales) {
+                val total = p.cantidad * p.precio
+                totalGeneral += total
+                sb.appendLine("${p.cantidad} x ${p.nombre} ... $${"%.2f".format(total)}")
+            }
+            sb.appendLine("-----------------------------------")
         }
 
-        summaryTextView.text = sb.toString()
-        summaryTotalTextView.text = "TOTAL: $${"%.2f".format(totalGeneral)}"
-        summaryContainer.visibility = View.VISIBLE
+        if (combos.isNotEmpty()) {
+            sb.appendLine(" COMBOS")
+            for (c in combos) {
+                val total = c.cantidad * c.precio
+                totalGeneral += total
+                sb.appendLine("${c.cantidad} x ${c.nombre} ... $${"%.2f".format(total)}")
+            }
+            sb.appendLine("-----------------------------------")
+        }
+
+        // Mostrar número de cuenta si aplica (ANTES de pintar el TextView)
         if (noCuenta.isChecked) {
             sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)}")
         }
+
+        // Pintar
+        summaryTextView.text = sb.toString()
+        summaryTotalTextView.text = "TOTAL: $${"%.2f".format(totalGeneral)}"
+        summaryContainer.visibility = View.VISIBLE
+
+        // Botón cerrar
+        btnCloseSummary.setOnClickListener { summaryContainer.visibility = View.GONE }
     }
+
+
+
+
 
     private fun ocultarResumen() {
         if (::summaryContainer.isInitialized) {
             summaryContainer.visibility = View.GONE
         }
     }
+
+    // -------------------------------------------------------------------------
+    // Modelos internos
+    // -------------------------------------------------------------------------
 
     data class ProductData(
         val cantidadTV: TextView,
@@ -941,248 +1438,436 @@ class MainActivity : AppCompatActivity() {
     data class Producto(
         val nombre: String,
         val precio: Double,
-        val cantidad: Int
+        val cantidad: Int,
+        val esCombo: Boolean
     ) {
-        val total: Double get() = precio * cantidad
+        val total: Double
+            get() = precio * cantidad
     }
 
+    // -------------------------------------------------------------------------
+    // Construcción del ticket ESC/POS (solo texto)
+    // -------------------------------------------------------------------------
+
     private fun obtenerProductosDesdeInputs(): List<Producto> {
-        val listaDeProductos = mutableListOf<Producto>()
+        val lista = mutableListOf<Producto>()
+
+        // 🔹 1) Productos normales (que no son hamburguesas)
         products.forEach { (nombre, data) ->
             val cantidad = quantities[nombre] ?: 0
             if (cantidad > 0) {
-                listaDeProductos.add(Producto(nombre, data.precio, cantidad))
-            }
-        }
-        return listaDeProductos
-    }
-
-    private fun generarTextoTicket(): String {
-        val fechaHora = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
-        val sb = StringBuilder()
-        val anchoTotalLinea = 32
-        sb.appendLine("   ANTOJITOS MEXICANOS MARGARITA")
-        sb.appendLine("********************************")
-        sb.appendLine("     *** TICKET DE COMPRA ***")
-        sb.appendLine("********************************")
-        sb.appendLine("Fecha y hora: $fechaHora")
-
-        if (noCuenta.isChecked) {
-            sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)} ")
-            sb.appendLine("Nombre: Margarita Daniel Perez")
-            sb.appendLine("Banco: BBVA")
-
-        }
-
-        val mesaInfo = editTextMesa.text.toString().trim()
-        if (mesaInfo.isNotEmpty()) {
-            sb.appendLine(String.format("%-32s", "Mesa: ${mesaInfo.uppercase()}"))
-            sb.appendLine("*****************************")
-        }
-        val lineaSeparadoraCorta = "-".repeat(anchoTotalLinea)
-        sb.appendLine(lineaSeparadoraCorta)
-        sb.appendLine(String.format("%-15s %6s %3s %7s", "Producto", "Precio", "Cant", "Total"))
-        sb.appendLine(lineaSeparadoraCorta)
-        var totalGeneral = 0.0
-        val productos = obtenerProductosDesdeInputs()
-        if (productos.isEmpty()) {
-            sb.appendLine("      NINGUN PRODUCTO")
-            sb.appendLine("       SELECCIONADO")
-        } else {
-            for (p in productos) {
-                totalGeneral += p.total
-                val nombreProducto =
-                    if (p.nombre.length > 15) p.nombre.substring(0, 12) + "..." else p.nombre
-                val precioConSimbolo = String.format("$%.2f", p.precio)
-                val totalConSimbolo = String.format("$%.2f", p.total)
-                sb.appendLine(
-                    String.format(
-                        "%-15s %6s %3d %7s",
-                        nombreProducto,
-                        precioConSimbolo,
-                        p.cantidad,
-                        totalConSimbolo
+                lista.add(
+                    Producto(
+                        nombre = nombre,
+                        precio = data.precio,
+                        cantidad = cantidad,
+                        esCombo = false
                     )
                 )
             }
         }
-        sb.appendLine(lineaSeparadoraCorta)
-        val totalGeneralConSimbolo = String.format("$%.2f", totalGeneral)
-        sb.appendLine(String.format("%-22s%10s", "TOTAL:", totalGeneralConSimbolo))
-        sb.appendLine(lineaSeparadoraCorta)
-        sb.appendLine("")
-        sb.appendLine("    Gracias por su compra")
-        sb.appendLine("    Vuelva pronto")
-        sb.appendLine("\n\n\n")
-        sb.append(byteArrayOf(0x1D, 0x56, 0x42, 0x01).toString(StandardCharsets.ISO_8859_1))
-        return sb.toString()
-    }
 
-
-    // -----------------------------------------------------------------------------------------
-    // Funciones de persistencia y administración
-    // -----------------------------------------------------------------------------------------
-
-    /**
-     * Persiste una orden y sus productos en la base de datos. Calcula el campo
-     * businessDate aplicando un corte a las 5:00 AM para que las ventas después
-     * de medianoche se asignen al día anterior. También determina el tipo de
-     * orden (DINE_IN o TAKEOUT) según si hay valor en el campo mesa.
-     *
-     * @param productos Lista de productos seleccionados.
-     * @param mesaInfo Texto introducido en el campo mesa; si está vacío se
-     *                 asumirá que es para llevar.
-     */
-
-
-
-// === BLOQUE CORREGIDO Y OPTIMIZADO — PÉGALO AL FINAL DE TU MainActivity.kt ===
-
-    /** Formatea un Double como dinero con 2 decimales. */
-    private fun Double.formatMoney(): String = "$" + String.format("%.2f", this)
-
-    /** Refresca el listado de órdenes en el panel administrador. */
-    private fun refreshOrders() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val updated = appDatabase.OrderDao().getAllOrders()
-            withContext(Dispatchers.Main) { adminOrderAdapter.updateOrders(updated) }
-        }
-    }
-
-    /** Persiste una orden y refresca la lista del panel de administración. */
-    private fun guardarOrden(productos: List<Producto>, mesaInfo: String) {
-        val createdAt = System.currentTimeMillis()
-
-        // businessDate con corte 5:00 AM (misma lógica, solo más clara)
-        val businessDate = Calendar.getInstance().apply {
-            timeInMillis = createdAt
-            if (get(Calendar.HOUR_OF_DAY) < 5) add(Calendar.DAY_OF_MONTH, -1)
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }.timeInMillis
-
-        val subtotal = productos.sumOf { it.cantidad * it.precio }
-        val grandTotal = subtotal // (misma lógica: sin propinas/iva/etc.)
-
-        val orderEntity = OrderEntity(
-            orderId = 0,
-            mesa = mesaInfo.ifBlank { null },
-            createdAt = createdAt,
-            businessDate = businessDate,
-            grandTotal = grandTotal
-        )
-
-        val items = productos.map {
-            OrderItemEntity(
-                itemId = 0,
-                orderId = 0, // se asigna en la transacción
-                name = it.nombre,
-                unitPrice = it.precio,
-                quantity = it.cantidad
-            )
-        }
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            appDatabase.OrderDao().insertOrderWithItems(orderEntity, items)
-            withContext(Dispatchers.Main) { refreshOrders() }
-        }
-    }
-
-    /** Construye el texto de resumen (reutilizado por diario/semanal/mensual). */
-    private inline fun <T> buildResumen(
-        resultados: List<T>,
-        crossinline line: (T) -> String
-    ): String {
-        val sb = StringBuilder()
-        var totalGeneral = 0.0
-        resultados.forEach { r ->
-            sb.appendLine(line(r))
-            // Los tipos DailySummary/WeeklySummary/MonthlySummary exponen totalSales
-            val total = when (r) {
-                is DailySummary -> r.totalSales
-                is WeeklySummary -> r.totalSales
-                is MonthlySummary -> r.totalSales
-                else -> 0.0
-            }
-            totalGeneral += total
-        }
-        sb.appendLine("------------------------------")
-        sb.appendLine("Total acumulado: ${totalGeneral.formatMoney()}")
-        return sb.toString()
-    }
-
-    /** Calcula y muestra la ganancia DIARIA. */
-    private fun generarGananciaDiaria() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val resultados = appDatabase.OrderDao().getDailySales()
-            val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
-            val texto = buildResumen(resultados) { r ->
-                "${sdf.format(Date(r.businessDate))}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
-            }
-            withContext(Dispatchers.Main) { adminSummaryTextView.text = texto }
-        }
-    }
-
-    /** Calcula y muestra la ganancia SEMANAL (YYYY-WW). */
-    private fun generarGananciaSemanal() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val resultados = appDatabase.OrderDao().getWeeklySales()
-            val texto = buildResumen(resultados) { r ->
-                "Semana ${r.week}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
-            }
-            withContext(Dispatchers.Main) { adminSummaryTextView.text = texto }
-        }
-    }
-
-    /** Calcula y muestra la ganancia MENSUAL (YYYY-MM). */
-    private fun generarGananciaMensual() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val resultados = appDatabase.OrderDao().getMonthlySales()
-            val texto = buildResumen(resultados) { r ->
-                "Mes ${r.month}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
-            }
-            withContext(Dispatchers.Main) { adminSummaryTextView.text = texto }
-        }
-    }
-
-    /** Carga todas las órdenes (llamar en onCreate). */
-    private fun cargarPedidos() = refreshOrders()
-
-    /** Elimina una orden y refresca la lista. */
-    private fun eliminarPedido(orderId: Long) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            appDatabase.OrderDao().deleteOrderById(orderId)
-            withContext(Dispatchers.Main) {
-                refreshOrders()
-                Toast.makeText(this@MainActivity, "Pedido eliminado", Toast.LENGTH_SHORT).show()
+        // 🔹 2) Hamburguesas normales
+        for ((nombre, cantidad) in cantidadesNormales) {
+            if (cantidad > 0) {
+                val precio = preciosHamburguesas[nombre] ?: 0.0
+                lista.add(
+                    Producto(
+                        nombre = nombre,
+                        precio = precio,
+                        cantidad = cantidad,
+                        esCombo = false
+                    )
+                )
             }
         }
+
+        // 🔹 3) Hamburguesas en combo (+$30)
+        val extraCombo = 30.0
+        for ((nombre, cantidad) in cantidadesCombo) {
+            if (cantidad > 0) {
+                val precioBase = preciosHamburguesas[nombre] ?: 0.0
+                val precioCombo = precioBase + extraCombo
+                lista.add(
+                    Producto(
+                        nombre = "$nombre (Combo)",
+                        precio = precioCombo,
+                        cantidad = cantidad,
+                        esCombo = true
+                    )
+                )
+            }
+        }
+
+        return lista
     }
 
-    /** Muestra un diálogo con el detalle de artículos de la orden. */
-    private fun mostrarResumenPedido(order: OrderEntity) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val items = appDatabase.OrderDao().getItemsForOrder(order.orderId)
-            val detalle = buildString {
-                items.forEach { it ->
-                    val total = it.unitPrice * it.quantity
-                    appendLine("${it.quantity} x ${it.name} ... ${total.formatMoney()}")
+
+
+    // Renombra "guarder" a "guardar" y completa la lógica
+    private fun guardarSoloCombos() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val productos = obtenerProductosDesdeInputs()
+            val combos = productos.filter { it.esCombo }
+
+            if (combos.isEmpty()) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MainActivity, "No hay combos para guardar", Toast.LENGTH_SHORT).show()
                 }
-                appendLine("------------------------------")
-                appendLine("TOTAL: ${order.grandTotal.formatMoney()}")
+                return@launch
             }
+
+            val createdAt = System.currentTimeMillis()
+            val businessDate = getBusinessDate(createdAt)
+            val grandTotal = combos.sumOf { it.precio * it.cantidad }
+            val mesaInfo = withContext(Dispatchers.Main) { editTextMesa.text.toString().trim() }
+
+            val orderEntity = OrderEntity(
+                mesa = mesaInfo.ifBlank { null },
+                createdAt = createdAt,
+                businessDate = businessDate,
+                grandTotal = grandTotal
+            )
+
+            val comboItems = combos.map {
+                OrderItemEntity(
+                    orderId = 0,
+                    name = it.nombre,
+                    unitPrice = it.precio,
+                    quantity = it.cantidad,
+                    esCombo = true
+                )
+            }
+
+            appDatabase.orderDao().insertOrderWithItems(orderEntity, comboItems)
+
             withContext(Dispatchers.Main) {
-                androidx.appcompat.app.AlertDialog.Builder(this@MainActivity)
-                    .setTitle("Pedido ${order.orderId} - ${order.mesa ?: "Para llevar"}")
-                    .setMessage(detalle)
-                    .setPositiveButton("Cerrar", null)
-                    .show()
+                Toast.makeText(this@MainActivity, "Combos guardados correctamente", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-// === FIN DEL BLOQUE CORREGIDO Y OPTIMIZADO ===
 
-}
+
+    // ✅ CORRECCIÓN
+    private suspend fun generarTextoTicket(
+        productosSeleccionados: List<Producto> // Recibimos la lista como único parámetro
+    ): String {
+        val withContext = withContext(Dispatchers.IO) {
+            val fechaHora =
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+            val sb = StringBuilder()
+            val anchoTotalLinea = 32
+            val lineaSeparadora = "-".repeat(anchoTotalLinea)
+
+            // ... El resto del encabezado del ticket no cambia ...
+            sb.appendLine("   ANTOJITOS MEXICANOS MARGARITA")
+            sb.appendLine("********************************")
+            sb.appendLine("     *** TICKET DE COMPRA ***")
+            // ...
+
+            // Mesa/cliente
+            val mesaInfo = withContext(Dispatchers.Main) { editTextMesa.text.toString().trim() }
+            if (mesaInfo.isNotEmpty()) {
+                sb.appendLine(String.format("%-32s", "Mesa: ${mesaInfo.uppercase()}"))
+                sb.appendLine("*****************************")
+            }
+
+            // ✅ CORRECCIÓN: Ya no obtenemos los productos aquí dentro, usamos el parámetro.
+            // La línea "val productosSeleccionados: List<Producto> = obtenerProductosDesdeInputs()" se elimina.
+
+            // Guardar orden en BD y mostrar resumen en el layout
+            guardarOrden(productosSeleccionados, mesaInfo)
+            withContext(Dispatchers.Main) {
+                mostrarResumen(productosSeleccionados)
+            }
+
+            // ... el resto de la función para generar el texto del ticket continúa igual ...
+            // Separación normales vs combos
+            val combos = mutableListOf<Producto>()
+            //...
+
+
+            // -------------------------------------------------------------------------
+            // Persistencia en base de datos y panel admin
+            // -------------------------------------------------------------------------
+            // ✅ Solución
+            fun guarderSoloCombos() {
+                CoroutineScope(Dispatchers.IO).launch {
+                    // 🔹 Obtener lista de productos seleccionados desde inputs
+                    val productos = obtenerProductosDesdeInputs()
+                    val combos =
+                        productos.filter { it.esCombo } // Filtra usando la propiedad booleana
+
+                    if (combos.isEmpty()) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "No hay combos para guardar",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        return@launch
+                    }
+
+                    // 🔹 Lógica para crear la orden (igual que en guardarOrden)
+                    val createdAt = System.currentTimeMillis()
+                    val businessDate = getBusinessDate(createdAt)
+                    val grandTotal = combos.sumOf { it.precio * it.cantidad }
+                    val mesaInfo =
+                        withContext(Dispatchers.Main) { editTextMesa.text.toString().trim() }
+
+                    val orderEntity = OrderEntity(
+                        orderId = TODO(),
+                        mesa = TODO(),
+                        createdAt = TODO(),
+                        businessDate = TODO(),
+                        grandTotal = TODO(),
+                        esCombo = TODO(),
+                        items = TODO(),
+                        total = TODO(),
+                        timestamp = TODO(),
+                        tableNumber = TODO(),
+                        id = TODO(),
+                        customerName = TODO(),
+                        purchasedItems = TODO()
+                    )
+
+                    val comboItems = combos.map {
+                        OrderItemEntity(
+                            orderId = 0, // Se asignará en la transacción
+                            name = it.nombre,
+                            unitPrice = it.precio,
+                            quantity = it.cantidad,
+                            esCombo = true
+                        )
+                    }
+
+                    // 🔹 Insertar en BD
+                    appDatabase.orderDao().insertOrderWithItems(orderEntity, comboItems)
+
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Combos guardados correctamente (${combos.size})",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        // Opcional: Limpiar campos o actualizar UI
+                    }
+                }
+            }
+
+            /**
+             * Calcula la "fecha de negocio". Si la hora es antes de las 5 AM,
+             * la fecha de negocio corresponde al día anterior.
+             * Devuelve el timestamp del inicio de ese día (00:00:00).
+             */
+            private fun getBusinessDate(timestamp: Long): Long {
+                return Calendar.getInstance().apply {
+                    timeInMillis = timestamp
+                    // Si la hora es antes de las 5 AM, se considera del día anterior
+                    if (get(Calendar.HOUR_OF_DAY) < 5) {
+                        add(Calendar.DAY_OF_MONTH, -1)
+                    }
+                    // Se ajusta la hora a las 00:00:00 de ese día de negocio
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }.timeInMillis
+            }
+
+
+            /** Helper: formato money */
+            private fun Double.formatMoney(): String =
+                "$" + String.format("%.2f", this)
+
+            /** Actualiza lista en panel admin */
+            private fun refreshOrders(order: OrderEntity, items: List<OrderItemEntity>) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    // 🔹 Inserta la orden con sus ítems
+                    appDatabase.orderDao().insertOrderWithItems(order, items)
+
+                    // 🔹 Luego obtiene todas las órdenes actualizadas
+                    val updatedOrders = appDatabase.orderDao().getAllOrders()
+
+                    withContext(Dispatchers.Main) {
+                        adminOrderAdapter.updateOrders(updatedOrders)
+                    }
+                }
+            }
+
+
+            /** Guarda la orden en Room y refresca el panel */
+            /** Guarda la orden en Room y refresca el panel */
+            // En MainActivity.kt
+
+            private fun guardarOrden(productos: List<Producto>, mesaInfo: String) {
+                val createdAt = System.currentTimeMillis()
+                val businessDate = getBusinessDate(createdAt)
+                val grandTotal = productos.sumOf { it.precio * it.cantidad }
+
+                val orderEntity = OrderEntity(
+                    orderId = 0, // se asignará automáticamente al insertar
+                    mesa = TODO(),
+                    createdAt = TODO(),
+                    businessDate = TODO(),
+                    grandTotal = TODO(),
+                    esCombo = TODO(),
+                    items = TODO(),
+                    total = TODO(),
+                    timestamp = TODO(),
+                    tableNumber = TODO(),
+                    id = TODO(),
+                    customerName = TODO(),
+                    purchasedItems = TODO()
+                )
+
+                val items = productos.map {
+                    OrderItemEntity(
+                        orderId = 0, // Se actualizará después
+                        name = it.nombre,
+                        unitPrice = it.precio,
+                        quantity = it.cantidad
+                    )
+                }
+
+                lifecycleScope.launch(Dispatchers.IO) {
+                    // Inserta la orden y obtiene su ID
+                    val newOrderId = appDatabase.orderDao().insertOrder(orderEntity)
+
+                    // Asigna el ID de la orden a cada artículo y los inserta
+                    val itemsConId = items.map { it.copy(orderId = newOrderId) }
+                    appDatabase.orderDao().insertOrderItems(itemsConId)
+
+                    // Actualizar la lista de pedidos en el panel de administración
+                    val updatedOrders = appDatabase.orderDao().getAllOrders()
+                    withContext(Dispatchers.Main) {
+                        adminOrderAdapter.updateOrders(updatedOrders)
+                    }
+                }
+            }
+
+
+            /** utilidad para armar texto resumen de ventas */
+            private inline fun <T> buildResumen(
+                resultados: List<T>,
+                crossinline line: (T) -> String
+            ): String {
+                val sb = StringBuilder()
+                var totalGeneral = 0.0
+                resultados.forEach { r ->
+                    sb.appendLine(line(r))
+                    val total = when (r) {
+                        is DailySummary -> r.totalSales
+                        is WeeklySummary -> r.totalSales
+                        is MonthlySummary -> r.totalSales
+                        else -> 0.0
+                    }
+                    totalGeneral += total
+                }
+                sb.appendLine("------------------------------")
+                sb.appendLine("Total acumulado: ${totalGeneral.formatMoney()}")
+                return sb.toString()
+            }
+
+            /** Ganancia diaria */
+            private fun generarGananciaDiaria() {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val resultados =
+                        appDatabase.orderDao().getDailySales()
+                    val sdf = SimpleDateFormat(
+                        "yyyy-MM-dd",
+                        Locale.getDefault()
+                    )
+                    val texto = buildResumen(resultados) { r ->
+                        "${sdf.format(Date(r.businessDate))}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
+                    }
+                    withContext(Dispatchers.Main) {
+                        adminSummaryTextView.text = texto
+                    }
+                }
+            }
+
+            /** Ganancia semanal */
+            private fun generarGananciaSemanal() {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val resultados =
+                        appDatabase.orderDao().getWeeklySales()
+                    val texto = buildResumen(resultados) { r ->
+                        "Semana ${r.week}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
+                    }
+                    withContext(Dispatchers.Main) {
+                        adminSummaryTextView.text = texto
+                    }
+                }
+            }
+
+            /** Ganancia mensual */
+            private fun generarGananciaMensual() {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val resultados =
+                        appDatabase.orderDao().getMonthlySales()
+                    val texto = buildResumen(resultados) { r ->
+                        "Mes ${r.month}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
+                    }
+                    withContext(Dispatchers.Main) {
+                        adminSummaryTextView.text = texto
+                    }
+                }
+            }
+
+            /** Carga pedidos a Recycler */
+            /** Carga los pedidos en el RecyclerView */
+            private fun cargarPedidos() {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        // 🔹 Obtener pedidos desde la base de datos
+                        val pedidos = appDatabase.orderDao().getAllOrders()
+
+                        withContext(Dispatchers.Main) {
+                            // 🔹 Actualizar adaptador
+                            adminOrderAdapter.updateOrders(pedidos)
+                        }
+
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Error al cargar pedidos",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                            Log.e("MainActivity", "Error cargando pedidos", e)
+                        }
+                    }
+                }
+            }
+
+
+            // ✅ Solución
+            private fun eliminarPedido(orderId: Long) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    // 1. Elimina el pedido en el hilo de fondo
+                    appDatabase.orderDao().deleteOrderById(orderId)
+
+                    // 2. Vuelve a cargar la lista actualizada en el hilo principal
+                    withContext(Dispatchers.Main) {
+                        cargarPedidos() // Llama a la función que ya tienes para recargar
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Pedido eliminado",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+        return withContext
+    }
+    }
+
+    
+
+
+

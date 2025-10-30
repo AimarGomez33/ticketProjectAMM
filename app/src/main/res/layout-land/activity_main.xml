@@ -268,15 +268,15 @@
                         android:textColor="@color/text_primary"
                         android:textSize="22sp"
                         android:textStyle="bold" />
-
                 <ImageView
-                    android:id="@+id/arrowPambazos"
-                    android:layout_width="40dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="5dp"
-                    android:src="@drawable/down_arrow"
-                    app:tint="@color/Grey" />
+                        android:id="@+id/arrowPambazos"
+                        android:layout_width="40dp"
+                        android:layout_height="35dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/down_arrow"
+                        app:tint="@color/Grey"
+                        />
             </RelativeLayout>
             <View
                     android:layout_width="match_parent"

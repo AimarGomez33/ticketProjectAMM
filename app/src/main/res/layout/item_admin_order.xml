@@ -1,61 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Layout representing a single entry in the administration list of orders. Each row
-    displays basic information about an order (table name or type, timestamp and
-    total) along with a button to delete the order. The styling here uses the same
-    colour palette as the rest of the application to ensure visual consistency.
+    Layout representing a single entry in the administration list of orders.
+    Each row displays basic information about an order (table name or type, timestamp,
+    total) along with buttons to reprint and delete the order.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/Light_grayish"
-        android:padding="8dp"
-        android:gravity="center_vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/Light_grayish"
+    android:padding="8dp"
+    android:gravity="center_vertical">
 
-    <!-- Container for textual information about the order. We use a vertical
-         orientation so that the table/type and timestamp are stacked. A weight
-         is assigned so it takes up remaining space to the left of the delete
-         button. -->
+    <!-- Información del pedido -->
     <LinearLayout
-            android:layout_width="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvOrderInfo"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:text="Mesa 1 - 2025-08-23 13:00"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold" />
 
         <TextView
-                android:id="@+id/tvOrderInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Mesa 1 - 2025-08-23 13:00"
-                android:textSize="16sp"
-                android:textColor="@color/text_primary"
-                android:textStyle="bold" />
-
-        <TextView
-                android:id="@+id/tvOrderTotal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Total: $99.00"
-                android:textSize="14sp"
-                android:textColor="@color/text_secondary" />
+            android:id="@+id/tvOrderTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total: $99.00"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary" />
     </LinearLayout>
 
-    <!-- Delete button. Uses a material button with an icon to represent a
-         destructive action. The colour tint is chosen from the application's
-         palette so it stands out but still harmonises with the rest of the UI. -->
+    <!-- Botón de reimprimir -->
     <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnDeleteOrder"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="0dp"
-            android:contentDescription="Eliminar pedido"
-            app:icon="@android:drawable/ic_menu_delete"
-            app:iconTint="@color/Grayish_lime"
-            app:backgroundTint="@color/Grayish_green"
-            app:cornerRadius="24dp"
-            app:iconGravity="textTop"/>
+        android:id="@+id/btnprintOrder"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="Reimprimir orden"
+        app:icon="@drawable/receipt"
+        app:iconTint="@color/Grayish_lime"
+        app:backgroundTint="@color/Grayish_green"
+        app:cornerRadius="24dp"
+        app:iconGravity="textTop" />
+    <!-- Botón eliminar -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDeleteOrder"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="Eliminar pedido"
+        app:icon="@android:drawable/ic_menu_delete"
+        app:iconTint="@color/Grayish_lime"
+        app:backgroundTint="@color/Grayish_green"
+        app:cornerRadius="24dp"
+        app:iconGravity="textTop" />
 
 </LinearLayout>

@@ -77,8 +77,43 @@
     <string name="increment_postres30">Aumentar cantidad de Postres 30</string>
     <string name="increment_postres35">Aumentar cantidad de Postres 35</string>
 
-    <string name="qr_code_image">Código QR del ticket</string>
      <string name="incluir_n_mero_de_cuenta">Incluir Número de cuenta</string>
      <string name="cuenta"><font><big>4152-3145-3997-7978 </big></font></string>
+
+     <!-- ===================== HAMBURGUESAS ===================== -->
+     <string name="decrement_hamburguesa_clasica">Disminuir cantidad de hamburguesa clásica</string>
+     <string name="decrement_hamburguesa_hawaiana">Disminuir cantidad de hamburguesa hawaiana</string>
+     <string name="decrement_hamburguesa_pollo">Disminuir cantidad de hamburguesa de pollo</string>
+     <string name="decrement_hamburguesa_champinones">Disminuir cantidad de hamburguesa de champiñones</string>
+     <string name="decrement_hamburguesa_arrachera">Disminuir cantidad de hamburguesa de arrachera</string>
+     <string name="decrement_hamburguesa_magey">Disminuir cantidad de hamburguesa maguey</string>
+     <string name="decrement_hamburguesa_doble">Disminuir cantidad de hamburguesa doble</string>
+     <string name="decrement_combos">Disminuir cantidad de combos</string>
+
+     <string name="increment_hamburguesa_clasica">Aumentar cantidad de hamburguesa clásica</string>
+     <string name="increment_hamburguesa_hawaiana">Aumentar cantidad de hamburguesa hawaiana</string>
+     <string name="increment_hamburguesa_pollo">Aumentar cantidad de hamburguesa de pollo</string>
+     <string name="increment_hamburguesa_champinones">Aumentar cantidad de hamburguesa de champiñones</string>
+     <string name="increment_hamburguesa_arrachera">Aumentar cantidad de hamburguesa de arrachera</string>
+     <string name="increment_hamburguesa_magey">Aumentar cantidad de hamburguesa maguey</string>
+     <string name="increment_hamburguesa_doble">Aumentar cantidad de hamburguesa doble</string>
+     <string name="increment_combo">Aumentar cantidad de combos</string>
+
+     <!-- ===================== TACOS ===================== -->
+     <string name="decrement_taco_unitario">Disminuir cantidad de taco (c/u)</string>
+     <string name="decrement_taco_con_queso">Disminuir cantidad de taco con queso (c/u)</string>
+
+     <string name="increment_taco_unitario">Aumentar cantidad de taco (c/u)</string>
+     <string name="increment_taco_con_queso">Aumentar cantidad de taco con queso (c/u)</string>
+
+     <!-- ===================== ALITAS ===================== -->
+     <string name="decrement_alitas6">Disminuir cantidad de alitas 6 piezas</string>
+     <string name="decrement_alitas10">Disminuir cantidad de alitas 10 piezas</string>
+     <string name="decrement_alitas15">Disminuir cantidad de alitas 15 piezas</string>
+
+     <string name="increment_alitas6">Aumentar cantidad de alitas 6 piezas</string>
+     <string name="increment_alitas10">Aumentar cantidad de alitas 10 piezas</string>
+     <string name="increment_alitas15">Aumentar cantidad de alitas 15 piezas</string>
+
 
  </resources>

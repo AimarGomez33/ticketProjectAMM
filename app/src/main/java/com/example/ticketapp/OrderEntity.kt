@@ -30,7 +30,17 @@ data class OrderEntity(
 
     /** Total final pagado en la orden. */
     @ColumnInfo(name = "grand_total")
-    val grandTotal: Double
+    val grandTotal: Double,
+
+    val esCombo: Boolean = false,
+    val items: List<OrderItemEntity>, // This is the list you need
+    val total: Double,
+    val timestamp: String,
+    val tableNumber: String,
+    val id: Int = 0,
+    val customerName: String,
+    // ... other fields
+    val purchasedItems: List<String>
 )
 
 /**
@@ -70,5 +80,8 @@ data class OrderItemEntity(
 
     /** Cantidad vendida de este producto. */
     @ColumnInfo(name = "quantity")
-    val quantity: Int
+    val quantity: Int,
+
+    @ColumnInfo(name = "combo")
+    val esCombo: Boolean = false
 )

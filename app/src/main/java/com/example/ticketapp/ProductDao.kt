@@ -1,4 +1,3 @@
-
 package com.example.ticketapp
 
 import androidx.room.Dao
@@ -10,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductDao {
+
     @Query("SELECT * FROM products ORDER BY name ASC")
     fun getAllProducts(): Flow<List<Product>>
 
@@ -21,6 +21,13 @@ interface ProductDao {
 
     @Query("SELECT * FROM products WHERE id = :id")
     suspend fun getProductById(id: Int): Product?
+
+    @Query("SELECT * FROM products WHERE name = :nombre LIMIT 1")
+    suspend fun getProductByName(nombre: String): Product?
+
+    // ✅ Método correcto para múltiples nombres
+    @Query("SELECT * FROM products WHERE name IN (:nombres)")
+    suspend fun getProductsByNames(nombres: List<String>): List<Product>
 
     @Insert
     suspend fun insert(product: Product)
