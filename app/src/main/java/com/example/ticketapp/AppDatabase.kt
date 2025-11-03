@@ -4,11 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import com.example.ticketapp.Converters
 
 @Database(
     entities = [
@@ -16,11 +15,9 @@ import com.example.ticketapp.Converters
         OrderEntity::class,
         OrderItemEntity::class
     ],
-    version = 12,
+    version = 13,
     exportSchema = false
 )
-
-@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun productDao(): ProductDao
@@ -30,21 +27,32 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
+
+        val MIGRATION_12_13 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Define aquí los cambios.
+                // En este caso, añadimos la columna 'esCombo' a la tabla 'orders'.
+                // La columna es de tipo INTEGER (0 para false, 1 para true).
+                // Le damos un valor por defecto de 0 (false) para todos los registros existentes.
+                db.execSQL("ALTER TABLE orders ADD COLUMN esCombo INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
         fun getDatabase(context: Context, scope: CoroutineScope): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "ticket_database"
+                    "ticket_app_database" // El nombre de tu base de datos
                 )
-                    .fallbackToDestructiveMigration()
-                    .addCallback(DatabaseCallback(scope))
-                    .fallbackToDestructiveMigration()
+                    // ✅ PASO 3: Añade la migración al constructor
+                    .addMigrations(MIGRATION_12_13)
                     .build()
                 INSTANCE = instance
                 instance
             }
         }
+
 
         private class DatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
@@ -69,5 +77,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
             defaultProducts.forEach { productDao.insert(it) }
         }
+
+
     }
 }

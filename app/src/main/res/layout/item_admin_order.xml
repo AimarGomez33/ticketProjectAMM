@@ -44,7 +44,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:contentDescription="Reimprimir orden"
-        app:icon="@drawable/receipt"
+        app:icon="@drawable/print"
         app:iconTint="@color/Grayish_lime"
         app:backgroundTint="@color/Grayish_green"
         app:cornerRadius="24dp"

@@ -1,44 +1,319 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Este es el layout del NavigationView dentro del DrawerLayout -->
+<!-- Reemplaza o modifica tu layout actual del drawer de administración -->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MenuAdminActivity">
+    android:fillViewport="true"
+    android:background="@color/Light_grayish">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
+        <!-- ========== SECCIÓN 1: RESÚMENES DE VENTAS ========== -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="Administrar Menú"
-            android:background="?attr/colorPrimary"
-            app:titleTextColor="?attr/colorOnPrimary"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/old_grayish_green"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="12dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/adminProductsRecyclerView"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📊 Resumen de Ventas"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/Grey"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- Botones de período -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginBottom="12dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGananciaDiaria"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Diaria"
+                        android:textSize="12sp"
+                        android:textColor="@color/Light_grayish"
+                        android:backgroundTint="@color/Grayish_green"
+                        android:layout_marginEnd="4dp"
+                        style="@style/Widget.Material3.Button"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGananciaSemanal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Semanal"
+                        android:textSize="12sp"
+                        android:textColor="@color/Light_grayish"
+                        android:backgroundTint="@color/Grayish_green"
+                        android:layout_marginHorizontal="4dp"
+                        style="@style/Widget.Material3.Button"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGananciaMensual"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Mensual"
+                        android:textSize="12sp"
+                        android:textColor="@color/Light_grayish"
+                        android:backgroundTint="@color/Grayish_green"
+                        android:layout_marginStart="4dp"
+                        style="@style/Widget.Material3.Button"/>
+
+                </LinearLayout>
+
+                <!-- Resultado del resumen -->
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:background="@color/Light_grayish"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/adminSummaryTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Selecciona un período para ver el resumen"
+                        android:textSize="14sp"
+                        android:fontFamily="monospace"
+                        android:textColor="@color/Grey"/>
+
+                </ScrollView>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ========== SECCIÓN 2: FILTRO DE VENTAS POR PRODUCTO ========== -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingVertical="4dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_admin_product" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/old_grayish_green"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🔍 Ventas por Producto"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/Grey"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- Spinner de productos -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Producto:"
+                    android:textSize="14sp"
+                    android:textColor="@color/Grey"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp"/>
+
+                <Spinner
+                    android:id="@+id/spinnerProductFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:layout_marginBottom="12dp"
+                    android:popupBackground="@color/Light_grayish"/>
+
+                <!-- Spinner de tipo (Normal/Combo/Todos) -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo:"
+                    android:textSize="14sp"
+                    android:textColor="@color/Grey"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp"/>
+
+                <Spinner
+                    android:id="@+id/spinnerTypeFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:layout_marginBottom="12dp"
+                    android:visibility="gone"
+                    android:popupBackground="@color/Light_grayish"/>
+
+                <!-- Spinner de período -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Período:"
+                    android:textSize="14sp"
+                    android:textColor="@color/Grey"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp"/>
+
+                <Spinner
+                    android:id="@+id/spinnerPeriodFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:layout_marginBottom="12dp"
+                    android:popupBackground="@color/Light_grayish"/>
+
+                <!-- Layout para rango personalizado -->
+                <LinearLayout
+                    android:id="@+id/layoutCustomRange"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fecha de inicio:"
+                        android:textSize="14sp"
+                        android:textColor="@color/Grey"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp"/>
+
+                    <EditText
+                        android:id="@+id/editStartDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="yyyy-MM-dd"
+                        android:textColorHint="@color/Grayish_lime"
+                        android:textColor="@color/Grey"
+                        android:background="@color/Light_grayish"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:inputType="none"
+                        android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fecha de fin:"
+                        android:textSize="14sp"
+                        android:textColor="@color/Grey"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp"/>
+
+                    <EditText
+                        android:id="@+id/editEndDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="yyyy-MM-dd"
+                        android:textColorHint="@color/Grayish_lime"
+                        android:textColor="@color/Grey"
+                        android:background="@color/Light_grayish"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:inputType="none"
+                        android:drawableEnd="@android:drawable/ic_menu_my_calendar"/>
+
+                </LinearLayout>
+
+                <!-- Botón calcular -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCalcularVentas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Calcular Ventas"
+                    android:textColor="@color/Light_grayish"
+                    android:backgroundTint="@color/Grayish_green"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- Resultado -->
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:background="@color/Light_grayish"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/tvProductSalesResult"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Selecciona un producto y período"
+                        android:textSize="14sp"
+                        android:textColor="@color/Grey"/>
+
+                </ScrollView>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ========== SECCIÓN 3: LISTA DE ÓRDENES ========== -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/old_grayish_green"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📋 Historial de Órdenes"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/Grey"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- RecyclerView con altura fija para permitir scroll interno -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewOrders"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:background="@color/Light_grayish"
+                    android:padding="8dp"
+                    android:nestedScrollingEnabled="false"/>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddProduct"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:contentDescription="Añadir nuevo producto"
-        app:srcCompat="@android:drawable/ic_input_add"
-        app:backgroundTint="@color/white"/>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</ScrollView>

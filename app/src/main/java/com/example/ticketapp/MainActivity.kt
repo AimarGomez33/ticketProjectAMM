@@ -22,6 +22,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.LayoutInflater
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,6 +33,8 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,8 +46,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.widget.CheckBox
 import kotlinx.coroutines.CoroutineScope
+import java.util.Calendar
 import java.util.Date
-import kotlin.collections.List
 
 
 class MainActivity : AppCompatActivity() {
@@ -91,6 +94,11 @@ class MainActivity : AppCompatActivity() {
     private val cantidadesCombo = mutableMapOf<String, Int>()
 
 
+    // Base de datos de la aplicación
+    // Declaración única del adaptador del panel de administración
+    // (evita duplicados y confusiones con nombres)
+    private lateinit var adminOrderAdapter: AdminOrderAdapter
+
     private lateinit var summaryContainer: View
     private lateinit var summaryTextView: TextView
     private lateinit var summaryTotalTextView: TextView
@@ -111,10 +119,25 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnGananciaMensual: MaterialButton
     private lateinit var adminSummaryTextView: TextView
     private lateinit var recyclerViewOrders: RecyclerView
-    private lateinit var adminOrderAdapter: AdminOrderAdapter
+
+
+
+    // El adaptador se declara una sola vez arriba
 
     private var isEditMode = false
 
+    // Flag para evitar múltiples impresiones por toques rápidos
+    private var isPrinting = false
+
+    // --- Filtro de ventas por producto ---
+    private lateinit var spinnerProductFilter: Spinner
+    private lateinit var spinnerPeriodFilter: Spinner
+    private lateinit var spinnerTypeFilter: Spinner
+    private lateinit var editStartDate: EditText
+    private lateinit var editEndDate: EditText
+    private lateinit var btnCalcularVentas: MaterialButton
+    private lateinit var layoutCustomRange: View
+    private lateinit var tvProductSalesResult: TextView
 
     // --- Hardware & Permissions ---
     private lateinit var usbManager: UsbManager
@@ -128,9 +151,6 @@ class MainActivity : AppCompatActivity() {
     }
     private val bluetoothAdapter: BluetoothAdapter? by lazy { bluetoothManager.adapter }
     private var bluetoothSocket: BluetoothSocket? = null
-
-
-
 
     private val requestBluetoothPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -199,7 +219,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        // Inicializa la base de datos una vez al inicio. La observación se configurará
+        // después de que el adaptador de órdenes haya sido configurado para evitar
+        // condiciones de carrera.
+        appDatabase = AppDatabase.getDatabase(applicationContext, lifecycleScope)
         txtTotal = findViewById(R.id.textViewTotal)
 
         txtNormales = mapOf(
@@ -264,7 +287,11 @@ class MainActivity : AppCompatActivity() {
                 val actual = (cantidadesNormales[nombre] ?: 0) + 1
                 cantidadesNormales[nombre] = actual
                 txtNormales[nombre]?.text = "Normales: $actual"
+                // Recalcula el total (solo hamburguesas)
                 recalcularTotal()
+                // Actualiza el resumen en tiempo real
+                val productosSeleccionados = obtenerProductosDesdeInputs()
+                mostrarResumen(productosSeleccionados)
             }
         }
 
@@ -273,15 +300,22 @@ class MainActivity : AppCompatActivity() {
                 val actual = (cantidadesCombo[nombre] ?: 0) + 1
                 cantidadesCombo[nombre] = actual
                 txtCombos[nombre]?.text = "Combos: $actual"
+                // Recalcula el total (solo hamburguesas)
                 recalcularTotal()
+                // Actualiza el resumen en tiempo real
+                val productosSeleccionados = obtenerProductosDesdeInputs()
+                mostrarResumen(productosSeleccionados)
             }
         }
 
 
+        // La función de reimprimir ticket se ha movido a un método de la clase.
+
 
 
         // DB y panel admin
-        appDatabase = AppDatabase.getDatabase(this, lifecycleScope)
+        // La base de datos ya fue inicializada al inicio de onCreate, no es necesario volver a asignarla aquí
+        // appDatabase = AppDatabase.getDatabase(this, lifecycleScope)
         drawerLayout = findViewById(R.id.drawerLayout)
         btnGananciaDiaria = findViewById(R.id.btnGananciaDiaria)
         btnGananciaSemanal = findViewById(R.id.btnGananciaSemanal)
@@ -289,35 +323,33 @@ class MainActivity : AppCompatActivity() {
         adminSummaryTextView = findViewById(R.id.adminSummaryTextView)
         recyclerViewOrders = findViewById(R.id.recyclerViewOrders)
 
+        // Elementos para el filtro de ventas por producto
+        spinnerProductFilter = findViewById(R.id.spinnerProductFilter)
+        spinnerPeriodFilter = findViewById(R.id.spinnerPeriodFilter)
+        spinnerTypeFilter = findViewById(R.id.spinnerTypeFilter)
+        editStartDate = findViewById(R.id.editStartDate)
+        editEndDate = findViewById(R.id.editEndDate)
+        btnCalcularVentas = findViewById(R.id.btnCalcularVentas)
+        layoutCustomRange = findViewById(R.id.layoutCustomRange)
+        tvProductSalesResult = findViewById(R.id.tvProductSalesResult)
+
         recyclerViewOrders.layoutManager = LinearLayoutManager(this)
 
         adminOrderAdapter = AdminOrderAdapter(
-            mutableListOf(),
-            { orderId -> Eli(orderId) },
-            { order -> mostrarResumen(obtenerProductosDesdeInputs()) },
-            { order ->reimprimirTicket(order) }
+            onDelete = { orderId -> eliminarPedido(orderId) },
+
+            // CORREGIDO: Llama a la nueva función que maneja la lógica
+            onOrderClick = { order -> mostrarResumenDeOrdenGuardada(order) },
+
+            onPrint = { order -> reimprimirTicket(order) }
         )
+
+
 
         recyclerViewOrders.adapter = adminOrderAdapter
 
-         fun reimprimirTicket(order: OrderEntity) {
-            lifecycleScope.launch(Dispatchers.IO) {
-                val items = appDatabase.orderDao().getItemsForOrder(order.orderId)
-                val ticket = generarTextoTicket(order = obtenerProductosDesdeInputs(), obtenerProductosDesdeInputs())
-                withContext(Dispatchers.Main) {
-                    AlertDialog.Builder(this@MainActivity)
-                        .setTitle("Reimprimir ticket")
-                        .setMessage(ticket)
-                        .setPositiveButton("Imprimir") { _, _ ->
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                printViaUsb(ticket) || printViaBluetooth(ticket)
-                            }
-                        }
-                        .setNegativeButton("Cancelar", null)
-                        .show()
-                }
-            }
-        }
+        // Comienza a observar la lista de órdenes una vez que el adaptador está listo
+        observarOrdenes()
 
 
 
@@ -325,14 +357,17 @@ class MainActivity : AppCompatActivity() {
         btnGananciaSemanal.setOnClickListener { generarGananciaSemanal() }
         btnGananciaMensual.setOnClickListener { generarGananciaMensual() }
 
-        // cargar pedidos al inicio
-        cargarPedidos()
+        // No llamamos a cargarPedidos(). El flujo de datos de Room se encarga
+        // de actualizar la lista automáticamente.
 
         usbManager = getSystemService(USB_SERVICE) as UsbManager
 
         setupProductViews()
         setupButtons()
         setupCollapsibleCategories()
+
+        // Configura el filtro de ventas por producto (spinner, fechas, botón)
+        setupProductSalesFilter()
 
         // registrar receiver USB
         val filter = IntentFilter(ACTION_USB_PERMISSION)
@@ -342,8 +377,6 @@ class MainActivity : AppCompatActivity() {
             @Suppress("UnspecifiedRegisterReceiverFlag")
             registerReceiver(usbReceiver, filter)
         }
-
-
 
 
 
@@ -359,27 +392,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
-// ... (rest of MainActivity.kt)
-
-    fun reimprimirTicket(order: OrderEntity) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val items = appDatabase.orderDao().getItemsForOrder(order.orderId)
-            val ticket = generarTextoTicket(order = obtenerProductosDesdeInputs(), productosSeleccionados1 = obtenerProductosDesdeInputs())
-            withContext(Dispatchers.Main) {
-                AlertDialog.Builder(this@MainActivity)
-                    .setTitle("Reimprimir ticket")
-                    .setMessage(ticket)
-                    .setPositiveButton("Imprimir") { _, _ ->
-                        lifecycleScope.launch(Dispatchers.IO) {
-                            printViaUsb(ticket) || printViaBluetooth(ticket)
-                        }
-                    }
-                    .setNegativeButton("Cancelar", null)
-                    .show()
-            }
-        }
-    }
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(usbReceiver)
@@ -698,6 +710,9 @@ class MainActivity : AppCompatActivity() {
                         if (currentQuantity != newValue) {
                             quantities[productName] = newValue
                         }
+                        // Actualizar resumen en tiempo real al cambiar la cantidad de chalupas
+                        val productosSeleccionados = obtenerProductosDesdeInputs()
+                        mostrarResumen(productosSeleccionados)
                     }
                 })
             }
@@ -775,29 +790,54 @@ class MainActivity : AppCompatActivity() {
         btnCloseSummary = findViewById(R.id.btnCloseSummary)
 
         btnImprimir.setOnClickListener {
+            // Evita múltiples toques rápidos que generan órdenes duplicadas
+            if (isPrinting) return@setOnClickListener
+            isPrinting = true
+
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
-                    // 1️⃣ Obtener los productos seleccionados (incluye combos)
+                    // 1️⃣ Obtener los productos seleccionados desde la UI
                     val productosSeleccionados = obtenerProductosDesdeInputs()
+                    if (productosSeleccionados.isEmpty()) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "No hay productos seleccionados",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        isPrinting = false
+                        return@launch
+                    }
 
-                    // 2️⃣ Generar el texto del ticket
-
-                    val textoTicket = generarTextoTicket(obtenerProductosDesdeInputs(), obtenerProductosDesdeInputs())
-
+                    // 2️⃣ Generar el texto del ticket UNA vez
+                    val textoTicket = generarTextoTicket(productosSeleccionados)
 
                     // 3️⃣ Guardar la orden en la base de datos
                     val mesaInfo = editTextMesa.text.toString().trim()
                     guardarOrden(productosSeleccionados, mesaInfo)
 
-                    // 4️⃣ Imprimir el ticket
-                    imprimirTicket(textoTicket)
+                    // 4️⃣ Imprimir automáticamente sin mostrar vista previa
+                    val exito = printViaUsb(textoTicket) || printViaBluetooth(textoTicket)
 
-                    // 5️⃣ Mostrar el resumen en la UI
+                    // 5️⃣ Mostrar mensaje en la UI (no actualizamos el resumen aquí)
                     withContext(Dispatchers.Main) {
-                        mostrarResumen(productosSeleccionados)
-                        Toast.makeText(this@MainActivity, "Ticket generado correctamente", Toast.LENGTH_SHORT).show()
+                        if (exito) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Ticket impreso correctamente",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "No se pudo imprimir el ticket",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                        // No actualizamos el resumen al imprimir; éste se actualiza en tiempo real al agregar productos
+                        isPrinting = false
                     }
-
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
@@ -806,6 +846,7 @@ class MainActivity : AppCompatActivity() {
                             Toast.LENGTH_LONG
                         ).show()
                     }
+                    isPrinting = false
                 }
             }
         }
@@ -836,6 +877,334 @@ class MainActivity : AppCompatActivity() {
     }
 
     // -------------------------------------------------------------------------
+    // Filtro de ventas por producto
+    // -------------------------------------------------------------------------
+
+    /**
+     * Configura el filtro de ventas por producto: pobla los spinners de producto y periodo,
+     * muestra/oculta campos de fecha personalizados según la selección, y define la lógica
+     * para calcular las ventas del producto seleccionado en el rango seleccionado.
+     */
+    private fun setupProductSalesFilter() {
+        // Poblar spinner de productos: une nombres de hamburguesas y otros productos
+        val productNames: MutableList<String> = mutableSetOf<String>().apply {
+            // nombres de hamburguesas (normales y combos comparten nombre base)
+            addAll(preciosHamburguesas.keys)
+            // nombres de productos generales (otros platillos y extras)
+            addAll(products.keys)
+        }.toMutableList().sorted().toMutableList()
+
+        // Adaptador para el spinner de productos
+        val productoAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            productNames
+        )
+        productoAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+        spinnerProductFilter.adapter = productoAdapter
+
+        // Adaptador para el spinner de tipo (Normal, Combo, Todos)
+        val typeOptions = listOf("Todos", "Normal", "Combo")
+        val typeAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            typeOptions
+        )
+        typeAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+        spinnerTypeFilter.adapter = typeAdapter
+
+        // Por defecto, ocultar el spinner de tipo hasta que se seleccione un producto que lo requiera
+        spinnerTypeFilter.visibility = View.GONE
+
+        // Mostrar u ocultar el spinner de tipo según si el producto tiene variante combo
+        spinnerProductFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selectedName = productNames[position]
+                // Si es una hamburguesa, mostrar el spinner de tipo; de lo contrario ocultarlo
+                if (preciosHamburguesas.containsKey(selectedName)) {
+                    spinnerTypeFilter.visibility = View.VISIBLE
+                    // por defecto, seleccionar "Todos" para combos y normales
+                    spinnerTypeFilter.setSelection(0)
+                } else {
+                    spinnerTypeFilter.visibility = View.GONE
+                    // si se oculta, seleccionar "Todos" para evitar null
+                    spinnerTypeFilter.setSelection(0)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+        // Opciones de periodo
+        val periodOptions = listOf(
+            "Hoy",
+            "Esta semana",
+            "Este mes",
+            "Rango específico"
+        )
+        val periodAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            periodOptions
+        )
+        periodAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+        spinnerPeriodFilter.adapter = periodAdapter
+
+        // Mostrar u ocultar el rango personalizado según la selección del periodo
+        spinnerPeriodFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selected = periodOptions[position]
+                if (selected == "Rango específico") {
+                    layoutCustomRange.visibility = View.VISIBLE
+                } else {
+                    layoutCustomRange.visibility = View.GONE
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // No hacer nada
+            }
+        }
+
+        // Configurar date pickers para seleccionar fechas de inicio y fin
+        editStartDate.setOnClickListener { showDatePicker(editStartDate) }
+        editEndDate.setOnClickListener { showDatePicker(editEndDate) }
+
+        // Listener para el botón de calcular ventas
+        btnCalcularVentas.setOnClickListener {
+            val selectedProduct = spinnerProductFilter.selectedItem as? String ?: return@setOnClickListener
+            val selectedPeriod = spinnerPeriodFilter.selectedItem as? String ?: return@setOnClickListener
+            val selectedType = spinnerTypeFilter.selectedItem as? String ?: "Todos"
+
+            // Determinar las fechas de inicio y fin según el periodo seleccionado
+            val range: Pair<Long, Long>? = when (selectedPeriod) {
+                "Hoy" -> {
+                    val now = Date()
+                    Pair(getStartOfDay(now), getEndOfDay(now))
+                }
+                "Esta semana" -> {
+                    getStartAndEndOfWeek(Date())
+                }
+                "Este mes" -> {
+                    getStartAndEndOfMonth(Date())
+                }
+                "Rango específico" -> {
+                    // Obtener fechas de los EditText. Si están vacías, mostrar mensaje y regresar
+                    val startStr = editStartDate.text.toString().trim()
+                    val endStr = editEndDate.text.toString().trim()
+                    if (startStr.isEmpty() || endStr.isEmpty()) {
+                        Toast.makeText(
+                            this,
+                            "Seleccione las fechas de inicio y fin",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@setOnClickListener
+                    }
+                    try {
+                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                        val startDate = sdf.parse(startStr) ?: Date()
+                        val endDate = sdf.parse(endStr) ?: Date()
+                        // Validar que la fecha inicio no sea mayor a fin
+                        if (startDate.after(endDate)) {
+                            Toast.makeText(
+                                this,
+                                "La fecha de inicio no puede ser posterior a la fecha de fin",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            return@setOnClickListener
+                        }
+                        Pair(getStartOfDay(startDate), getEndOfDay(endDate))
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            this,
+                            "Formato de fecha inválido",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@setOnClickListener
+                    }
+                }
+                else -> null
+            }
+
+            if (range != null) {
+                calcularVentasProducto(selectedProduct, range.first, range.second, selectedType)
+            }
+        }
+    }
+
+    /**
+     * Muestra un DatePickerDialog para seleccionar una fecha y la asigna al EditText objetivo.
+     */
+    private fun showDatePicker(targetEdit: EditText) {
+        val calendar = Calendar.getInstance()
+        val datePicker = android.app.DatePickerDialog(
+            this,
+            { _, year, month, dayOfMonth ->
+                val cal = Calendar.getInstance()
+                cal.set(year, month, dayOfMonth)
+                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                targetEdit.setText(sdf.format(cal.time))
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePicker.show()
+    }
+
+    /**
+     * Calcula las ventas de un producto entre dos timestamps (inclusive) y actualiza la UI con el resultado.
+     */
+    /**
+     * Calcula las ventas de un producto (y su variante) entre dos timestamps (inclusive) y actualiza la UI con el resultado.
+     *
+     * @param nombreProducto El nombre base del producto (por ejemplo, "Hamburguesa Hawaiana").
+     * @param inicio         Timestamp de inicio del rango (inclusive).
+     * @param fin            Timestamp de fin del rango (inclusive).
+     * @param tipo           Variante a filtrar: "Normal", "Combo" o "Todos". Para productos sin variante, se ignora.
+     */
+    private fun calcularVentasProducto(nombreProducto: String, inicio: Long, fin: Long, tipo: String = "Todos") {
+        lifecycleScope.launch(Dispatchers.IO) {
+            // Obtener todas las órdenes
+            val orders = appDatabase.orderDao().getAllOrders()
+            var totalNormales = 0.0
+            var unidadesNormales = 0
+            var totalCombos = 0.0
+            var unidadesCombos = 0
+            // Filtrar por rango de fechas
+            val filteredOrders = orders.filter { order ->
+                order.createdAt >= inicio && order.createdAt <= fin
+            }
+            // Para cada orden en el rango, sumar las ventas del producto
+            for (order in filteredOrders) {
+                val items = appDatabase.orderDao().getItemsForOrder(order.orderId)
+                for (item in items) {
+                    // Extraer el nombre base sin sufijo de combo si existe
+                    val baseName = if (item.esCombo) {
+                        // Soporta tanto los nombres persistidos antiguos " (Combo)" como el nuevo formato " + Combo"
+                        item.name.substringBefore(" + Combo").substringBefore(" (Combo)")
+                    } else {
+                        item.name
+                    }
+                    if (baseName == nombreProducto) {
+                        if (item.esCombo) {
+                            totalCombos += item.unitPrice * item.quantity
+                            unidadesCombos += item.quantity
+                        } else {
+                            totalNormales += item.unitPrice * item.quantity
+                            unidadesNormales += item.quantity
+                        }
+                    }
+                }
+            }
+            // Determinar resultados según el tipo
+            val (unidadesVendidas, totalVentas) = when (tipo) {
+                "Normal" -> unidadesNormales to totalNormales
+                "Combo" -> unidadesCombos to totalCombos
+                else -> (unidadesNormales + unidadesCombos) to (totalNormales + totalCombos)
+            }
+            withContext(Dispatchers.Main) {
+                // Actualizar resultado en la UI
+                val resultadoTexto: String = if (unidadesVendidas > 0) {
+                    when (tipo) {
+                        "Normal" -> "Ventas de $nombreProducto (normal): $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
+                        "Combo" -> "Ventas de $nombreProducto combo: $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
+                        else -> {
+                            // Mostrar resumen separado si hay ventas en ambas variantes
+                            val partes = mutableListOf<String>()
+                            if (unidadesNormales > 0) {
+                                partes.add("Normales: $unidadesNormales unidad(es), Total: ${totalNormales.formatMoney()}")
+                            }
+                            if (unidadesCombos > 0) {
+                                partes.add("Combo: $unidadesCombos unidad(es), Total: ${totalCombos.formatMoney()}")
+                            }
+                            if (partes.isNotEmpty()) {
+                                "Ventas de $nombreProducto:\n" + partes.joinToString("\n")
+                            } else {
+                                // Fallback por si acaso (no debería ocurrir)
+                                "Ventas de $nombreProducto: $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
+                            }
+                        }
+                    }
+                } else {
+                    "No se encontraron ventas para $nombreProducto en el periodo seleccionado"
+                }
+                tvProductSalesResult.text = resultadoTexto
+            }
+        }
+    }
+
+    /**
+     * Calcula el timestamp de inicio y fin del día para la fecha dada.
+     */
+    private fun getStartOfDay(date: Date): Long {
+        val cal = Calendar.getInstance()
+        cal.time = date
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+        return cal.timeInMillis
+    }
+
+    private fun getEndOfDay(date: Date): Long {
+        val cal = Calendar.getInstance()
+        cal.time = date
+        cal.set(Calendar.HOUR_OF_DAY, 23)
+        cal.set(Calendar.MINUTE, 59)
+        cal.set(Calendar.SECOND, 59)
+        cal.set(Calendar.MILLISECOND, 999)
+        return cal.timeInMillis
+    }
+
+    /**
+     * Devuelve el inicio (lunes) y fin (domingo) de la semana de la fecha dada.
+     */
+    private fun getStartAndEndOfWeek(date: Date): Pair<Long, Long> {
+        val cal = Calendar.getInstance()
+        cal.time = date
+        cal.firstDayOfWeek = Calendar.MONDAY
+        // Ajustar al inicio de la semana
+        cal.set(Calendar.DAY_OF_WEEK, cal.firstDayOfWeek)
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+        val start = cal.timeInMillis
+        // Fin de la semana (domingo)
+        cal.add(Calendar.DAY_OF_WEEK, 6)
+        cal.set(Calendar.HOUR_OF_DAY, 23)
+        cal.set(Calendar.MINUTE, 59)
+        cal.set(Calendar.SECOND, 59)
+        cal.set(Calendar.MILLISECOND, 999)
+        val end = cal.timeInMillis
+        return Pair(start, end)
+    }
+
+    /**
+     * Devuelve el inicio y fin del mes de la fecha dada.
+     */
+    private fun getStartAndEndOfMonth(date: Date): Pair<Long, Long> {
+        val cal = Calendar.getInstance()
+        cal.time = date
+        cal.set(Calendar.DAY_OF_MONTH, 1)
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+        val start = cal.timeInMillis
+        // Fin del mes
+        cal.add(Calendar.MONTH, 1)
+        cal.set(Calendar.DAY_OF_MONTH, 1)
+        cal.add(Calendar.DAY_OF_MONTH, -1)
+        cal.set(Calendar.HOUR_OF_DAY, 23)
+        cal.set(Calendar.MINUTE, 59)
+        cal.set(Calendar.SECOND, 59)
+        cal.set(Calendar.MILLISECOND, 999)
+        val end = cal.timeInMillis
+        return Pair(start, end)
+    }
+
+    // -------------------------------------------------------------------------
     // Lógica de cantidades / impresión / resumen en pantalla
     // -------------------------------------------------------------------------
 
@@ -848,6 +1217,11 @@ class MainActivity : AppCompatActivity() {
         if (view is EditText) {
             view.setSelection(view.text.length)
         }
+
+        // 🔸 Actualizar resumen en tiempo real con los productos seleccionados
+        // Se obtiene la lista actual de productos (incluye hamburguesas y combos)
+        val productosSeleccionados = obtenerProductosDesdeInputs()
+        mostrarResumen(productosSeleccionados)
     }
 
 
@@ -895,11 +1269,12 @@ class MainActivity : AppCompatActivity() {
             findViewById<TextView>(id)?.text = "Combos: 0"
         }
 
-        // 🔹 6) Limpiar campo de mesa y resumen
+        // 🔹 6) Limpiar campo de mesa y resumen. Mantener visible el resumen actual
         editTextMesa.setText("")
         summaryTextView.text = ""
         summaryTotalTextView.text = "TOTAL: $0.00"
-        summaryContainer.visibility = View.GONE
+        // No ocultamos el summaryContainer para que el resumen actual no desaparezca
+        summaryContainer.visibility = View.VISIBLE
 
         // 🔹 7) Confirmación visual
         Toast.makeText(this, "Todas las cantidades se han restablecido a 0", Toast.LENGTH_SHORT).show()
@@ -925,7 +1300,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             // 🔹 Generar texto del ticket
-            val ticketTexto = generarTextoTicket(order = obtenerProductosDesdeInputs(), productosSeleccionados)
+            val ticketTexto = generarTextoTicket(productosSeleccionados)
 
             withContext(Dispatchers.Main) {
                 AlertDialog.Builder(this@MainActivity)
@@ -1414,6 +1789,31 @@ class MainActivity : AppCompatActivity() {
         btnCloseSummary.setOnClickListener { summaryContainer.visibility = View.GONE }
     }
 
+    private fun mostrarResumenDeOrdenGuardada(order: OrderEntity) {
+        // 1. Usar una corrutina para acceder a la base de datos en un hilo secundario
+        lifecycleScope.launch(Dispatchers.IO) {
+            // 2. Obtener la lista de artículos para la orden seleccionada
+            val itemsDeLaOrden = appDatabase.orderDao().getItemsForOrder(order.orderId)
+
+
+            val productosParaResumen = itemsDeLaOrden.map { itemEntity ->
+                Producto(
+                    nombre = itemEntity.name,
+                    precio = itemEntity.unitPrice,
+                    cantidad = itemEntity.quantity,
+                    esCombo = itemEntity.esCombo
+                )
+            }
+
+            // 3. Volver al hilo principal para mostrar el diálogo
+            withContext(Dispatchers.Main) {
+                // 4. Llamar a la función que ya sabe cómo mostrar un resumen, pero con la lista convertida
+                mostrarResumen(productosParaResumen) // <--- Se usa la nueva lista
+            }
+        }
+    }
+
+
 
 
 
@@ -1490,7 +1890,8 @@ class MainActivity : AppCompatActivity() {
                 val precioCombo = precioBase + extraCombo
                 lista.add(
                     Producto(
-                        nombre = "$nombre (Combo)",
+                        // Utilizar "+ Combo" en lugar de paréntesis para unificar el nombre
+                        nombre = "$nombre + Combo",
                         precio = precioCombo,
                         cantidad = cantidad,
                         esCombo = true
@@ -1504,370 +1905,408 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    // Renombra "guarder" a "guardar" y completa la lógica
+
     private fun guardarSoloCombos() {
         CoroutineScope(Dispatchers.IO).launch {
+            // 🔹 Obtener lista de productos seleccionados desde inputs (solo combos)
             val productos = obtenerProductosDesdeInputs()
-            val combos = productos.filter { it.esCombo }
+            val combos = productos.filter { it.nombre.contains("Combo", ignoreCase = true) }
 
             if (combos.isEmpty()) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, "No hay combos para guardar", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "No hay combos para guardar",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 return@launch
             }
 
-            val createdAt = System.currentTimeMillis()
-            val businessDate = getBusinessDate(createdAt)
-            val grandTotal = combos.sumOf { it.precio * it.cantidad }
-            val mesaInfo = withContext(Dispatchers.Main) { editTextMesa.text.toString().trim() }
-
-            val orderEntity = OrderEntity(
-                mesa = mesaInfo.ifBlank { null },
-                createdAt = createdAt,
-                businessDate = businessDate,
-                grandTotal = grandTotal
-            )
-
+            // 🔹 Convertir productos a entidades para guardar en BD
             val comboItems = combos.map {
                 OrderItemEntity(
-                    orderId = 0,
+                    orderId = 0L, // se asignará automáticamente al insertar
                     name = it.nombre,
                     unitPrice = it.precio,
-                    quantity = it.cantidad,
+                    quantity = quantities[it.nombre.substringBefore(" (x")] ?: 1, // cantidad desde UI
                     esCombo = true
                 )
             }
 
-            appDatabase.orderDao().insertOrderWithItems(orderEntity, comboItems)
+            // 🔹 Crear la orden (solo combos)
+            val order = OrderEntity(
+                mesa = "Combos Especiales",
+                createdAt = System.currentTimeMillis(),
+                businessDate = System.currentTimeMillis(),
+                grandTotal = comboItems.sumOf { it.unitPrice * it.quantity },
+                esCombo = true
+            )
+
+            // 🔹 Insertar en BD usando tu DAO transaccional
+            val db = AppDatabase.getDatabase(applicationContext, this)
+            db.orderDao().insertOrderWithItems(order, comboItems)
 
             withContext(Dispatchers.Main) {
-                Toast.makeText(this@MainActivity, "Combos guardados correctamente", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Combos guardados correctamente (${combos.size})",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
 
+    private suspend fun generarTextoTicket(productosSeleccionados: List<Producto>): String = withContext(Dispatchers.IO){
+        val fechaHora = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+        val sb = StringBuilder()
+        val anchoTotalLinea = 32
+        val lineaSeparadora = "-".repeat(anchoTotalLinea)
 
-    // ✅ CORRECCIÓN
-    private suspend fun generarTextoTicket(
-        productosSeleccionados: List<Producto> // Recibimos la lista como único parámetro
-    ): String {
-        val withContext = withContext(Dispatchers.IO) {
-            val fechaHora =
-                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
-            val sb = StringBuilder()
-            val anchoTotalLinea = 32
-            val lineaSeparadora = "-".repeat(anchoTotalLinea)
+        // Encabezado
+        sb.appendLine("   ANTOJITOS MEXICANOS MARGARITA")
+        sb.appendLine("********************************")
+        sb.appendLine("     *** TICKET DE COMPRA ***")
+        sb.appendLine("********************************")
+        sb.appendLine("Fecha y hora: $fechaHora")
 
-            // ... El resto del encabezado del ticket no cambia ...
-            sb.appendLine("   ANTOJITOS MEXICANOS MARGARITA")
-            sb.appendLine("********************************")
-            sb.appendLine("     *** TICKET DE COMPRA ***")
-            // ...
+        // Datos de cuenta si aplica
+        if (noCuenta.isChecked) {
+            sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)} ")
+            sb.appendLine("Nombre: Margarita Daniel Pérez")
+            sb.appendLine("Banco: BBVA")
+        }
 
-            // Mesa/cliente
-            val mesaInfo = withContext(Dispatchers.Main) { editTextMesa.text.toString().trim() }
-            if (mesaInfo.isNotEmpty()) {
-                sb.appendLine(String.format("%-32s", "Mesa: ${mesaInfo.uppercase()}"))
-                sb.appendLine("*****************************")
+        // Mesa/cliente
+        val mesaInfo = editTextMesa.text.toString().trim()
+        if (mesaInfo.isNotEmpty()) {
+            sb.appendLine(String.format("%-32s", "Mesa: ${mesaInfo.uppercase()}"))
+            sb.appendLine("*****************************")
+        }
+
+        // Obtener productos seleccionados desde tus inputs (debe devolver List<Producto>)
+
+        // Guardar orden en BD y mostrar resumen en el layou
+
+        // Separación normales vs combos
+        val combos = mutableListOf<Producto>()
+        val normales = mutableListOf<Producto>()
+        for (p in productosSeleccionados) if (p.esCombo) combos.add(p) else normales.add(p)
+
+        // Tabla cabecera
+        sb.appendLine(lineaSeparadora)
+        sb.appendLine(String.format("%-15s %6s %3s %7s", "Producto", "Precio", "Cant", "Total"))
+        sb.appendLine(lineaSeparadora)
+
+        var totalGeneral = 0.0
+
+        // Listado de productos normales
+        if (normales.isNotEmpty()) {
+            sb.appendLine("PRODUCTOS")
+            for (p in normales) {
+                val totalProducto = p.precio * p.cantidad
+                totalGeneral += totalProducto
+
+                val nombreCorto = if (p.nombre.length > 15) p.nombre.substring(0, 12) + "..." else p.nombre
+                val precioFmt = String.format("$%.2f", p.precio)
+                val totalFmt = String.format("$%.2f", totalProducto)
+
+                sb.appendLine(String.format("%-15s %6s %3d %7s", nombreCorto, precioFmt, p.cantidad, totalFmt))
             }
+            sb.appendLine(lineaSeparadora)
+        }
 
-            // ✅ CORRECCIÓN: Ya no obtenemos los productos aquí dentro, usamos el parámetro.
-            // La línea "val productosSeleccionados: List<Producto> = obtenerProductosDesdeInputs()" se elimina.
+        // Listado de combos
+        if (combos.isNotEmpty()) {
+            sb.appendLine("COMBOS")
+            for (c in combos) {
+                val totalCombo = c.precio * c.cantidad
+                totalGeneral += totalCombo
 
-            // Guardar orden en BD y mostrar resumen en el layout
-            guardarOrden(productosSeleccionados, mesaInfo)
+                val nombreCorto = if (c.nombre.length > 15) c.nombre.substring(0, 12) + "..." else c.nombre
+                val precioFmt = String.format("$%.2f", c.precio)
+                val totalFmt = String.format("$%.2f", totalCombo)
+
+                sb.appendLine(String.format("%-15s %6s %3d %7s", nombreCorto, precioFmt, c.cantidad, totalFmt))
+            }
+            sb.appendLine(lineaSeparadora)
+        }
+
+        // Totales
+        sb.appendLine(String.format("%-15s %16s", "TOTAL:", String.format("$%.2f", totalGeneral)))
+        sb.appendLine(lineaSeparadora)
+        sb.appendLine("")
+        sb.appendLine("    Gracias por su compra")
+        sb.appendLine("    Vuelva pronto")
+        sb.appendLine("\n\n\n") // feed para corte manual
+
+        return@withContext sb.toString()
+    }
+
+    // -------------------------------------------------------------------------
+    // Persistencia en base de datos y panel admin
+    // -------------------------------------------------------------------------
+
+    /** Helper: formato money */
+    private fun Double.formatMoney(): String =
+        "$" + String.format("%.2f", this)
+
+    /** Actualiza lista en panel admin */
+    private fun refreshOrders(order: OrderEntity, items: List<OrderItemEntity>) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            // 🔹 Inserta la orden con sus ítems
+            appDatabase.orderDao().insertOrderWithItems(order, items)
+
+            // 🔹 Luego obtiene todas las órdenes actualizadas
+            val updatedOrders = appDatabase.orderDao().getAllOrders()
+
             withContext(Dispatchers.Main) {
-                mostrarResumen(productosSeleccionados)
+                adminOrderAdapter.updateOrders(updatedOrders)
             }
-
-            // ... el resto de la función para generar el texto del ticket continúa igual ...
-            // Separación normales vs combos
-            val combos = mutableListOf<Producto>()
-            //...
+        }
+    }
 
 
-            // -------------------------------------------------------------------------
-            // Persistencia en base de datos y panel admin
-            // -------------------------------------------------------------------------
-            // ✅ Solución
-            fun guarderSoloCombos() {
-                CoroutineScope(Dispatchers.IO).launch {
-                    // 🔹 Obtener lista de productos seleccionados desde inputs
-                    val productos = obtenerProductosDesdeInputs()
-                    val combos =
-                        productos.filter { it.esCombo } // Filtra usando la propiedad booleana
+    /** Guarda la orden en Room y refresca el panel */
+    /** Guarda la orden en Room y refresca el panel */
+    /**
+     * Guarda la orden en Room. No se encarga de actualizar la UI directamente.
+     */
+    private fun guardarOrden(productos: List<Producto>, mesaInfo: String) {
+        if (productos.isEmpty()) {
+            Toast.makeText(this, "No hay productos para guardar", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-                    if (combos.isEmpty()) {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                this@MainActivity,
-                                "No hay combos para guardar",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        return@launch
-                    }
+        lifecycleScope.launch(Dispatchers.IO) {
+            val createdAt = System.currentTimeMillis()
+            // ... (tu lógica para businessDate, etc.) ...
 
-                    // 🔹 Lógica para crear la orden (igual que en guardarOrden)
-                    val createdAt = System.currentTimeMillis()
-                    val businessDate = getBusinessDate(createdAt)
-                    val grandTotal = combos.sumOf { it.precio * it.cantidad }
-                    val mesaInfo =
-                        withContext(Dispatchers.Main) { editTextMesa.text.toString().trim() }
+            val orderEntity = OrderEntity(
+                mesa = mesaInfo.ifBlank { null },
+                createdAt = createdAt,
+                businessDate = createdAt, // o tu variable businessDate
+                grandTotal = productos.sumOf { it.total }
+            )
 
-                    val orderEntity = OrderEntity(
-                        orderId = TODO(),
-                        mesa = TODO(),
-                        createdAt = TODO(),
-                        businessDate = TODO(),
-                        grandTotal = TODO(),
-                        esCombo = TODO(),
-                        items = TODO(),
-                        total = TODO(),
-                        timestamp = TODO(),
-                        tableNumber = TODO(),
-                        id = TODO(),
-                        customerName = TODO(),
-                        purchasedItems = TODO()
-                    )
-
-                    val comboItems = combos.map {
-                        OrderItemEntity(
-                            orderId = 0, // Se asignará en la transacción
-                            name = it.nombre,
-                            unitPrice = it.precio,
-                            quantity = it.cantidad,
-                            esCombo = true
-                        )
-                    }
-
-                    // 🔹 Insertar en BD
-                    appDatabase.orderDao().insertOrderWithItems(orderEntity, comboItems)
-
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Combos guardados correctamente (${combos.size})",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        // Opcional: Limpiar campos o actualizar UI
-                    }
-                }
-            }
-
-            /**
-             * Calcula la "fecha de negocio". Si la hora es antes de las 5 AM,
-             * la fecha de negocio corresponde al día anterior.
-             * Devuelve el timestamp del inicio de ese día (00:00:00).
-             */
-            private fun getBusinessDate(timestamp: Long): Long {
-                return Calendar.getInstance().apply {
-                    timeInMillis = timestamp
-                    // Si la hora es antes de las 5 AM, se considera del día anterior
-                    if (get(Calendar.HOUR_OF_DAY) < 5) {
-                        add(Calendar.DAY_OF_MONTH, -1)
-                    }
-                    // Se ajusta la hora a las 00:00:00 de ese día de negocio
-                    set(Calendar.HOUR_OF_DAY, 0)
-                    set(Calendar.MINUTE, 0)
-                    set(Calendar.SECOND, 0)
-                    set(Calendar.MILLISECOND, 0)
-                }.timeInMillis
-            }
-
-
-            /** Helper: formato money */
-            private fun Double.formatMoney(): String =
-                "$" + String.format("%.2f", this)
-
-            /** Actualiza lista en panel admin */
-            private fun refreshOrders(order: OrderEntity, items: List<OrderItemEntity>) {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    // 🔹 Inserta la orden con sus ítems
-                    appDatabase.orderDao().insertOrderWithItems(order, items)
-
-                    // 🔹 Luego obtiene todas las órdenes actualizadas
-                    val updatedOrders = appDatabase.orderDao().getAllOrders()
-
-                    withContext(Dispatchers.Main) {
-                        adminOrderAdapter.updateOrders(updatedOrders)
-                    }
-                }
-            }
-
-
-            /** Guarda la orden en Room y refresca el panel */
-            /** Guarda la orden en Room y refresca el panel */
-            // En MainActivity.kt
-
-            private fun guardarOrden(productos: List<Producto>, mesaInfo: String) {
-                val createdAt = System.currentTimeMillis()
-                val businessDate = getBusinessDate(createdAt)
-                val grandTotal = productos.sumOf { it.precio * it.cantidad }
-
-                val orderEntity = OrderEntity(
-                    orderId = 0, // se asignará automáticamente al insertar
-                    mesa = TODO(),
-                    createdAt = TODO(),
-                    businessDate = TODO(),
-                    grandTotal = TODO(),
-                    esCombo = TODO(),
-                    items = TODO(),
-                    total = TODO(),
-                    timestamp = TODO(),
-                    tableNumber = TODO(),
-                    id = TODO(),
-                    customerName = TODO(),
-                    purchasedItems = TODO()
+            val items = productos.map {
+                OrderItemEntity(
+                    // itemId se genera automáticamente
+                    orderId = 0, // se rellena en la transacción
+                    name = it.nombre,
+                    unitPrice = it.precio,
+                    quantity = it.cantidad,
+                    esCombo = it.esCombo // Asegúrate de que tu OrderItemEntity tenga este campo
                 )
-
-                val items = productos.map {
-                    OrderItemEntity(
-                        orderId = 0, // Se actualizará después
-                        name = it.nombre,
-                        unitPrice = it.precio,
-                        quantity = it.cantidad
-                    )
-                }
-
-                lifecycleScope.launch(Dispatchers.IO) {
-                    // Inserta la orden y obtiene su ID
-                    val newOrderId = appDatabase.orderDao().insertOrder(orderEntity)
-
-                    // Asigna el ID de la orden a cada artículo y los inserta
-                    val itemsConId = items.map { it.copy(orderId = newOrderId) }
-                    appDatabase.orderDao().insertOrderItems(itemsConId)
-
-                    // Actualizar la lista de pedidos en el panel de administración
-                    val updatedOrders = appDatabase.orderDao().getAllOrders()
-                    withContext(Dispatchers.Main) {
-                        adminOrderAdapter.updateOrders(updatedOrders)
-                    }
-                }
             }
 
+            // Inserta en la BD. El observador se encargará del resto.
+            appDatabase.orderDao().insertOrderWithItems(orderEntity, items)
+        }
+    }
 
-            /** utilidad para armar texto resumen de ventas */
-            private inline fun <T> buildResumen(
-                resultados: List<T>,
-                crossinline line: (T) -> String
-            ): String {
-                val sb = StringBuilder()
-                var totalGeneral = 0.0
-                resultados.forEach { r ->
-                    sb.appendLine(line(r))
-                    val total = when (r) {
-                        is DailySummary -> r.totalSales
-                        is WeeklySummary -> r.totalSales
-                        is MonthlySummary -> r.totalSales
-                        else -> 0.0
-                    }
-                    totalGeneral += total
-                }
-                sb.appendLine("------------------------------")
-                sb.appendLine("Total acumulado: ${totalGeneral.formatMoney()}")
-                return sb.toString()
-            }
-
-            /** Ganancia diaria */
-            private fun generarGananciaDiaria() {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    val resultados =
-                        appDatabase.orderDao().getDailySales()
-                    val sdf = SimpleDateFormat(
-                        "yyyy-MM-dd",
-                        Locale.getDefault()
-                    )
-                    val texto = buildResumen(resultados) { r ->
-                        "${sdf.format(Date(r.businessDate))}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
-                    }
-                    withContext(Dispatchers.Main) {
-                        adminSummaryTextView.text = texto
-                    }
-                }
-            }
-
-            /** Ganancia semanal */
-            private fun generarGananciaSemanal() {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    val resultados =
-                        appDatabase.orderDao().getWeeklySales()
-                    val texto = buildResumen(resultados) { r ->
-                        "Semana ${r.week}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
-                    }
-                    withContext(Dispatchers.Main) {
-                        adminSummaryTextView.text = texto
-                    }
-                }
-            }
-
-            /** Ganancia mensual */
-            private fun generarGananciaMensual() {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    val resultados =
-                        appDatabase.orderDao().getMonthlySales()
-                    val texto = buildResumen(resultados) { r ->
-                        "Mes ${r.month}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
-                    }
-                    withContext(Dispatchers.Main) {
-                        adminSummaryTextView.text = texto
-                    }
-                }
-            }
-
-            /** Carga pedidos a Recycler */
-            /** Carga los pedidos en el RecyclerView */
-            private fun cargarPedidos() {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    try {
-                        // 🔹 Obtener pedidos desde la base de datos
-                        val pedidos = appDatabase.orderDao().getAllOrders()
-
-                        withContext(Dispatchers.Main) {
-                            // 🔹 Actualizar adaptador
-                            adminOrderAdapter.updateOrders(pedidos)
-                        }
-
-                    } catch (e: Exception) {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Error al cargar pedidos",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
-                            Log.e("MainActivity", "Error cargando pedidos", e)
-                        }
-                    }
-                }
-            }
-
-
-            // ✅ Solución
-            private fun eliminarPedido(orderId: Long) {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    // 1. Elimina el pedido en el hilo de fondo
-                    appDatabase.orderDao().deleteOrderById(orderId)
-
-                    // 2. Vuelve a cargar la lista actualizada en el hilo principal
-                    withContext(Dispatchers.Main) {
-                        cargarPedidos() // Llama a la función que ya tienes para recargar
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Pedido eliminado",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+    /**
+     * Observa la tabla de órdenes y actualiza el adaptador cada vez que hay un cambio.
+     * Esta es la ÚNICA forma en que el adaptador debe recibir datos.
+     */
+    private fun observarOrdenes() {
+        lifecycleScope.launch {
+            appDatabase.orderDao().getAllOrdersFlow().collect { listaDeOrdenes ->
+                // Cuando hay un cambio en la BD, la lista llega aquí
+                withContext(Dispatchers.Main) {
+                    // Y se la pasamos al adaptador, que se actualiza eficientemente
+                    adminOrderAdapter.submitList(listaDeOrdenes)
                 }
             }
         }
-        return withContext
-    }
     }
 
-    
 
+
+    /** utilidad para armar texto resumen de ventas */
+    private inline fun <T> buildResumen(
+        resultados: List<T>,
+        crossinline line: (T) -> String
+    ): String {
+        val sb = StringBuilder()
+        var totalGeneral = 0.0
+        resultados.forEach { r ->
+            sb.appendLine(line(r))
+            val total = when (r) {
+                is DailySummary -> r.totalSales
+                is WeeklySummary -> r.totalSales
+                is MonthlySummary -> r.totalSales
+                else -> 0.0
+            }
+            totalGeneral += total
+        }
+        sb.appendLine("------------------------------")
+        sb.appendLine("Total acumulado: ${totalGeneral.formatMoney()}")
+        return sb.toString()
+    }
+
+    /** Ganancia diaria */
+    private fun generarGananciaDiaria() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val resultados =
+                appDatabase.orderDao().getDailySales()
+            val sdf = SimpleDateFormat(
+                "yyyy-MM-dd",
+                Locale.getDefault()
+            )
+            val texto = buildResumen(resultados) { r ->
+                "${sdf.format(Date(r.businessDate))}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
+            }
+            withContext(Dispatchers.Main) {
+                adminSummaryTextView.text = texto
+            }
+        }
+    }
+
+    /** Ganancia semanal */
+    private fun generarGananciaSemanal() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val resultados =
+                appDatabase.orderDao().getWeeklySales()
+            val texto = buildResumen(resultados) { r ->
+                "Semana ${r.week}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
+            }
+            withContext(Dispatchers.Main) {
+                adminSummaryTextView.text = texto
+            }
+        }
+    }
+
+    /** Ganancia mensual */
+    private fun generarGananciaMensual() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val resultados =
+                appDatabase.orderDao().getMonthlySales()
+            val texto = buildResumen(resultados) { r ->
+                "Mes ${r.month}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
+            }
+            withContext(Dispatchers.Main) {
+                adminSummaryTextView.text = texto
+            }
+        }
+    }
+
+    /** Carga pedidos a Recycler */
+    /** Carga los pedidos en el RecyclerView */
+    private fun cargarPedidos() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // 🔹 Obtener pedidos desde la base de datos
+                val pedidos = appDatabase.orderDao().getAllOrders()
+
+                withContext(Dispatchers.Main) {
+                    // 🔹 Actualizar adaptador
+                    adminOrderAdapter.updateOrders(pedidos)
+                }
+
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MainActivity, "Error al cargar pedidos", Toast.LENGTH_SHORT)
+                        .show()
+                    Log.e("MainActivity", "Error cargando pedidos", e)
+                }
+            }
+        }
+    }
+
+
+    /** Elimina un pedido y deja que el observador de la base de datos actualice la UI automáticamente. */
+    private fun eliminarPedido(orderId: Long) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            // 1. Elimina la orden de la base de datos en un hilo secundario.
+            //    La llave foránea con onDelete = CASCADE se encargará de borrar sus items.
+            appDatabase.orderDao().deleteOrderById(orderId)
+
+            // 2. Muestra un mensaje de confirmación en el hilo principal.
+            withContext(Dispatchers.Main) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Pedido eliminado",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            // ❌ NO se necesita llamar a refreshOrders() o updateOrders() aquí.
+            //    El observador (getAllOrdersFlow().collect) se activará solo
+            //    y le pasará la nueva lista (sin el pedido borrado) al adaptador.
+        }
+    }
+
+    /**
+     * Reimprime el ticket de una orden existente. Utiliza los ítems almacenados en la base de
+     * datos para reconstruir el ticket, en lugar de leer la UI actual. Muestra un diálogo de
+     * confirmación previo a la impresión.
+     */
+    private fun reimprimirTicket(order: OrderEntity) {
+        // Utiliza una rutina de corrutina para recuperar los ítems y construir el ticket
+        lifecycleScope.launch(Dispatchers.IO) {
+            // Obtén los items de la orden desde la base de datos
+            val items = appDatabase.orderDao().getItemsForOrder(order.orderId)
+
+            // Construye una lista de Producto a partir de los items guardados
+            val productos = items.map {
+                Producto(
+                    nombre = it.name,
+                    precio = it.unitPrice,
+                    cantidad = it.quantity,
+                    esCombo = it.esCombo
+                )
+            }
+
+            // Genera el texto del ticket con los productos recuperados
+            val ticket = generarTextoTicket(productos)
+
+            // Cambia al hilo principal para mostrar el diálogo personalizado
+            withContext(Dispatchers.Main) {
+                // Infla la vista personalizada para el diálogo de reimpresión de ticket
+                val inflater = LayoutInflater.from(this@MainActivity)
+                val dialogView = inflater.inflate(R.layout.dialog_reimprimir_ticket, null)
+
+                // Establece el contenido del ticket en el TextView
+                val ticketTextView = dialogView.findViewById<TextView>(R.id.ticketTextView)
+                ticketTextView.text = ticket
+
+                // Configura los botones dentro del diálogo
+                val btnPrint = dialogView.findViewById<MaterialButton>(R.id.btnPrintTicket)
+                val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancelTicket)
+                val btnClose = dialogView.findViewById<ImageButton>(R.id.btnCloseDialog)
+
+                // Construye el AlertDialog con la vista personalizada
+                val alertDialog = AlertDialog.Builder(this@MainActivity)
+                    .setView(dialogView)
+                    .setCancelable(true)
+                    .create()
+
+                // Al imprimir, ejecuta la impresión en un hilo de fondo y cierra el diálogo
+                btnPrint.setOnClickListener {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        printViaUsb(ticket) || printViaBluetooth(ticket)
+                    }
+                    alertDialog.dismiss()
+                }
+
+                // Cierre del diálogo al cancelar
+                val dismissListener = View.OnClickListener { alertDialog.dismiss() }
+                btnCancel.setOnClickListener(dismissListener)
+                btnClose.setOnClickListener(dismissListener)
+
+                alertDialog.show()
+            }
+        }
+    }
+
+
+
+
+}
+
+private fun OrderEntity.filter(function: Any) {
+    TODO("Not yet implemented")
+}
 
 
