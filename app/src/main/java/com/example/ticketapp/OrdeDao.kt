@@ -40,6 +40,23 @@ interface OrderDao {
     @Query("SELECT * FROM orders ORDER BY created_at DESC")
     fun getAllOrdersFlow(): Flow<List<OrderEntity>>
 
+    // Ganancia por categoría en un rango [inicio, fin] (por created_at)
+    @Query("""
+    SELECT COALESCE(SUM(oi.quantity * oi.unit_price), 0)
+    FROM order_items AS oi
+    INNER JOIN orders AS o    ON o.orderId = oi.order_id
+    INNER JOIN products AS p  ON p.name = oi.name
+    WHERE (:category IS NULL OR p.category = :category)
+      AND (:includeCombos = 1 OR oi.esCombo = 0)
+      AND o.created_at BETWEEN :inicio AND :fin
+""")
+    suspend fun getProfitByCategory(
+        category: String?,     // null o nombre exacto de la categoría
+        inicio: Long,
+        fin: Long,
+        includeCombos: Int     // 1 = incluir combos, 0 = excluir combos
+    ): Double
+
 
 
     /** Retrieves all items associated with a specific order ID. */

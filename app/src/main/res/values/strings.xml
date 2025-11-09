@@ -86,7 +86,7 @@
      <string name="decrement_hamburguesa_pollo">Disminuir cantidad de hamburguesa de pollo</string>
      <string name="decrement_hamburguesa_champinones">Disminuir cantidad de hamburguesa de champiñones</string>
      <string name="decrement_hamburguesa_arrachera">Disminuir cantidad de hamburguesa de arrachera</string>
-     <string name="decrement_hamburguesa_magey">Disminuir cantidad de hamburguesa maguey</string>
+     <string name="decrement_hamburguesa_maggy">Disminuir cantidad de hamburguesa maggy</string>
      <string name="decrement_hamburguesa_doble">Disminuir cantidad de hamburguesa doble</string>
      <string name="decrement_combos">Disminuir cantidad de combos</string>
 
@@ -95,7 +95,7 @@
      <string name="increment_hamburguesa_pollo">Aumentar cantidad de hamburguesa de pollo</string>
      <string name="increment_hamburguesa_champinones">Aumentar cantidad de hamburguesa de champiñones</string>
      <string name="increment_hamburguesa_arrachera">Aumentar cantidad de hamburguesa de arrachera</string>
-     <string name="increment_hamburguesa_magey">Aumentar cantidad de hamburguesa maguey</string>
+     <string name="increment_hamburguesa_maggy">Aumentar cantidad de hamburguesa maggy</string>
      <string name="increment_hamburguesa_doble">Aumentar cantidad de hamburguesa doble</string>
      <string name="increment_combo">Aumentar cantidad de combos</string>
 

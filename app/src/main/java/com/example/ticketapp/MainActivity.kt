@@ -1,4 +1,7 @@
 package com.example.ticketapp
+import java.util.Locale
+import android.widget.EditText
+import android.app.DatePickerDialog
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -48,6 +51,8 @@ import android.widget.CheckBox
 import kotlinx.coroutines.CoroutineScope
 import java.util.Calendar
 import java.util.Date
+import androidx.core.view.GravityCompat
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -85,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         "Hamburguesa Pollo" to 70.0,
         "Hamburguesa Champinones" to 90.0,
         "Hamburguesa Arrachera" to 105.0,
-        "Hamburguesa Magey" to 100.0,
+        "Hamburguesa Maggy" to 100.0,
         "Hamburguesa Doble" to 110.0
     )
 
@@ -138,6 +143,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnCalcularVentas: MaterialButton
     private lateinit var layoutCustomRange: View
     private lateinit var tvProductSalesResult: TextView
+
+    lateinit var editCategoryStartDate: EditText
+    lateinit var editCategoryEndDate: EditText
+
 
     // --- Hardware & Permissions ---
     private lateinit var usbManager: UsbManager
@@ -219,11 +228,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val tmpCatStart = findViewById<EditText?>(R.id.editCategoryStartDate)
+        val tmpCatEnd   = findViewById<EditText?>(R.id.editCategoryEndDate)
+
         // Inicializa la base de datos una vez al inicio. La observación se configurará
         // después de que el adaptador de órdenes haya sido configurado para evitar
         // condiciones de carrera.
         appDatabase = AppDatabase.getDatabase(applicationContext, lifecycleScope)
         txtTotal = findViewById(R.id.textViewTotal)
+
+        editCategoryStartDate = tmpCatStart ?: findViewById(R.id.editStartDate)
+        editCategoryEndDate   = tmpCatEnd   ?: findViewById(R.id.editEndDate)
 
         txtNormales = mapOf(
             "Hamburguesa Clasica" to findViewById(R.id.cantidadHamburguesaClasicaNormal),
@@ -231,7 +246,7 @@ class MainActivity : AppCompatActivity() {
             "Hamburguesa Pollo" to findViewById(R.id.cantidadHamburguesaPolloNormal),
             "Hamburguesa Champinones" to findViewById(R.id.cantidadHamburguesaChampinonesNormal),
             "Hamburguesa Arrachera" to findViewById(R.id.cantidadHamburguesaArracheraNormal),
-            "Hamburguesa Magey" to findViewById(R.id.cantidadHamburguesaMageyNormal),
+            "Hamburguesa Maggy" to findViewById(R.id.cantidadHamburguesaMaggyNormal),
             "Hamburguesa Doble" to findViewById(R.id.cantidadHamburguesaDobleNormal)
         )
 
@@ -241,7 +256,7 @@ class MainActivity : AppCompatActivity() {
             "Hamburguesa Pollo" to findViewById(R.id.cantidadHamburguesaPolloCombo),
             "Hamburguesa Champinones" to findViewById(R.id.cantidadHamburguesaChampinonesCombo),
             "Hamburguesa Arrachera" to findViewById(R.id.cantidadHamburguesaArracheraCombo),
-            "Hamburguesa Magey" to findViewById(R.id.cantidadHamburguesaMageyCombo),
+            "Hamburguesa Maggy" to findViewById(R.id.cantidadHamburguesaMaggyCombo),
             "Hamburguesa Doble" to findViewById(R.id.cantidadHamburguesaDobleCombo)
         )
 
@@ -268,7 +283,7 @@ class MainActivity : AppCompatActivity() {
             "Hamburguesa Pollo" to findViewById<Button>(R.id.btnMasHamburguesaPolloNormal),
             "Hamburguesa Champinones" to findViewById<Button>(R.id.btnMasHamburguesaChampinonesNormal),
             "Hamburguesa Arrachera" to findViewById<Button>(R.id.btnMasHamburguesaArracheraNormal),
-            "Hamburguesa Magey" to findViewById<Button>(R.id.btnMasHamburguesaMageyNormal),
+            "Hamburguesa Maggy" to findViewById<Button>(R.id.btnMasHamburguesaMaggyNormal),
             "Hamburguesa Doble" to findViewById<Button>(R.id.btnMasHamburguesaDobleNormal)
         )
 
@@ -278,7 +293,7 @@ class MainActivity : AppCompatActivity() {
             "Hamburguesa Pollo" to findViewById<Button>(R.id.btnMasHamburguesaPolloCombo),
             "Hamburguesa Champinones" to findViewById<Button>(R.id.btnMasHamburguesaChampinonesCombo),
             "Hamburguesa Arrachera" to findViewById<Button>(R.id.btnMasHamburguesaArracheraCombo),
-            "Hamburguesa Magey" to findViewById<Button>(R.id.btnMasHamburguesaMageyCombo),
+            "Hamburguesa Maggy" to findViewById<Button>(R.id.btnMasHamburguesaMaggyCombo),
             "Hamburguesa Doble" to findViewById<Button>(R.id.btnMasHamburguesaDobleCombo)
         )
 
@@ -309,8 +324,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        // La función de reimprimir ticket se ha movido a un método de la clase.
-
 
 
         // DB y panel admin
@@ -321,7 +334,11 @@ class MainActivity : AppCompatActivity() {
         btnGananciaSemanal = findViewById(R.id.btnGananciaSemanal)
         btnGananciaMensual = findViewById(R.id.btnGananciaMensual)
         adminSummaryTextView = findViewById(R.id.adminSummaryTextView)
+
         recyclerViewOrders = findViewById(R.id.recyclerViewOrders)
+        recyclerViewOrders.layoutManager = LinearLayoutManager(this)
+
+
 
         // Elementos para el filtro de ventas por producto
         spinnerProductFilter = findViewById(R.id.spinnerProductFilter)
@@ -333,8 +350,8 @@ class MainActivity : AppCompatActivity() {
         layoutCustomRange = findViewById(R.id.layoutCustomRange)
         tvProductSalesResult = findViewById(R.id.tvProductSalesResult)
 
-        recyclerViewOrders.layoutManager = LinearLayoutManager(this)
 
+        appDatabase = AppDatabase.getDatabase(applicationContext, lifecycleScope)
         adminOrderAdapter = AdminOrderAdapter(
             onDelete = { orderId -> eliminarPedido(orderId) },
 
@@ -347,10 +364,8 @@ class MainActivity : AppCompatActivity() {
 
 
         recyclerViewOrders.adapter = adminOrderAdapter
-
         // Comienza a observar la lista de órdenes una vez que el adaptador está listo
         observarOrdenes()
-
 
 
         btnGananciaDiaria.setOnClickListener { generarGananciaDiaria() }
@@ -360,6 +375,8 @@ class MainActivity : AppCompatActivity() {
         // No llamamos a cargarPedidos(). El flujo de datos de Room se encarga
         // de actualizar la lista automáticamente.
 
+
+
         usbManager = getSystemService(USB_SERVICE) as UsbManager
 
         setupProductViews()
@@ -368,6 +385,10 @@ class MainActivity : AppCompatActivity() {
 
         // Configura el filtro de ventas por producto (spinner, fechas, botón)
         setupProductSalesFilter()
+
+        editCategoryStartDate.setOnClickListener { showDatePicker(editCategoryStartDate) }
+        editCategoryEndDate.setOnClickListener { showDatePicker(editCategoryEndDate) }
+
 
         // registrar receiver USB
         val filter = IntentFilter(ACTION_USB_PERMISSION)
@@ -1132,6 +1153,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     /**
      * Calcula el timestamp de inicio y fin del día para la fecha dada.

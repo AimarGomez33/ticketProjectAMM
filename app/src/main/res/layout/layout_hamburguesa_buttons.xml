@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  This layout defines a horizontal bar of three circular buttons for the hamburguesa items.
+  It is more spacious than the inline definition and uses equal weights so that each
+  button occupies the same amount of horizontal space. The buttons have a fixed
+  height of 48dp and a corner radius of 24dp to make them circular like other
+  controls in the app. You can include this layout wherever you need a minus
+  button, a plus Normal button and a plus Combo button for a given product.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="4dp">
+
+    <!-- Minus button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnMinus"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:text="-"
+        android:textSize="18sp"
+        android:textColor="@color/Grayish_lime"
+        app:cornerRadius="24dp"
+        android:padding="0dp"
+        app:backgroundTint="@color/Grey"
+        app:iconPadding="0dp"
+        app:icon="@null" />
+
+    <!-- Plus Normal button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPlusNormal"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:text="+ Normal"
+        android:textSize="14sp"
+        android:textColor="@color/Grayish_lime"
+        app:cornerRadius="24dp"
+        android:padding="0dp"
+        app:backgroundTint="@color/Grayish_green"
+        app:iconPadding="0dp"
+        app:icon="@null" />
+
+    <!-- Plus Combo button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPlusCombo"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:text="+ Combo"
+        android:textSize="14sp"
+        android:textColor="@color/Grayish_lime"
+        app:cornerRadius="24dp"
+        android:padding="0dp"
+        app:backgroundTint="@color/Grayish_green"
+        app:iconPadding="0dp"
+        app:icon="@null" />
+
+</LinearLayout>
