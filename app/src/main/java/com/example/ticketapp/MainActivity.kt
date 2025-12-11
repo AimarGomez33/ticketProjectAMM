@@ -1331,6 +1331,7 @@ class MainActivity : AppCompatActivity() {
         // Se obtiene la lista actual de productos (incluye hamburguesas y combos)
         val productosSeleccionados = obtenerProductosDesdeInputs()
         mostrarResumen(productosSeleccionados)
+    }
 
     private fun limpiarCantidades() {
         // 🔹 1) Reiniciar todos los productos del mapa general
