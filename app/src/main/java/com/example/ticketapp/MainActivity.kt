@@ -98,6 +98,32 @@ class MainActivity : AppCompatActivity() {
     private val cantidadesNormales = mutableMapOf<String, Int>()
     private val cantidadesCombo = mutableMapOf<String, Int>()
 
+    // 🔹 MAPA DE VARIANTES DE PRODUCTOS
+    private val productVariations = mapOf(
+        "Quesadillas" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Volcanes" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Volcan Queso/Guisado Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Tostadas" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Pozole Grande" to listOf("Maciza", "Surtida"),
+        "Pozole Chico" to listOf("Maciza", "Surtida"),
+        "Guajoloyets Naturales" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Guajoloyets Naturales Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Guajoloyets Adobados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Guajoloyets Adobados Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Pambazos Naturales" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Pambazos Naturales Combinados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Pambazos Naturales Combinados con Queso" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Pambazos Naturales Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Pambazos Adobados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Pambazos Adobados Combinados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Pambazos Adobados Combinados con Queso" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
+        "Pambazos Adobados Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso")
+    )
+
+    // 🔹 LISTA PARA ALMACENAR PRODUCTOS CON VARIANTES SELECCIONADAS
+    private val selectedVariations = mutableListOf<Producto>()
+
+
 
     // Base de datos de la aplicación
     // Declaración única del adaptador del panel de administración
@@ -185,6 +211,7 @@ class MainActivity : AppCompatActivity() {
 
     private val usbReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+
             if (ACTION_USB_PERMISSION == intent?.action) {
                 synchronized(this) {
                     val device: UsbDevice? =
@@ -421,6 +448,57 @@ class MainActivity : AppCompatActivity() {
     }
 
     // --- Configuración de la UI (productos, botones, secciones colapsables) ---
+
+    private fun showVariationSelectionDialog(productName: String) {
+        val variations = productVariations[productName] ?: return
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Elige variante para $productName")
+        builder.setItems(variations.toTypedArray()) { _, which ->
+            val selectedVariant = variations[which]
+            val productData = products[productName] ?: return@setItems
+
+            val newItem = Producto(
+                nombre = "$productName ($selectedVariant)",
+                precio = productData.precio,
+                cantidad = 1,
+                esCombo = false
+            )
+            selectedVariations.add(newItem)
+
+            // Actualizar contador UI
+            updateQuantity(productName, 1)
+        }
+        builder.show()
+    }
+
+    private fun showVariationRemovalDialog(productName: String) {
+        val prefix = "$productName ("
+        // Buscar items que empiecen con "NombreProducto ("
+        val items = selectedVariations.filter { it.nombre.startsWith(prefix) }
+
+        if (items.isEmpty()) {
+            updateQuantity(productName, -1)
+            return
+        }
+
+        // Agrupar para el diálogo: "Chorizo (x2)"
+        val grouped = items.groupBy { it.nombre }
+        val displayList = grouped.map { "${it.key.substringAfter("(").substringBefore(")")} (x${it.value.size})" }.toTypedArray()
+        val keyList = grouped.keys.toList()
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Eliminar de $productName")
+        builder.setItems(displayList) { _, which ->
+            val keyToRemove = keyList[which]
+            // Remover SOLO UNO de la lista
+            val itemToRemove = selectedVariations.firstOrNull { it.nombre == keyToRemove }
+            if (itemToRemove != null) {
+                selectedVariations.remove(itemToRemove)
+                updateQuantity(productName, -1)
+            }
+        }
+        builder.show()
+    }
 
     private fun setupProductViews() {
         // Mapeo de productos (nombre lógico -> views + precio)
@@ -706,10 +784,18 @@ class MainActivity : AppCompatActivity() {
             quantities[productName] = 0
 
             productData.btnMas.setOnClickListener {
-                updateQuantity(productName, 1)
+                if (productVariations.containsKey(productName)) {
+                    showVariationSelectionDialog(productName)
+                } else {
+                    updateQuantity(productName, 1)
+                }
             }
             productData.btnMenos.setOnClickListener {
-                updateQuantity(productName, -1)
+                if (productVariations.containsKey(productName) && (quantities[productName] ?: 0) > 0) {
+                    showVariationRemovalDialog(productName)
+                } else {
+                    updateQuantity(productName, -1)
+                }
             }
 
             // chalupas es EditText libre
@@ -1245,12 +1331,11 @@ class MainActivity : AppCompatActivity() {
         // Se obtiene la lista actual de productos (incluye hamburguesas y combos)
         val productosSeleccionados = obtenerProductosDesdeInputs()
         mostrarResumen(productosSeleccionados)
-    }
-
 
     private fun limpiarCantidades() {
         // 🔹 1) Reiniciar todos los productos del mapa general
-        for ((nombre, data) in products) {
+    selectedVariations.clear()
+    for ((nombre, data) in products) {
             quantities[nombre] = 0
             data.cantidadTV.text = "0"
         }
@@ -1877,17 +1962,33 @@ class MainActivity : AppCompatActivity() {
 
         // 🔹 1) Productos normales (que no son hamburguesas)
         products.forEach { (nombre, data) ->
-            val cantidad = quantities[nombre] ?: 0
-            if (cantidad > 0) {
-                lista.add(
-                    Producto(
-                        nombre = nombre,
-                        precio = data.precio,
-                        cantidad = cantidad,
-                        esCombo = false
+            if (!productVariations.containsKey(nombre)) {
+                val cantidad = quantities[nombre] ?: 0
+                if (cantidad > 0) {
+                    lista.add(
+                        Producto(
+                            nombre = nombre,
+                            precio = data.precio,
+                            cantidad = cantidad,
+                            esCombo = false
+                        )
                     )
-                )
+                }
             }
+        }
+        
+        // Agregar variantes agrupadas
+        val grouped = selectedVariations.groupBy { it.nombre }
+        for ((nombreVar, items) in grouped) {
+            val first = items.first()
+            lista.add(
+                Producto(
+                     nombre = nombreVar,
+                     precio = first.precio,
+                     cantidad = items.size,
+                     esCombo = false
+                )
+            )
         }
 
         // 🔹 2) Hamburguesas normales
