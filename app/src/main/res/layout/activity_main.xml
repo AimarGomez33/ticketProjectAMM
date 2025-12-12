@@ -113,6 +113,16 @@
                 </com.google.android.material.card.MaterialCardView>
                 <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+                        <TextView android:id="@+id/labelQuesadillaQueso" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Quesadilla/Queso" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosQuesadillaQueso" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_quesadilla_queso" android:text="-" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grey" app:cornerRadius="24dp"/>
+                            <TextView android:id="@+id/cantidadQuesadillaQueso" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasQuesadillaQueso" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_quesadilla_queso" android:text="+" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
                         <TextView android:id="@+id/labelPozoleGrande" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Pozole Grande" android:textColor="@color/text_secondary" android:textSize="16sp"/>
                         <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
                             <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPozoleGrande" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_pozole_grande" android:text="-" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
@@ -153,11 +163,21 @@
                 </com.google.android.material.card.MaterialCardView>
                 <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
-                        <TextView android:id="@+id/labelGuajolotaExtra" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Volcan Queso/Guisado Extra" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                        <TextView android:id="@+id/labelVolcanQueso" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Volcan Queso" android:textColor="@color/text_secondary" android:textSize="16sp"/>
                         <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosGuajolotaExtra" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_guajolota_extra" android:text="-" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                            <TextView android:id="@+id/cantidadGuajolotaExtra" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasGuajolotaExtra" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_guajolota_extra" android:text="+" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosVolcanQueso" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_volcan_queso" android:text="-" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                            <TextView android:id="@+id/cantidadVolcanQueso" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasVolcanQueso" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_volcan_queso" android:text="+" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+                        <TextView android:id="@+id/labelGuisadoExtra" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Guisado Extra" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosGuisadoExtra" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_guisado_extra" android:text="-" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                            <TextView android:id="@+id/cantidadGuisadoExtra" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasGuisadoExtra" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_guisado_extra" android:text="+" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -573,49 +593,107 @@
                             android:gravity="center"
                             android:text="Hamburguesa Clásica"
                             android:textColor="@color/text_secondary"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            android:layout_marginBottom="8dp"/>
 
+                        <!-- Normal Row -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginTop="4dp">
-
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="4dp">
+                            
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Normal"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="14sp"/>
+                            
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMenosHamburguesaClasicaNormal"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:text="-"
+                                android:textColor="@color/Grayish_lime"
+                                app:backgroundTint="@color/Grey"
+                                app:cornerRadius="20dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:padding="0dp"/>
+                            
+                            <TextView
+                                android:id="@+id/cantidadHamburguesaClasicaNormal"
+                                android:layout_width="30dp"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:gravity="center"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="16sp"/>
+                            
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnMasHamburguesaClasicaNormal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Normal"
-                                android:textColor="@color/Grayish_lime"
-                                app:backgroundTint="@color/Grayish_green"/>
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMasHamburguesaClasicaCombo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Combo"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:text="+"
                                 android:textColor="@color/Grayish_lime"
                                 app:backgroundTint="@color/Grayish_green"
-                                android:layout_marginStart="8dp"/>
+                                app:cornerRadius="20dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:padding="0dp"/>
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaClasicaNormal"
-                            android:layout_width="wrap_content"
+                        <!-- Combo Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Normales: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="4dp"/>
-
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaClasicaCombo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Combos: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="2dp"/>
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Combo"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="14sp"/>
+                            
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMenosHamburguesaClasicaCombo"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:text="-"
+                                android:textColor="@color/Grayish_lime"
+                                app:backgroundTint="@color/Grey"
+                                app:cornerRadius="20dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:padding="0dp"/>
+                            
+                            <TextView
+                                android:id="@+id/cantidadHamburguesaClasicaCombo"
+                                android:layout_width="30dp"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:gravity="center"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="16sp"/>
+                            
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnMasHamburguesaClasicaCombo"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:text="+"
+                                android:textColor="@color/Grayish_lime"
+                                app:backgroundTint="@color/Grayish_green"
+                                app:cornerRadius="20dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:padding="0dp"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -642,49 +720,33 @@
                             android:gravity="center"
                             android:text="Hamburguesa Hawaiana"
                             android:textColor="@color/text_secondary"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            android:layout_marginBottom="8dp"/>
 
+                        <!-- Normal Row -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginTop="4dp">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMasHamburguesaHawaianaNormal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Normal"
-                                android:textColor="@color/Grayish_lime"
-                                app:backgroundTint="@color/Grayish_green"/>
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMasHamburguesaHawaianaCombo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Combo"
-                                android:textColor="@color/Grayish_lime"
-                                app:backgroundTint="@color/Grayish_green"
-                                android:layout_marginStart="8dp"/>
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="4dp">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Normal" android:textColor="@color/text_secondary" android:textSize="14sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHamburguesaHawaianaNormal" android:layout_width="40dp" android:layout_height="40dp" android:text="-" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grey" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                            <TextView android:id="@+id/cantidadHamburguesaHawaianaNormal" android:layout_width="30dp" android:layout_height="wrap_content" android:text="0" android:gravity="center" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHamburguesaHawaianaNormal" android:layout_width="40dp" android:layout_height="40dp" android:text="+" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grayish_green" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaHawaianaNormal"
-                            android:layout_width="wrap_content"
+                        <!-- Combo Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Normales: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="4dp"/>
-
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaHawaianaCombo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Combos: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="2dp"/>
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Combo" android:textColor="@color/text_secondary" android:textSize="14sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHamburguesaHawaianaCombo" android:layout_width="40dp" android:layout_height="40dp" android:text="-" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grey" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                            <TextView android:id="@+id/cantidadHamburguesaHawaianaCombo" android:layout_width="30dp" android:layout_height="wrap_content" android:text="0" android:gravity="center" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHamburguesaHawaianaCombo" android:layout_width="40dp" android:layout_height="40dp" android:text="+" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grayish_green" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -709,51 +771,35 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Hamburguesa de Pollo"
+                            android:text="Hamburguesa Pollo"
                             android:textColor="@color/text_secondary"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            android:layout_marginBottom="8dp"/>
 
+                        <!-- Normal Row -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginTop="4dp">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMasHamburguesaPolloNormal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Normal"
-                                android:textColor="@color/Grayish_lime"
-                                app:backgroundTint="@color/Grayish_green"/>
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMasHamburguesaPolloCombo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Combo"
-                                android:textColor="@color/Grayish_lime"
-                                app:backgroundTint="@color/Grayish_green"
-                                android:layout_marginStart="8dp"/>
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="4dp">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Normal" android:textColor="@color/text_secondary" android:textSize="14sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHamburguesaPolloNormal" android:layout_width="40dp" android:layout_height="40dp" android:text="-" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grey" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                            <TextView android:id="@+id/cantidadHamburguesaPolloNormal" android:layout_width="30dp" android:layout_height="wrap_content" android:text="0" android:gravity="center" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHamburguesaPolloNormal" android:layout_width="40dp" android:layout_height="40dp" android:text="+" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grayish_green" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaPolloNormal"
-                            android:layout_width="wrap_content"
+                        <!-- Combo Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Normales: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="4dp"/>
-
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaPolloCombo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Combos: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="2dp"/>
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Combo" android:textColor="@color/text_secondary" android:textSize="14sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHamburguesaPolloCombo" android:layout_width="40dp" android:layout_height="40dp" android:text="-" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grey" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                            <TextView android:id="@+id/cantidadHamburguesaPolloCombo" android:layout_width="30dp" android:layout_height="wrap_content" android:text="0" android:gravity="center" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHamburguesaPolloCombo" android:layout_width="40dp" android:layout_height="40dp" android:text="+" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grayish_green" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -778,51 +824,35 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Hamburguesa de Champiñones"
+                            android:text="Hamburguesa Champiñones"
                             android:textColor="@color/text_secondary"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            android:layout_marginBottom="8dp"/>
 
+                        <!-- Normal Row -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginTop="4dp">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMasHamburguesaChampinonesNormal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Normal"
-                                android:textColor="@color/Grayish_lime"
-                                app:backgroundTint="@color/Grayish_green"/>
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMasHamburguesaChampinonesCombo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Combo"
-                                android:textColor="@color/Grayish_lime"
-                                app:backgroundTint="@color/Grayish_green"
-                                android:layout_marginStart="8dp"/>
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="4dp">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Normal" android:textColor="@color/text_secondary" android:textSize="14sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHamburguesaChampinonesNormal" android:layout_width="40dp" android:layout_height="40dp" android:text="-" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grey" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                            <TextView android:id="@+id/cantidadHamburguesaChampinonesNormal" android:layout_width="30dp" android:layout_height="wrap_content" android:text="0" android:gravity="center" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHamburguesaChampinonesNormal" android:layout_width="40dp" android:layout_height="40dp" android:text="+" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grayish_green" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaChampinonesNormal"
-                            android:layout_width="wrap_content"
+                        <!-- Combo Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Normales: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="4dp"/>
-
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaChampinonesCombo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Combos: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="2dp"/>
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Combo" android:textColor="@color/text_secondary" android:textSize="14sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHamburguesaChampinonesCombo" android:layout_width="40dp" android:layout_height="40dp" android:text="-" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grey" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                            <TextView android:id="@+id/cantidadHamburguesaChampinonesCombo" android:layout_width="30dp" android:layout_height="wrap_content" android:text="0" android:gravity="center" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHamburguesaChampinonesCombo" android:layout_width="40dp" android:layout_height="40dp" android:text="+" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grayish_green" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -847,51 +877,35 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="Hamburguesa de Arrachera"
+                            android:text="Hamburguesa Arrachera"
                             android:textColor="@color/text_secondary"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            android:layout_marginBottom="8dp"/>
 
+                        <!-- Normal Row -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginTop="4dp">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMasHamburguesaArracheraNormal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Normal"
-                                android:textColor="@color/Grayish_lime"
-                                app:backgroundTint="@color/Grayish_green"/>
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMasHamburguesaArracheraCombo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Combo"
-                                android:textColor="@color/Grayish_lime"
-                                app:backgroundTint="@color/Grayish_green"
-                                android:layout_marginStart="8dp"/>
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="4dp">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Normal" android:textColor="@color/text_secondary" android:textSize="14sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHamburguesaArracheraNormal" android:layout_width="40dp" android:layout_height="40dp" android:text="-" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grey" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                            <TextView android:id="@+id/cantidadHamburguesaArracheraNormal" android:layout_width="30dp" android:layout_height="wrap_content" android:text="0" android:gravity="center" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHamburguesaArracheraNormal" android:layout_width="40dp" android:layout_height="40dp" android:text="+" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grayish_green" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaArracheraNormal"
-                            android:layout_width="wrap_content"
+                        <!-- Combo Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Normales: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="4dp"/>
-
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaArracheraCombo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Combos: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="2dp"/>
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Combo" android:textColor="@color/text_secondary" android:textSize="14sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHamburguesaArracheraCombo" android:layout_width="40dp" android:layout_height="40dp" android:text="-" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grey" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                            <TextView android:id="@+id/cantidadHamburguesaArracheraCombo" android:layout_width="30dp" android:layout_height="wrap_content" android:text="0" android:gravity="center" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHamburguesaArracheraCombo" android:layout_width="40dp" android:layout_height="40dp" android:text="+" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grayish_green" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -917,51 +931,35 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="HamburguesaMaggy"
+                            android:text="Hamburguesa Maggy"
                             android:textColor="@color/text_secondary"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            android:layout_marginBottom="8dp"/>
 
+                        <!-- Normal Row -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginTop="4dp">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMasHamburguesaMaggyNormal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Normal"
-                                android:textColor="@color/Grayish_lime"
-                                app:backgroundTint="@color/Grayish_green"/>
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMasHamburguesaMaggyCombo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Combo"
-                                android:textColor="@color/Grayish_lime"
-                                app:backgroundTint="@color/Grayish_green"
-                                android:layout_marginStart="8dp"/>
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="4dp">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Normal" android:textColor="@color/text_secondary" android:textSize="14sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHamburguesaMaggyNormal" android:layout_width="40dp" android:layout_height="40dp" android:text="-" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grey" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                            <TextView android:id="@+id/cantidadHamburguesaMaggyNormal" android:layout_width="30dp" android:layout_height="wrap_content" android:text="0" android:gravity="center" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHamburguesaMaggyNormal" android:layout_width="40dp" android:layout_height="40dp" android:text="+" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grayish_green" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaMaggyNormal"
-                            android:layout_width="wrap_content"
+                        <!-- Combo Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Normales: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="4dp"/>
-
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaMaggyCombo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Combos: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="2dp"/>
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Combo" android:textColor="@color/text_secondary" android:textSize="14sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHamburguesaMaggyCombo" android:layout_width="40dp" android:layout_height="40dp" android:text="-" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grey" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                            <TextView android:id="@+id/cantidadHamburguesaMaggyCombo" android:layout_width="30dp" android:layout_height="wrap_content" android:text="0" android:gravity="center" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHamburguesaMaggyCombo" android:layout_width="40dp" android:layout_height="40dp" android:text="+" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grayish_green" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -989,49 +987,33 @@
                             android:gravity="center"
                             android:text="Hamburguesa Doble"
                             android:textColor="@color/text_secondary"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            android:layout_marginBottom="8dp"/>
 
+                        <!-- Normal Row -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginTop="4dp">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMasHamburguesaDobleNormal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Normal"
-                                android:textColor="@color/Grayish_lime"
-                                app:backgroundTint="@color/Grayish_green"/>
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMasHamburguesaDobleCombo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="48dp"
-                                android:text="+ Combo"
-                                android:textColor="@color/Grayish_lime"
-                                app:backgroundTint="@color/Grayish_green"
-                                android:layout_marginStart="8dp"/>
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="4dp">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Normal" android:textColor="@color/text_secondary" android:textSize="14sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHamburguesaDobleNormal" android:layout_width="40dp" android:layout_height="40dp" android:text="-" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grey" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                            <TextView android:id="@+id/cantidadHamburguesaDobleNormal" android:layout_width="30dp" android:layout_height="wrap_content" android:text="0" android:gravity="center" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHamburguesaDobleNormal" android:layout_width="40dp" android:layout_height="40dp" android:text="+" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grayish_green" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaDobleNormal"
-                            android:layout_width="wrap_content"
+                        <!-- Combo Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Normales: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="4dp"/>
-
-                        <TextView
-                            android:id="@+id/cantidadHamburguesaDobleCombo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Combos: 0"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="16sp"
-                            android:layout_marginTop="2dp"/>
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Combo" android:textColor="@color/text_secondary" android:textSize="14sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHamburguesaDobleCombo" android:layout_width="40dp" android:layout_height="40dp" android:text="-" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grey" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                            <TextView android:id="@+id/cantidadHamburguesaDobleCombo" android:layout_width="30dp" android:layout_height="wrap_content" android:text="0" android:gravity="center" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHamburguesaDobleCombo" android:layout_width="40dp" android:layout_height="40dp" android:text="+" android:textColor="@color/Grayish_lime" app:backgroundTint="@color/Grayish_green" app:cornerRadius="20dp" android:insetTop="0dp" android:insetBottom="0dp" android:padding="0dp"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -1659,78 +1641,37 @@
                 app:tint="@color/Grey"
                 app:backgroundTint="@color/Grayish_green"/>
 
-            <GridLayout android:id="@+id/gridPostres" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnCount="3" android:useDefaultMargins="true" android:visibility="gone">
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
-                        <TextView android:id="@+id/labelExtra10" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Extra +10" android:textColor="@color/text_secondary" android:textSize="16sp"/>
-                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosExtra10" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_extra10" android:text="-" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                            <TextView android:id="@+id/cantidadExtra10" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasExtra10" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_extra10" android:text="+" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
-                        <TextView android:id="@+id/labelExtra5" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Extra +5" android:textColor="@color/text_secondary" android:textSize="16sp"/>
-                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosExtra5" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_extra5" android:text="-" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                            <TextView android:id="@+id/cantidadExtra5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasExtra5" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_extra5" android:text="+" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
-                        <TextView android:id="@+id/labelExtra12" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Extra +12" android:textColor="@color/text_secondary" android:textSize="16sp"/>
-                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosExtra12" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_extra12" android:text="-" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                            <TextView android:id="@+id/cantidadExtra12" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasExtra12" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_extra12" android:text="+" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
-                        <TextView android:id="@+id/labelPostres20" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Postres 20" android:textColor="@color/text_secondary" android:textSize="16sp"/>
-                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPostres20" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_postres20" android:text="-" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                            <TextView android:id="@+id/cantidadPostres20" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPostres20" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_postres20" android:text="+" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
-                        <TextView android:id="@+id/labelPostres25" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Postres 25" android:textColor="@color/text_secondary" android:textSize="16sp"/>
-                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPostres25" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_postres25" android:text="-" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                            <TextView android:id="@+id/cantidadPostres25" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPostres25" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_postres25" android:text="+" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
-                        <TextView android:id="@+id/labelPostres30" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Postres 30" android:textColor="@color/text_secondary" android:textSize="16sp"/>
-                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPostres30" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_postres30" android:text="-" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                            <TextView android:id="@+id/cantidadPostres30" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPostres30" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_postres30" android:text="+" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
-                        <TextView android:id="@+id/labelPostres35" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Postres 35" android:textColor="@color/text_secondary" android:textSize="16sp"/>
-                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPostres35" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_postres35" android:text="-" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                            <TextView android:id="@+id/cantidadPostres35" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPostres35" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_postres35" android:text="+" android:textColor="@color/Grayish_lime" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </GridLayout>
+            <LinearLayout 
+                android:id="@+id/containerNotasExtras"
+                android:layout_width="match_parent" 
+                android:layout_height="wrap_content" 
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone">
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Notas / Postres / Extras"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"/>
+                
+                <EditText
+                    android:id="@+id/editNotasExtras"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="100dp"
+                    android:gravity="top|start"
+                    android:hint="Ej: Gelatina $20, Flan $25, Sin cebolla, etc."
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:background="@color/Light_grayish"
+                    android:padding="12dp"
+                    android:textColor="@color/text_secondary"
+                    android:textColorHint="@color/Grey"
+                    android:textSize="16sp"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/summaryContainer"
@@ -1888,36 +1829,65 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
-            <!-- Botones de ganancias -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGananciaDiaria"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Ganancia Diaria"
-                android:textColor="@color/Grayish_lime"
-                app:backgroundTint="@color/Grayish_green"
-                app:cornerRadius="12dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGananciaSemanal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Ganancia Semanal"
-                android:textColor="@color/Grayish_lime"
-                app:backgroundTint="@color/Grayish_green"
-                app:cornerRadius="12dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGananciaMensual"
+            <!-- Agregar a Pedido Existente -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="Ganancia Mensual"
-                android:textColor="@color/Grayish_lime"
-                app:backgroundTint="@color/Grayish_green"
-                app:cornerRadius="12dp" />
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Agregar a Pedido Existente"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Busca un pedido por número de mesa y agrégale más productos"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="16dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Número de Mesa"
+                        android:layout_marginBottom="12dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editBuscarMesa"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapCharacters"
+                            android:maxLength="10"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnBuscarPedido"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Buscar y Agregar Productos"
+                        android:textColor="@color/Grayish_lime"
+                        app:backgroundTint="@color/Grayish_green"
+                        app:cornerRadius="12dp"
+                        app:icon="@android:drawable/ic_menu_add"
+                        app:iconGravity="start"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/adminSummaryTextView"

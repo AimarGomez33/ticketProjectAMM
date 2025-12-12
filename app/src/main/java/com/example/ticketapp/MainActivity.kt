@@ -100,25 +100,34 @@ class MainActivity : AppCompatActivity() {
 
     // 🔹 MAPA DE VARIANTES DE PRODUCTOS
     private val productVariations = mapOf(
-        "Quesadillas" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Volcanes" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Volcan Queso/Guisado Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Tostadas" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Pozole Grande" to listOf("Maciza", "Surtida"),
-        "Pozole Chico" to listOf("Maciza", "Surtida"),
-        "Guajoloyets Naturales" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Guajoloyets Naturales Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Guajoloyets Adobados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Guajoloyets Adobados Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Pambazos Naturales" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Pambazos Naturales Combinados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Pambazos Naturales Combinados con Queso" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Pambazos Naturales Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Pambazos Adobados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Pambazos Adobados Combinados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Pambazos Adobados Combinados con Queso" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso"),
-        "Pambazos Adobados Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papas con Rajas", "Chicharrón Prensado", "Queso")
+        "Quesadillas" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Quesadilla/Queso" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Volcanes" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Volcan Queso" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Guisado Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Tostadas" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pozole Grande" to listOf("pollo", "puerco", "combinado"),
+        "Pozole Chico" to listOf("pollo", "puerco", "combinado"),
+        "Guajoloyets Naturales Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Guajoloyets Adobados Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Naturales" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Naturales Combinados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Naturales Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Naturales Combinados con Queso" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Adobados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Adobados Combinados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Adobados Combinados con Queso" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Adobados Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Taco (c/u)" to listOf("Costilla", "Arrachera", "Cecina", "Chorizo Argentino"),
+        "Taco con Queso (c/u)" to listOf("Costilla", "Arrachera", "Cecina", "Chorizo Argentino"),
+        "Alitas 6 pzas" to listOf("BBQ", "BBQ Hot", "Búfalo", "Macha"),
+        "Alitas 10 pzas" to listOf("BBQ", "BBQ Hot", "Búfalo", "Macha"),
+        "Alitas 15 pzas" to listOf("BBQ", "BBQ Hot", "Búfalo", "Macha")
     )
+
+
+    // 🔹 PRODUCTOS QUE USAN INPUT DE TEXTO PARA VARIANTES
+    private val textInputProducts = setOf("Refrescos", "Aguas de Sabor")
 
     // 🔹 LISTA PARA ALMACENAR PRODUCTOS CON VARIANTES SELECCIONADAS
     private val selectedVariations = mutableListOf<Producto>()
@@ -328,7 +337,7 @@ class MainActivity : AppCompatActivity() {
             boton.setOnClickListener {
                 val actual = (cantidadesNormales[nombre] ?: 0) + 1
                 cantidadesNormales[nombre] = actual
-                txtNormales[nombre]?.text = "Normales: $actual"
+                txtNormales[nombre]?.text = "$actual"
                 // Recalcula el total (solo hamburguesas)
                 recalcularTotal()
                 // Actualiza el resumen en tiempo real
@@ -341,10 +350,53 @@ class MainActivity : AppCompatActivity() {
             boton.setOnClickListener {
                 val actual = (cantidadesCombo[nombre] ?: 0) + 1
                 cantidadesCombo[nombre] = actual
-                txtCombos[nombre]?.text = "Combos: $actual"
+                txtCombos[nombre]?.text = "$actual"
                 // Recalcula el total (solo hamburguesas)
                 recalcularTotal()
                 // Actualiza el resumen en tiempo real
+                val productosSeleccionados = obtenerProductosDesdeInputs()
+                mostrarResumen(productosSeleccionados)
+            }
+        }
+
+        // Botones de RESTAR
+        val botonesMenosNormal = mapOf(
+            "Hamburguesa Clasica" to findViewById<Button>(R.id.btnMenosHamburguesaClasicaNormal),
+            "Hamburguesa Hawaiana" to findViewById<Button>(R.id.btnMenosHamburguesaHawaianaNormal),
+            "Hamburguesa Pollo" to findViewById<Button>(R.id.btnMenosHamburguesaPolloNormal),
+            "Hamburguesa Champinones" to findViewById<Button>(R.id.btnMenosHamburguesaChampinonesNormal),
+            "Hamburguesa Arrachera" to findViewById<Button>(R.id.btnMenosHamburguesaArracheraNormal),
+            "Hamburguesa Maggy" to findViewById<Button>(R.id.btnMenosHamburguesaMaggyNormal),
+            "Hamburguesa Doble" to findViewById<Button>(R.id.btnMenosHamburguesaDobleNormal)
+        )
+
+        val botonesMenosCombo = mapOf(
+            "Hamburguesa Clasica" to findViewById<Button>(R.id.btnMenosHamburguesaClasicaCombo),
+            "Hamburguesa Hawaiana" to findViewById<Button>(R.id.btnMenosHamburguesaHawaianaCombo),
+            "Hamburguesa Pollo" to findViewById<Button>(R.id.btnMenosHamburguesaPolloCombo),
+            "Hamburguesa Champinones" to findViewById<Button>(R.id.btnMenosHamburguesaChampinonesCombo),
+            "Hamburguesa Arrachera" to findViewById<Button>(R.id.btnMenosHamburguesaArracheraCombo),
+            "Hamburguesa Maggy" to findViewById<Button>(R.id.btnMenosHamburguesaMaggyCombo),
+            "Hamburguesa Doble" to findViewById<Button>(R.id.btnMenosHamburguesaDobleCombo)
+        )
+
+        for ((nombre, boton) in botonesMenosNormal) {
+            boton.setOnClickListener {
+                val actual = maxOf((cantidadesNormales[nombre] ?: 0) - 1, 0)
+                cantidadesNormales[nombre] = actual
+                txtNormales[nombre]?.text = "$actual"
+                recalcularTotal()
+                val productosSeleccionados = obtenerProductosDesdeInputs()
+                mostrarResumen(productosSeleccionados)
+            }
+        }
+
+        for ((nombre, boton) in botonesMenosCombo) {
+            boton.setOnClickListener {
+                val actual = maxOf((cantidadesCombo[nombre] ?: 0) - 1, 0)
+                cantidadesCombo[nombre] = actual
+                txtCombos[nombre]?.text = "$actual"
+                recalcularTotal()
                 val productosSeleccionados = obtenerProductosDesdeInputs()
                 mostrarResumen(productosSeleccionados)
             }
@@ -451,7 +503,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showVariationSelectionDialog(productName: String) {
         val variations = productVariations[productName] ?: return
-        val builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
         builder.setTitle("Elige variante para $productName")
         builder.setItems(variations.toTypedArray()) { _, which ->
             val selectedVariant = variations[which]
@@ -486,7 +538,7 @@ class MainActivity : AppCompatActivity() {
         val displayList = grouped.map { "${it.key.substringAfter("(").substringBefore(")")} (x${it.value.size})" }.toTypedArray()
         val keyList = grouped.keys.toList()
 
-        val builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
         builder.setTitle("Eliminar de $productName")
         builder.setItems(displayList) { _, which ->
             val keyToRemove = keyList[which]
@@ -500,12 +552,84 @@ class MainActivity : AppCompatActivity() {
         builder.show()
     }
 
+    private fun showTextInputVariationDialog(productName: String) {
+        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
+        builder.setTitle("Especifica $productName")
+        
+        val input = EditText(this)
+        input.hint = "Ej: Coca Cola, Jamaica, etc."
+        input.inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_CAP_WORDS
+        input.setPadding(50, 30, 50, 30)
+        builder.setView(input)
+        
+        builder.setPositiveButton("Agregar") { _, _ ->
+            val variant = input.text.toString().trim()
+            if (variant.isNotEmpty()) {
+                val productData = products[productName] ?: return@setPositiveButton
+                
+                val newItem = Producto(
+                    nombre = "$productName ($variant)",
+                    precio = productData.precio,
+                    cantidad = 1,
+                    esCombo = false
+                )
+                selectedVariations.add(newItem)
+                updateQuantity(productName, 1)
+            }
+        }
+        builder.setNegativeButton("Cancelar", null)
+        builder.show()
+    }
+
+    private fun showSequentialGuisadoDialog(productName: String, productData: ProductData, guisadosSeleccionados: MutableList<String> = mutableListOf()) {
+        val variations = productVariations[productName] ?: emptyList()
+        
+        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
+        builder.setTitle("Selecciona guisado ${guisadosSeleccionados.size + 1}")
+        
+        val items = variations.toTypedArray()
+        builder.setItems(items) { _, which ->
+            val selectedVariant = variations[which]
+            guisadosSeleccionados.add(selectedVariant)
+            
+            // Mostrar siguiente diálogo
+            showSequentialGuisadoDialog(productName, productData, guisadosSeleccionados)
+        }
+        
+        // Agregar botón "Listo" para terminar
+        builder.setPositiveButton("Listo") { _, _ ->
+            if (guisadosSeleccionados.isNotEmpty()) {
+                // Crear nombre con todos los guisados seleccionados
+                val nombreCompleto = "$productName (${guisadosSeleccionados.joinToString(" + ")})"
+                
+                val newItem = Producto(
+                    nombre = nombreCompleto,
+                    precio = productData.precio,
+                    cantidad = 1,
+                    esCombo = false
+                )
+                selectedVariations.add(newItem)
+                
+                // Actualizar contador UI
+                updateQuantity(productName, 1)
+            }
+        }
+        
+        builder.show()
+    }
+
     private fun setupProductViews() {
         // Mapeo de productos (nombre lógico -> views + precio)
         products["Quesadillas"] = ProductData(
             findViewById(R.id.cantidadQuesadillas),
             findViewById(R.id.btnMenosQuesadillas),
             findViewById(R.id.btnMasQuesadillas),
+            30.0
+        )
+        products["Quesadilla/Queso"] = ProductData(
+            findViewById(R.id.cantidadQuesadillaQueso),
+            findViewById(R.id.btnMenosQuesadillaQueso),
+            findViewById(R.id.btnMasQuesadillaQueso),
             30.0
         )
         products["Pozole Grande"] = ProductData(
@@ -532,10 +656,16 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.btnMasVolcanes),
             60.0
         )
-        products["Volcan Queso/Guisado Extra"] = ProductData(
-            findViewById(R.id.cantidadGuajolotaExtra),
-            findViewById(R.id.btnMenosGuajolotaExtra),
-            findViewById(R.id.btnMasGuajolotaExtra),
+        products["Volcan Queso"] = ProductData(
+            findViewById(R.id.cantidadVolcanQueso),
+            findViewById(R.id.btnMenosVolcanQueso),
+            findViewById(R.id.btnMasVolcanQueso),
+            72.0
+        )
+        products["Guisado Extra"] = ProductData(
+            findViewById(R.id.cantidadGuisadoExtra),
+            findViewById(R.id.btnMenosGuisadoExtra),
+            findViewById(R.id.btnMasGuisadoExtra),
             72.0
         )
         products["Guajoloyets Naturales"] = ProductData(
@@ -676,48 +806,6 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.btnMasAguaTe),
             20.0
         )
-        products["Extra +5"] = ProductData(
-            findViewById(R.id.cantidadExtra5),
-            findViewById(R.id.btnMenosExtra5),
-            findViewById(R.id.btnMasExtra5),
-            5.0
-        )
-        products["Extra +10"] = ProductData(
-            findViewById(R.id.cantidadExtra10),
-            findViewById(R.id.btnMenosExtra10),
-            findViewById(R.id.btnMasExtra10),
-            10.0
-        )
-        products["Extra +12"] = ProductData(
-            findViewById(R.id.cantidadExtra12),
-            findViewById(R.id.btnMenosExtra12),
-            findViewById(R.id.btnMasExtra12),
-            12.0
-        )
-        products["Postres 20"] = ProductData(
-            findViewById(R.id.cantidadPostres20),
-            findViewById(R.id.btnMenosPostres20),
-            findViewById(R.id.btnMasPostres20),
-            20.0
-        )
-        products["Postres 25"] = ProductData(
-            findViewById(R.id.cantidadPostres25),
-            findViewById(R.id.btnMenosPostres25),
-            findViewById(R.id.btnMasPostres25),
-            25.0
-        )
-        products["Postres 30"] = ProductData(
-            findViewById(R.id.cantidadPostres30),
-            findViewById(R.id.btnMenosPostres30),
-            findViewById(R.id.btnMasPostres30),
-            30.0
-        )
-        products["Postres 35"] = ProductData(
-            findViewById(R.id.cantidadPostres35),
-            findViewById(R.id.btnMenosPostres35),
-            findViewById(R.id.btnMasPostres35),
-            35.0
-        )
 
 
 // ===== PAPAS =====
@@ -784,17 +872,21 @@ class MainActivity : AppCompatActivity() {
             quantities[productName] = 0
 
             productData.btnMas.setOnClickListener {
-                if (productVariations.containsKey(productName)) {
-                    showVariationSelectionDialog(productName)
-                } else {
-                    updateQuantity(productName, 1)
+                when {
+                    // Productos combinados usan diálogos secuenciales
+                    productName.contains("Combinados", ignoreCase = true) -> {
+                        showSequentialGuisadoDialog(productName, productData)
+                    }
+                    textInputProducts.contains(productName) -> showTextInputVariationDialog(productName)
+                    productVariations.containsKey(productName) -> showVariationSelectionDialog(productName)
+                    else -> updateQuantity(productName, 1)
                 }
             }
             productData.btnMenos.setOnClickListener {
-                if (productVariations.containsKey(productName) && (quantities[productName] ?: 0) > 0) {
-                    showVariationRemovalDialog(productName)
-                } else {
-                    updateQuantity(productName, -1)
+                when {
+                    textInputProducts.contains(productName) && (quantities[productName] ?: 0) > 0 -> showVariationRemovalDialog(productName)
+                    productVariations.containsKey(productName) && (quantities[productName] ?: 0) > 0 -> showVariationRemovalDialog(productName)
+                    else -> updateQuantity(productName, -1)
                 }
             }
 
@@ -870,7 +962,7 @@ class MainActivity : AppCompatActivity() {
         )
         setupCollapsibleView(
             findViewById(R.id.headerPostres),
-            findViewById(R.id.gridPostres),
+            findViewById(R.id.containerNotasExtras),
             findViewById(R.id.arrowPostres)
         )
     }
@@ -1336,6 +1428,11 @@ class MainActivity : AppCompatActivity() {
     private fun limpiarCantidades() {
         // 🔹 1) Reiniciar todos los productos del mapa general
     selectedVariations.clear()
+    
+    // Limpiar notas/extras
+    val editNotas = findViewById<EditText>(R.id.editNotasExtras)
+    editNotas.text.clear()
+    
     for ((nombre, data) in products) {
             quantities[nombre] = 0
             data.cantidadTV.text = "0"
@@ -2089,85 +2186,80 @@ class MainActivity : AppCompatActivity() {
         val anchoTotalLinea = 32
         val lineaSeparadora = "-".repeat(anchoTotalLinea)
 
-        // Encabezado
-        sb.appendLine("   ANTOJITOS MEXICANOS MARGARITA")
-        sb.appendLine("********************************")
-        sb.appendLine("     *** TICKET DE COMPRA ***")
-        sb.appendLine("********************************")
-        sb.appendLine("Fecha y hora: $fechaHora")
+        // Encabezado Simple
+    sb.appendLine("ANTOJITOS MEXICANOS MARGARITA")
+    sb.appendLine("TICKET DE COMPRA")
+    sb.appendLine("Fecha: $fechaHora")
 
-        // Datos de cuenta si aplica
-        if (noCuenta.isChecked) {
-            sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)} ")
-            sb.appendLine("Nombre: Margarita Daniel Pérez")
-            sb.appendLine("Banco: BBVA")
-        }
-
-        // Mesa/cliente
-        val mesaInfo = editTextMesa.text.toString().trim()
-        if (mesaInfo.isNotEmpty()) {
-            sb.appendLine(String.format("%-32s", "Mesa: ${mesaInfo.uppercase()}"))
-            sb.appendLine("*****************************")
-        }
-
-        // Obtener productos seleccionados desde tus inputs (debe devolver List<Producto>)
-
-        // Guardar orden en BD y mostrar resumen en el layou
-
-        // Separación normales vs combos
-        val combos = mutableListOf<Producto>()
-        val normales = mutableListOf<Producto>()
-        for (p in productosSeleccionados) if (p.esCombo) combos.add(p) else normales.add(p)
-
-        // Tabla cabecera
-        sb.appendLine(lineaSeparadora)
-        sb.appendLine(String.format("%-15s %6s %3s %7s", "Producto", "Precio", "Cant", "Total"))
-        sb.appendLine(lineaSeparadora)
-
-        var totalGeneral = 0.0
-
-        // Listado de productos normales
-        if (normales.isNotEmpty()) {
-            sb.appendLine("PRODUCTOS")
-            for (p in normales) {
-                val totalProducto = p.precio * p.cantidad
-                totalGeneral += totalProducto
-
-                val nombreCorto = if (p.nombre.length > 15) p.nombre.substring(0, 12) + "..." else p.nombre
-                val precioFmt = String.format("$%.2f", p.precio)
-                val totalFmt = String.format("$%.2f", totalProducto)
-
-                sb.appendLine(String.format("%-15s %6s %3d %7s", nombreCorto, precioFmt, p.cantidad, totalFmt))
-            }
-            sb.appendLine(lineaSeparadora)
-        }
-
-        // Listado de combos
-        if (combos.isNotEmpty()) {
-            sb.appendLine("COMBOS")
-            for (c in combos) {
-                val totalCombo = c.precio * c.cantidad
-                totalGeneral += totalCombo
-
-                val nombreCorto = if (c.nombre.length > 15) c.nombre.substring(0, 12) + "..." else c.nombre
-                val precioFmt = String.format("$%.2f", c.precio)
-                val totalFmt = String.format("$%.2f", totalCombo)
-
-                sb.appendLine(String.format("%-15s %6s %3d %7s", nombreCorto, precioFmt, c.cantidad, totalFmt))
-            }
-            sb.appendLine(lineaSeparadora)
-        }
-
-        // Totales
-        sb.appendLine(String.format("%-15s %16s", "TOTAL:", String.format("$%.2f", totalGeneral)))
-        sb.appendLine(lineaSeparadora)
-        sb.appendLine("")
-        sb.appendLine("    Gracias por su compra")
-        sb.appendLine("    Vuelva pronto")
-        sb.appendLine("\n\n\n") // feed para corte manual
-
-        return@withContext sb.toString()
+    // Datos de cuenta si aplica
+    if (noCuenta.isChecked) {
+        sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)} ")
+        sb.appendLine("Nombre: Margarita Daniel Pérez")
+        sb.appendLine("Banco: BBVA")
     }
+
+    // Mesa/cliente
+    val mesaInfo = editTextMesa.text.toString().trim()
+    if (mesaInfo.isNotEmpty()) {
+        sb.appendLine("Mesa: ${mesaInfo.uppercase()}")
+    }
+    sb.appendLine(lineaSeparadora)
+
+    // Obtener productos seleccionados desde tus inputs (debe devolver List<Producto>)
+
+    // Guardar orden en BD y mostrar resumen en el layou
+
+    // Separación normales vs combos
+    val combos = mutableListOf<Producto>()
+    val normales = mutableListOf<Producto>()
+    for (p in productosSeleccionados) if (p.esCombo) combos.add(p) else normales.add(p)
+
+    // SIN CABECERAS DE COLUMNA
+
+    var totalGeneral = 0.0
+
+    // Listado de productos normales
+    if (normales.isNotEmpty()) {
+        for (p in normales) {
+            val totalProducto = p.precio * p.cantidad
+            totalGeneral += totalProducto
+
+            // Formato Minimalista: "Cant x Producto"
+            // Ej: "2 x Quesadilla (Chorizo)"
+            sb.appendLine("${p.cantidad} x ${p.nombre}")
+        }
+    }
+
+    // Listado de combos
+    if (combos.isNotEmpty()) {
+        if (normales.isNotEmpty()) sb.appendLine(lineaSeparadora) // Separador si hay ambos
+        for (c in combos) {
+            val totalCombo = c.precio * c.cantidad
+            totalGeneral += totalCombo
+
+            sb.appendLine("${c.cantidad} x ${c.nombre}")
+        }
+    }
+
+    // Notas/Extras/Postres
+    val editNotas = findViewById<EditText>(R.id.editNotasExtras)
+    val notasText = editNotas.text.toString().trim()
+    if (notasText.isNotEmpty()) {
+        sb.appendLine(lineaSeparadora)
+        sb.appendLine("NOTAS:")
+        sb.appendLine(notasText)
+    }
+
+    // Solo Total Final
+    sb.appendLine(lineaSeparadora)
+    sb.appendLine("TOTAL: $${String.format("%.2f", totalGeneral)}")
+    sb.appendLine(lineaSeparadora)
+    sb.appendLine("")
+    sb.appendLine("Gracias por su compra")
+    sb.appendLine("\n\n\n") // feed para corte manual
+
+    return@withContext sb.toString()
+}
 
     // -------------------------------------------------------------------------
     // Persistencia en base de datos y panel admin
