@@ -100,29 +100,29 @@ class MainActivity : AppCompatActivity() {
 
     // 🔹 MAPA DE VARIANTES DE PRODUCTOS
     private val productVariations = mapOf(
-        "Quesadillas" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Quesadilla/Queso" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Volcanes" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Volcan Queso" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Guisado Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Tostadas" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Quesadillas" to listOf("Chorizo","Huevo","Huitlacoche", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Quesadilla/Queso" to listOf("Chorizo", "Huevo","Mole Verde","Huitlacoche","Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Volcanes" to listOf("Chorizo", "Mole Verde","Huevo", "Bisteck", "Pollo","Huitlacoche", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Volcan Queso" to listOf("Chorizo", "Mole Verde","Huevo", "Bisteck", "Pollo","Huitlacoche", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Guisado Extra" to listOf("Chorizo", "Mole Verde","Huevo", "Bisteck", "Pollo","Huitlacoche", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Tostadas" to listOf("Chorizo", "Mole Verde","pata", "Bisteck","Huevo", "Pollo", "Champiñones","Huitlacoche", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
         "Pozole Grande" to listOf("pollo", "puerco", "combinado"),
         "Pozole Chico" to listOf("pollo", "puerco", "combinado"),
-        "Guajoloyets Naturales Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Guajoloyets Adobados Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Pambazos Naturales" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Pambazos Naturales Combinados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Pambazos Naturales Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Pambazos Naturales Combinados con Queso" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Pambazos Adobados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Pambazos Adobados Combinados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Pambazos Adobados Combinados con Queso" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
-        "Pambazos Adobados Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Guajoloyets Naturales Extra" to listOf("Chorizo", "Mole Verde", "Huevo","Bisteck","Huitlacoche", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Guajoloyets Adobados Extra" to listOf("Chorizo", "Mole Verde","Huevo", "Bisteck","Huitlacoche", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Naturales" to listOf("Chorizo", "Mole Verde", "Bisteck","Huevo", "Pollo", "Champiñones","Huitlacoche", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Naturales Combinados" to listOf("Chorizo", "Mole Verde","Huevo", "Bisteck", "Pollo", "Champiñones","Huitlacoche", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Naturales Extra" to listOf("Chorizo", "Mole Verde", "Bisteck","Huevo", "Pollo", "Champiñones", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Naturales Combinados con Queso" to listOf("Chorizo", "Mole Verde", "Huevo","Bisteck", "Pollo", "Champiñones","Huitlacoche", "Tinga", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Adobados" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Huevo","Champiñones", "Tinga", "Picadillo","Huitlacoche", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Adobados Combinados" to listOf("Chorizo", "Mole Verde", "Bisteck","Huevo", "Pollo", "Champiñones", "Tinga","Huitlacoche", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Adobados Combinados con Queso" to listOf("Chorizo", "Mole Verde", "Huevo","Bisteck", "Pollo", "Champiñones", "Tinga","Huitlacoche", "Picadillo", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
+        "Pambazos Adobados Extra" to listOf("Chorizo", "Mole Verde", "Bisteck", "Pollo", "Huevo","Champiñones", "Tinga", "Picadillo","Huitlacoche", "Papa con chorizo", "Chicharrón Prensado", "Queso"),
         "Taco (c/u)" to listOf("Costilla", "Arrachera", "Cecina", "Chorizo Argentino"),
         "Taco con Queso (c/u)" to listOf("Costilla", "Arrachera", "Cecina", "Chorizo Argentino"),
-        "Alitas 6 pzas" to listOf("BBQ", "BBQ Hot", "Búfalo", "Macha"),
-        "Alitas 10 pzas" to listOf("BBQ", "BBQ Hot", "Búfalo", "Macha"),
-        "Alitas 15 pzas" to listOf("BBQ", "BBQ Hot", "Búfalo", "Macha")
+        "Alitas 6 pzas" to listOf("BBQ", "BBQ Hot", "Búfalo","Mango-Habanero", "Macha"),
+        "Alitas 10 pzas" to listOf("BBQ", "BBQ Hot", "Búfalo", "Mango-Habanero","Macha"),
+        "Alitas 15 pzas" to listOf("BBQ", "BBQ Hot", "Búfalo","Mango-Habanero", "Macha")
     )
 
 
@@ -154,9 +154,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appDatabase: AppDatabase
     private lateinit var drawerLayout: DrawerLayout
-    private lateinit var btnGananciaDiaria: MaterialButton
-    private lateinit var btnGananciaSemanal: MaterialButton
-    private lateinit var btnGananciaMensual: MaterialButton
+
     private lateinit var adminSummaryTextView: TextView
     private lateinit var recyclerViewOrders: RecyclerView
 
@@ -179,8 +177,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var layoutCustomRange: View
     private lateinit var tvProductSalesResult: TextView
 
-    lateinit var editCategoryStartDate: EditText
-    lateinit var editCategoryEndDate: EditText
+
 
 
     // --- Hardware & Permissions ---
@@ -264,8 +261,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val tmpCatStart = findViewById<EditText?>(R.id.editCategoryStartDate)
-        val tmpCatEnd   = findViewById<EditText?>(R.id.editCategoryEndDate)
+
 
         // Inicializa la base de datos una vez al inicio. La observación se configurará
         // después de que el adaptador de órdenes haya sido configurado para evitar
@@ -273,8 +269,6 @@ class MainActivity : AppCompatActivity() {
         appDatabase = AppDatabase.getDatabase(applicationContext, lifecycleScope)
         txtTotal = findViewById(R.id.textViewTotal)
 
-        editCategoryStartDate = tmpCatStart ?: findViewById(R.id.editStartDate)
-        editCategoryEndDate   = tmpCatEnd   ?: findViewById(R.id.editEndDate)
 
         txtNormales = mapOf(
             "Hamburguesa Clasica" to findViewById(R.id.cantidadHamburguesaClasicaNormal),
@@ -409,9 +403,6 @@ class MainActivity : AppCompatActivity() {
         // La base de datos ya fue inicializada al inicio de onCreate, no es necesario volver a asignarla aquí
         // appDatabase = AppDatabase.getDatabase(this, lifecycleScope)
         drawerLayout = findViewById(R.id.drawerLayout)
-        btnGananciaDiaria = findViewById(R.id.btnGananciaDiaria)
-        btnGananciaSemanal = findViewById(R.id.btnGananciaSemanal)
-        btnGananciaMensual = findViewById(R.id.btnGananciaMensual)
         adminSummaryTextView = findViewById(R.id.adminSummaryTextView)
 
         recyclerViewOrders = findViewById(R.id.recyclerViewOrders)
@@ -447,9 +438,7 @@ class MainActivity : AppCompatActivity() {
         observarOrdenes()
 
 
-        btnGananciaDiaria.setOnClickListener { generarGananciaDiaria() }
-        btnGananciaSemanal.setOnClickListener { generarGananciaSemanal() }
-        btnGananciaMensual.setOnClickListener { generarGananciaMensual() }
+
 
         // No llamamos a cargarPedidos(). El flujo de datos de Room se encarga
         // de actualizar la lista automáticamente.
@@ -464,10 +453,6 @@ class MainActivity : AppCompatActivity() {
 
         // Configura el filtro de ventas por producto (spinner, fechas, botón)
         setupProductSalesFilter()
-
-        editCategoryStartDate.setOnClickListener { showDatePicker(editCategoryStartDate) }
-        editCategoryEndDate.setOnClickListener { showDatePicker(editCategoryEndDate) }
-
 
         // registrar receiver USB
         val filter = IntentFilter(ACTION_USB_PERMISSION)
