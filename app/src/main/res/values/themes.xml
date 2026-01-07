@@ -8,4 +8,13 @@
         <item name="colorOnPrimary">@color/white</item>
         <!-- ... other items -->
     </style>
+
+    <style name="Theme.TicketApp.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/Grayish_green</item>
+        <item name="colorPrimaryVariant">@color/Grayish_lime</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="Theme.TicketApp.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+    <style name="Theme.TicketApp.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 </resources>
