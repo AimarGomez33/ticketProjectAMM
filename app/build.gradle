@@ -40,6 +40,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildToolsVersion '35.0.0'
 
     // ✅ CORRECCIÓN: Se han eliminado los bloques 'composeOptions' duplicados e incorrectos.
     // El nuevo plugin del compilador de Compose lo gestiona automáticamente con Kotlin 2.0.

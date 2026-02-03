@@ -2935,7 +2935,11 @@ class MainActivity : AppCompatActivity() {
                         // Formato Minimalista: "Cant x Producto"
                         // Ej: "2 x Quesadilla (Chorizo)"
                         sb.appendLine("${p.cantidad} x ${p.nombre}")
-                        // NOTA: Ya no imprimimos el comentario aquí
+
+                        // Imprimir comentario justo debajo del producto
+                        if (!p.comment.isNullOrEmpty()) {
+                            sb.appendLine("  [${p.comment}]")
+                        }
                     }
                 }
 
@@ -2948,20 +2952,15 @@ class MainActivity : AppCompatActivity() {
                         totalGeneral += totalCombo
 
                         sb.appendLine("${c.cantidad} x ${c.nombre}")
-                        // NOTA: Ya no imprimimos el comentario aquí
+
+                        // Imprimir comentario justo debajo del producto
+                        if (!c.comment.isNullOrEmpty()) {
+                            sb.appendLine("  [${c.comment}]")
+                        }
                     }
                 }
 
-                // 🔹 SECCIÓN DE COMENTARIOS ESPECIALES (si existen)
-                val productosConComentarios =
-                        productosSeleccionados.filter { !it.comment.isNullOrEmpty() }
-                if (productosConComentarios.isNotEmpty()) {
-                    sb.appendLine(lineaSeparadora)
-                    sb.appendLine("COMENTARIOS ESPECIALES:")
-                    for (p in productosConComentarios) {
-                        sb.appendLine("- ${p.nombre}: ${p.comment}")
-                    }
-                }
+                // (Sección de COMENTARIOS ESPECIALES eliminada ya que se muestran en línea)
 
                 // Notas/Extras/Postres
                 val editNotas = findViewById<EditText>(R.id.editNotasExtras)
