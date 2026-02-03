@@ -31,6 +31,22 @@
         app:iconPadding="0dp"
         app:icon="@null" />
 
+
+    <ImageButton
+        android:id="@+id/btnComment"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_weight="1"
+        android:src="@drawable/ic_comment"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:contentDescription="Agregar comentario"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/productName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:tint="@color/text_secondary" />
+
     <!-- Plus Normal button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnPlusNormal"

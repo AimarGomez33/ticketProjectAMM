@@ -616,6 +616,57 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // --- HAMBURGUESAS COMMENT BUTTONS SETUP ---
+        val botonesCommentNormal =
+                mapOf(
+                        "Hamburguesa Clasica" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaClasicaNormal),
+                        "Hamburguesa Hawaiana" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaHawaianaNormal),
+                        "Hamburguesa Pollo" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaPolloNormal),
+                        "Hamburguesa Champinones" to
+                                findViewById<ImageButton>(
+                                        R.id.btnCommentHamburguesaChampinonesNormal
+                                ),
+                        "Hamburguesa Arrachera" to
+                                findViewById<ImageButton>(
+                                        R.id.btnCommentHamburguesaArracheraNormal
+                                ),
+                        "Hamburguesa Maggy" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaMaggyNormal),
+                        "Hamburguesa Doble" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaDobleNormal)
+                )
+
+        val botonesCommentCombo =
+                mapOf(
+                        "Hamburguesa Clasica" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaClasicaCombo),
+                        "Hamburguesa Hawaiana" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaHawaianaCombo),
+                        "Hamburguesa Pollo" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaPolloCombo),
+                        "Hamburguesa Champinones" to
+                                findViewById<ImageButton>(
+                                        R.id.btnCommentHamburguesaChampinonesCombo
+                                ),
+                        "Hamburguesa Arrachera" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaArracheraCombo),
+                        "Hamburguesa Maggy" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaMaggyCombo),
+                        "Hamburguesa Doble" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaDobleCombo)
+                )
+
+        for ((nombre, boton) in botonesCommentNormal) {
+            boton.setOnClickListener { showCommentDialog(nombre) }
+        }
+
+        for ((nombre, boton) in botonesCommentCombo) {
+            boton.setOnClickListener { showCommentDialog(nombre) }
+        }
+
         // Botones de RESTAR
         val botonesMenosNormal =
                 mapOf(

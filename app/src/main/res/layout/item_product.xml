@@ -15,53 +15,78 @@
     android:background="?attr/selectableItemBackground"
     >
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cardLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="8dp">
-
-
+        android:padding="12dp">
 
         <TextView
             android:id="@+id/productName"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minLines="2"
-            android:textColor="@color/text_secondary"
+            android:text="Nombre del Producto"
+            android:textColor="@color/text_primary"
             android:textSize="16sp"
-            tools:text="Nombre del Producto Muy Largo" />
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/productPrice"
+            tools:text="Hamburguesa Clasica con Queso" />
 
         <TextView
             android:id="@+id/productPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="$0.00"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/productName"
             tools:text="$120.00"/>
 
-        <LinearLayout
+        <ImageButton
+            android:id="@+id/btnComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:src="@drawable/ic_comment"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:contentDescription="Agregar comentario"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/productName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:tint="@color/text_secondary" />
+
+        <LinearLayout
+            android:id="@+id/quantityContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="4dp">
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/productName"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnMenos"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:text="-"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                app:cornerRadius="24dp"
                 android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="20dp"
                 app:icon="@null"
-                app:iconPadding="0dp"
+                app:backgroundTint="@color/Grey"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -69,23 +94,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:minWidth="40dp"
+                android:minWidth="32dp"
                 android:text="0"
-                android:textColor="@color/Grey"
-                android:textSize="18sp" />
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginHorizontal="8dp"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnMas"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:text="+"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                app:cornerRadius="24dp"
                 android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="20dp"
                 app:icon="@null"
-                app:iconPadding="0dp"
+                app:backgroundTint="?attr/colorPrimary"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
-    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
