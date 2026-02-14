@@ -15,11 +15,14 @@
       </SelectionState>
       <SelectionState runConfigName="TicketApp">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-02-09T05:53:51.307702300Z">
+        <DropdownSelection timestamp="2026-02-14T06:20:14.186904300Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\jair_\.android\avd\Medium_Phone.avd" />
+              <DeviceId pluginId="FirebaseDirectAccess" identifier="reservation=projects/ticketapp-b95c74f1/deviceSessions/session-3n4gt4cqleenh" />
             </handle>
+            <template>
+              <DeviceId pluginId="FirebaseDirectAccess" type="TEMPLATE" identifier="model_id=tokay/34" />
+            </template>
           </Target>
         </DropdownSelection>
         <DialogSelection />

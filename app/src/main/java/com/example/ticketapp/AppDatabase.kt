@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
                         OrderItemEntity::class,
                         AguaSaborEntity::class,
                         RefrescoEntity::class],
-        version = 19,
+        version = 20,
         exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -73,6 +73,14 @@ abstract class AppDatabase : RoomDatabase() {
                                         )
                                 }
                         }
+                val MIGRATION_19_20 =
+                        object : Migration(19,20){
+                        override fun migrate(db: SupportSQLiteDatabase) {
+                        db.execSQL(
+                                "CREATE TABLE IF NOT EXISTS `refrescos` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `flavor_name` TEXT NOT NULL, `quantity_available` INTEGER NOT NULL)"
+                        )
+                        }
+                }
 
                 fun getDatabase(context: Context, scope: CoroutineScope): AppDatabase {
                         return INSTANCE
@@ -93,12 +101,16 @@ abstract class AppDatabase : RoomDatabase() {
                                                         .addMigrations(
                                                                 MIGRATION_16_17,
                                                                 MIGRATION_17_18,
-                                                                MIGRATION_18_19
+                                                                MIGRATION_18_19,
+                                                                MIGRATION_19_20
                                                         )
+                                                        Room.databaseBuilder(context, AppDatabase::class.java, "aguas-sabor")
+                                                                .fallbackToDestructiveMigration()
+                                                                .build()
+
+                                                        Room.databaseBuilder(context, AppDatabase::class.java, "refrescos")
                                                         .fallbackToDestructiveMigration()
                                                         .build()
-                                        INSTANCE = instance
-                                        instance
                                 }
                 }
 

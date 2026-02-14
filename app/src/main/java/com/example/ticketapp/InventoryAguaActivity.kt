@@ -23,6 +23,7 @@ import kotlinx.coroutines.withContext
 import com.example.ticketapp.AguaSaborDao
 import com.example.ticketapp.AguaSaborEntity
 import com.example.ticketapp.AppDatabase
+import androidx.room.RoomDatabase
 
 
 // Asegúrate de que estas clases existan en tu proyecto
@@ -117,6 +118,7 @@ class InventoryAguaActivity : AppCompatActivity(), InventoryAguaAdapter.OnItemCl
             .setPositiveButton("Actualizar") { _, _ ->
                 val name = etName.text.toString().trim()
                 val qty = etQty.text.toString().trim().toIntOrNull() ?: 0
+                val id = agua.id
                 updateSabor(agua.copy(flavorName = name, quantityAvailable = qty))
             }
             .setNegativeButton("Cancelar", null)
@@ -125,7 +127,7 @@ class InventoryAguaActivity : AppCompatActivity(), InventoryAguaAdapter.OnItemCl
 
     private fun saveSabor(name: String, qty: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
-            db.aguassaborDao().insert(AguaSaborEntity(flavorName = name, quantityAvailable = qty))
+            db.aguassaborDao().insert(AguaSaborEntity(flavorName = name, quantityAvailable = qty, id = adapter.currentList.size + 1))
             withContext(Dispatchers.Main) {
                 Toast.makeText(this@InventoryAguaActivity, "Guardado", Toast.LENGTH_SHORT).show()
             }
