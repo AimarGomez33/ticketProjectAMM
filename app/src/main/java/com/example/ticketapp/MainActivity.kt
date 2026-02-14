@@ -1469,6 +1469,22 @@ class MainActivity : AppCompatActivity() {
                 findViewById(R.id.gridBebidas),
                 findViewById(R.id.arrowBebidas)
         )
+        // ACCESO A INVENTARIO DE REFRESCOS (Long Click)
+        findViewById<View>(R.id.headerBebidas).setOnLongClickListener {
+            try {
+                val intent = android.content.Intent(this, InventoryRefrescoActivity::class.java)
+                startActivity(intent)
+            } catch (e: Exception) {
+                android.widget.Toast.makeText(
+                                this,
+                                "Error: ${e.message}",
+                                android.widget.Toast.LENGTH_SHORT
+                        )
+                        .show()
+                e.printStackTrace()
+            }
+            true
+        }
         setupCollapsibleView(
                 findViewById(R.id.headerHamburguesas),
                 findViewById(R.id.gridHamburguesas),

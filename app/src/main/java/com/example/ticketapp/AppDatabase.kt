@@ -10,14 +10,22 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Database(
-        entities = [Product::class, OrderEntity::class, OrderItemEntity::class],
-        version = 18,
+        entities =
+                [
+                        Product::class,
+                        OrderEntity::class,
+                        OrderItemEntity::class,
+                        AguaSaborEntity::class,
+                        RefrescoEntity::class],
+        version = 19,
         exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
         abstract fun productDao(): ProductDao
         abstract fun orderDao(): OrderDao
+        abstract fun aguassaborDao(): AguaSaborDao
+        abstract fun refrescoDao(): RefrescoDao
 
         companion object {
                 @Volatile private var INSTANCE: AppDatabase? = null
@@ -57,6 +65,15 @@ abstract class AppDatabase : RoomDatabase() {
                                 }
                         }
 
+                val MIGRATION_18_19 =
+                        object : Migration(18, 19) {
+                                override fun migrate(db: SupportSQLiteDatabase) {
+                                        db.execSQL(
+                                                "CREATE TABLE IF NOT EXISTS `refrescos` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `flavor_name` TEXT NOT NULL, `quantity_available` INTEGER NOT NULL)"
+                                        )
+                                }
+                        }
+
                 fun getDatabase(context: Context, scope: CoroutineScope): AppDatabase {
                         return INSTANCE
                                 ?: synchronized(this) {
@@ -75,7 +92,8 @@ abstract class AppDatabase : RoomDatabase() {
                                                         // Commented out old one
                                                         .addMigrations(
                                                                 MIGRATION_16_17,
-                                                                MIGRATION_17_18
+                                                                MIGRATION_17_18,
+                                                                MIGRATION_18_19
                                                         )
                                                         .fallbackToDestructiveMigration()
                                                         .build()
@@ -130,6 +148,44 @@ abstract class AppDatabase : RoomDatabase() {
                                         )
                                 )
                         defaultProducts.forEach { productDao.insert(it) }
+                }
+
+                suspend fun pupalateAguas(aguaDao: AguaSaborDao) {
+                        aguaDao.deleteAll()
+                        val defaultAguas =
+                                listOf(
+                                        AguaSaborEntity(
+                                                id = 1,
+                                                flavorName = "Horchata",
+                                                quantityAvailable = 100
+                                        ),
+                                        AguaSaborEntity(
+                                                id = 2,
+                                                flavorName = "Jamaica",
+                                                quantityAvailable = 100
+                                        ),
+                                )
+                        defaultAguas.forEach { aguaDao.insert(it) }
+                }
+
+                suspend fun populateRefrescos(refrescoDao: RefrescoDao) {
+                        refrescoDao.deleteAll()
+                        val defaultRefrescos =
+                                listOf(
+                                        RefrescoEntity(
+                                                flavorName = "Coca Cola",
+                                                quantityAvailable = 50
+                                        ),
+                                        RefrescoEntity(
+                                                flavorName = "Manzanita",
+                                                quantityAvailable = 50
+                                        ),
+                                        RefrescoEntity(
+                                                flavorName = "Sprite",
+                                                quantityAvailable = 50
+                                        ),
+                                )
+                        defaultRefrescos.forEach { refrescoDao.insert(it) }
                 }
         }
 }

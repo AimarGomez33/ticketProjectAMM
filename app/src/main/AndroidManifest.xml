@@ -59,6 +59,10 @@
                 android:resource="@xml/device_filter" />
         </activity>
 
+        <activity android:name=".InventoryAguaActivity" />
+        <activity android:name=".InventoryRefrescoActivity" />
+
+
     </application>
 
 </manifest>
