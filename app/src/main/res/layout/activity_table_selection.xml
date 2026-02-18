@@ -16,10 +16,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Theme.TicketApp.PopupOverlay"
+            android:background="@color/BrigthSnow"
+            app:popupTheme="@style/Theme.TicketApp.NoActionBar"
             app:title="Seleccionar Mesa"
-            app:titleTextColor="@color/white" />
+            app:titleTextColor="@color/CarbonBlack" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -27,9 +27,12 @@
         android:id="@+id/recyclerViewTables"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:backgroundTint="@color/Black"
+        android:backgroundTintMode="add"
         android:clipToPadding="false"
         android:padding="8dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
         tools:itemCount="12"
         tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         tools:spanCount="3" />

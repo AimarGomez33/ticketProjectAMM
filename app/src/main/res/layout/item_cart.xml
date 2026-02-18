@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp"
-    android:background="?attr/selectableItemBackground">
+    android:background="@color/BrigthSnow">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Producto Nombre"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/BrigthSnow"
             android:textSize="16sp"
             android:textStyle="bold"/>
 
@@ -37,7 +37,6 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@android:drawable/ic_menu_delete"
-            android:tint="@android:color/holo_red_dark"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Eliminar"/>
     </LinearLayout>
@@ -88,8 +87,8 @@
                 android:insetTop="0dp"
                 android:insetRight="0dp"
                 android:insetBottom="0dp"
-                app:backgroundTint="@color/Grey"
-                android:textColor="@color/Grayish_lime"/>
+                app:backgroundTint="@color/CarbonBlack"
+                android:textColor="@color/BrigthSnow"/>
 
             <TextView
                 android:id="@+id/tvCartQuantity"
@@ -114,8 +113,8 @@
                 android:insetTop="0dp"
                 android:insetRight="0dp"
                 android:insetBottom="0dp"
-                app:backgroundTint="@color/Grayish_green"
-                android:textColor="@color/Grayish_lime"/>
+                app:backgroundTint="@color/BrigthSnow"
+                android:textColor="@color/CarbonBlack"/>
         </LinearLayout>
     </LinearLayout>
     <View

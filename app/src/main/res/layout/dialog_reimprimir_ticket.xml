@@ -41,7 +41,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/Grayish_lime" />
+        android:background="@color/CarbonBlack" />
 
     <!-- Área scrollable para el contenido del ticket -->
     <ScrollView
@@ -64,7 +64,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/Grayish_lime" />
+        android:background="@color/BrigthSnow" />
 
     <!-- Botones de acción -->
     <LinearLayout
@@ -86,7 +86,7 @@
             android:paddingBottom="8dp"
             android:text="Cancelar"
             android:textColor="@color/text_primary"
-            app:strokeColor="@color/Grayish_lime" />
+            app:strokeColor="@color/BrigthSnow" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPrintTicket"
@@ -98,7 +98,7 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:text="Imprimir"
-            android:textColor="@color/app_background"
+            android:textColor="@color/BrigthSnow"
             app:backgroundTint="@color/text_primary"
             app:strokeColor="@color/text_primary"/>
     </LinearLayout>

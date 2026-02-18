@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_background"
-    tools:context="MainActivity">
+    tools:context="MainActivity"
+    android:fitsSystemWindows="true">
 
 
 
@@ -42,18 +43,19 @@
                 android:layout_width="369dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:backgroundTint="@color/Grayish_green"
-                android:textColorHint="@color/Grayish_green">
+                android:backgroundTint="@color/CarbonBlack"
+                android:textColorHint="@color/CarbonBlack">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editMesa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/Light_grayish"
+                    android:background="@color/BrigthSnow"
                     android:hint="Mesa/Mesero(Opcional)"
                     android:imeOptions="actionDone"
                     android:inputType="textCapWords"
-                    android:textColor="@color/Grayish_green" />
+                    android:textColor="@color/CarbonBlack"
+                    />
 
 
 
@@ -76,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/Light_grayish"
+                app:cardBackgroundColor="@color/BrigthSnow"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="2dp"
                 android:visibility="gone"
@@ -91,7 +93,7 @@
                         android:layout_height="wrap_content"
                         android:text="Pedido Anterior (Pendiente)"
                         android:textStyle="bold"
-                        android:textColor="@color/Grayish_green"
+                        android:textColor="@color/CarbonBlack"
                         android:textSize="16sp"/>
                     <TextView
                         android:id="@+id/tvExistingOrderDetails"
@@ -103,7 +105,7 @@
                         android:textSize="14sp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-            <RelativeLayout android:id="@+id/headerPlatillos" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="8dp" android:paddingBottom="8dp" android:background="?android:attr/selectableItemBackground" >
+            <RelativeLayout android:id="@+id/headerPlatillos" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="8dp" android:paddingBottom="8dp" android:background="@color/BrigthSnow" >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -116,7 +118,7 @@
                     android:textColor="@color/text_primary"
                     android:textSize="22sp"
                     android:textStyle="bold"
-                    app:tint="@color/Grey" />
+                    app:tint="@color/CarbonBlack" />
 
                 <ImageView
                     android:id="@+id/arrowPlatillos"
@@ -126,7 +128,7 @@
                     android:layout_marginEnd="5dp"
                     android:src="@drawable/down_arrow"
                     android:rotation="0"
-                    app:tint="@color/Grey"
+                    app:tint="@color/CarbonBlack"
                     />
             </RelativeLayout>
 
@@ -136,7 +138,7 @@
                 android:background="?android:attr/listDivider" />
 
             <GridLayout android:id="@+id/gridPlatillos" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnCount="3" android:useDefaultMargins="true" android:visibility="gone">
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -163,9 +165,9 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="Editar Pedido"
-                            android:textColor="@color/Grayish_lime"
+                            android:textColor="@color/BrigthSnow"
                             android:textSize="14sp"
-                            app:backgroundTint="@color/Grayish_green"
+                            app:backgroundTint="@color/CarbonBlack"
                             app:cornerRadius="12dp"
                             app:icon="@null"
                             app:layout_constraintTop_toBottomOf="@id/labelQuesadillas"
@@ -200,14 +202,15 @@
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:text="-"
-                                android:textColor="@color/white"
+                                android:textColor="@color/BrigthSnow"
                                 android:textSize="18sp"
                                 android:padding="0dp"
                                 android:insetTop="0dp"
                                 android:insetBottom="0dp"
                                 app:cornerRadius="20dp"
                                 app:icon="@null"
-                                app:backgroundTint="@color/Grey"
+                                tools:backgroundTint="@color/CarbonBlack"
+                                app:backgroundTint="@color/CarbonBlack"
                                 tools:ignore="HardcodedText"/>
 
                             <TextView
@@ -227,7 +230,7 @@
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:text="+"
-                                android:textColor="@color/white"
+                                android:textColor="@color/BrigthSnow"
                                 android:textSize="18sp"
                                 android:padding="0dp"
                                 android:insetTop="0dp"
@@ -240,7 +243,7 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -330,7 +333,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -420,7 +423,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -510,7 +513,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -600,7 +603,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -690,7 +693,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -780,7 +783,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -870,7 +873,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -995,7 +998,7 @@
 
             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?android:attr/listDivider"/>
             <GridLayout android:id="@+id/gridEntradas" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnCount="2" android:useDefaultMargins="true" android:visibility="gone">
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1085,7 +1088,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1175,7 +1178,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1265,7 +1268,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1355,7 +1358,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1475,7 +1478,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"/>
             <GridLayout android:id="@+id/gridPambazos" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnCount="2" android:useDefaultMargins="true" android:visibility="gone">
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1565,7 +1568,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1655,7 +1658,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/CarbonBlack" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1745,7 +1748,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1835,7 +1838,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -1907,6 +1910,7 @@
                             android:layout_marginHorizontal="4dp"
                             />
 
+
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMasPambazosAdobados"
                             android:layout_width="40dp"
@@ -1925,7 +1929,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -2015,7 +2019,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -2075,6 +2079,7 @@
                             tools:ignore="HardcodedText"/>
 
                         <TextView
+
                             android:id="@+id/cantidadPambazosAdobadosCombinados"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -2105,7 +2110,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/BrigthSnow" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -2220,7 +2225,7 @@
             </RelativeLayout>
             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?android:attr/listDivider"/>
             <GridLayout android:id="@+id/gridGuajoloyets" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnCount="2" android:useDefaultMargins="true" android:visibility="gone">
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/CarbonBlack" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -2310,7 +2315,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/CarbonBlack" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -2400,7 +2405,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/CarbonBlack" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -2490,7 +2495,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/CarbonBlack" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -2606,7 +2611,7 @@
             </RelativeLayout>
             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?android:attr/listDivider"/>
             <GridLayout android:id="@+id/gridBebidas" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnCount="2" android:useDefaultMargins="true" android:visibility="gone">
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/CarbonBlack" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -2696,7 +2701,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/CarbonBlack" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -2786,7 +2791,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/CarbonBlack" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -2876,7 +2881,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/CarbonBlack" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -2966,7 +2971,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+                <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/CarbonBlack" app:cardCornerRadius="12dp" app:cardElevation="2dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -3104,7 +3109,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
 
@@ -3290,7 +3295,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
 
@@ -3476,7 +3481,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
 
@@ -3662,7 +3667,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
 
@@ -3848,7 +3853,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
 
@@ -4035,7 +4040,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
 
@@ -4222,7 +4227,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
 
@@ -4411,7 +4416,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
                     <LinearLayout
@@ -4473,7 +4478,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
                     <LinearLayout
@@ -4536,7 +4541,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
                     <LinearLayout
@@ -4646,7 +4651,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
                     <LinearLayout
@@ -4709,7 +4714,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
                     <LinearLayout
@@ -4816,7 +4821,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
                     <LinearLayout
@@ -4879,7 +4884,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
                     <LinearLayout
@@ -4942,7 +4947,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    app:cardBackgroundColor="@color/card_background"
+                    app:cardBackgroundColor="@color/CarbonBlack"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
                     <LinearLayout
@@ -5071,7 +5076,7 @@
                 android:id="@+id/summaryContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/Light_grayish"
+                android:background="@color/BrigthSnow"
                 android:orientation="vertical"
                 android:padding="16dp"
                 android:visibility="gone"
@@ -5104,7 +5109,7 @@
                         android:layout_centerVertical="true"
                         android:text="X"
                         android:textColor="@color/Grayish_lime"
-                        app:backgroundTint="@color/Grayish_green"
+                        app:backgroundTint="@color/BrigthSnow"
                         app:cornerRadius="20dp" />
 
                 </RelativeLayout>
@@ -5113,7 +5118,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="8dp"
-                    android:background="@color/Grayish_lime" />
+                    android:background="@color/BrigthSnow" />
 
                 <ScrollView
                     android:layout_width="match_parent"
@@ -5162,7 +5167,7 @@
                     android:text="Limpiar Cantidades"
                     android:textColor="@color/text_primary"
                     android:textSize="20sp"
-                    app:strokeColor="@color/Grayish_lime"/>
+                    app:strokeColor="@color/Grayish_lime" />
 
             </LinearLayout>
 
@@ -5242,7 +5247,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/card_background"
+                app:cardBackgroundColor="@color/CarbonBlack"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
 
@@ -5311,7 +5316,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/card_background"
+                app:cardBackgroundColor="@color/CarbonBlack"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp">
 

@@ -9,28 +9,28 @@
     <color name="old_grayish_green">#D1D8BE</color>
     <color name="Light_grayish">#EEEFE0</color>
     <!--  Colores base para el tema (pueden ser los mismos de arriba o derivaciones)  -->
-    <color name="app_primary">@color/Grey</color>
-    <color name="app_primary_variant">@color/Grey</color>
+    <color name="app_primary">@color/CarbonBlack</color>
+    <color name="app_primary_variant">@color/CarbonBlack</color>
     <!--  O un tono ligeramente más oscuro si se desea  -->
-    <color name="app_on_primary">@color/Grey</color>
+    <color name="app_on_primary">@color/CarbonBlack</color>
     <color name="text_on_light_surface">#DE000000</color>
     <!--  87% Negro, estándar para texto principal  -->
-    <color name="app_secondary">@color/Grayish_lime</color>
-    <color name="app_secondary_variant">@color/Grayish_lime</color>
-    <color name="app_on_secondary">@color/Grayish_lime</color>
-    <color name="app_background">@color/Light_grayish</color>
-    <color name="app_surface">@color/Light_grayish</color>
+    <color name="app_secondary">@color/LilacAsh</color>
+    <color name="app_secondary_variant">@color/LilacAsh</color>
+    <color name="app_on_secondary">@color/LilacAsh</color>
+    <color name="app_background">@color/BrigthSnow</color>
+    <color name="app_surface">@color/BrigthSnow</color>
     <!--  Mismo que el fondo inicialmente  -->
-    <color name="app_on_background">@color/Grayish_lime</color>
-    <color name="app_on_surface">@color/Grey</color>
+    <color name="app_on_background">@color/BrigthSnow</color>
+    <color name="app_on_surface">@color/BrigthSnow</color>
     <color name="app_error">#B00020</color>
     <color name="app_on_error">#FFFFFF</color>
     <!--  Colores específicos que ya tenías y que podrías querer remapear o mantener  -->
     <color name="card_background">@color/old_grayish_green</color>
     <!--  Las tarjetas usarán el color de superficie del tema  -->
-    <color name="text_primary">@color/Grayish_lime</color>
+    <color name="text_primary">@color/CharcoalCool</color>
     <!--  Texto primario general, ahora verde oscuro sobre blanco hueso  -->
-    <color name="text_secondary">@color/Grey</color>
+    <color name="text_secondary">@color/CharcoalCool</color>
     <!--  Texto secundario, un tono más suave  -->
     <!--  Paleta de colores Dark mode  -->
     <color name="night_grey">#819A91</color>
@@ -58,6 +58,14 @@
     <color name="app_surface_night">#424242</color>
     <color name="app_on_background_night">@color/night_text_primary</color>
     <color name="app_on_surface_night">@color/night_text_primary</color>
+
+    <!--  New palette Colors  -->
+    <color name = "Black">#08090A</color>
+    <color name = "LilacAsh">#A7A2A9</color>
+    <color name = "BrigthSnow">#F4F7F5</color>
+    <color name = "CharcoalCool">#575A5E</color>
+    <color name = "CarbonBlack">#222823</color>
+
     <!--  Error Colors  -->
     <color name="app_error_night">#CF6679</color>
     <color name="app_on_error_night">@color/white</color>

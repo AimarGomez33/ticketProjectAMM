@@ -1,20 +1,30 @@
 <!-- res/values/themes.xml -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.TicketApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.TicketApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/Grayish_green</item>
-        <item name="colorPrimaryVariant">@color/Grayish_lime</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimary">@color/CarbonBlack</item>
+        <item name="colorPrimaryVariant">@color/CarbonBlack</item>
+        <item name="colorOnPrimary">@color/BrigthSnow</item>
+        <item name="android:statusBarColor">@color/CarbonBlack</item>
+
+
         <!-- ... other items -->
     </style>
 
     <style name="Theme.TicketApp.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/Grayish_green</item>
-        <item name="colorPrimaryVariant">@color/Grayish_lime</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimary">@color/CarbonBlack</item>
+        <item name="colorPrimaryVariant">@color/CarbonBlack</item>
+        <item name="colorOnPrimary">@color/BrigthSnow</item>
     </style>
 
-    <style name="Theme.TicketApp.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
-    <style name="Theme.TicketApp.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
+    <style name="Theme.TableSelection" parent="Theme.TicketApp">
+        <!-- Cambia el color aquí -->
+        <item name="android:statusBarColor">@color/BrigthSnow</item>
+        <!-- Si el fondo es claro, pon los iconos oscuros para que se vean -->
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+
+
 </resources>

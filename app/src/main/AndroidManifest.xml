@@ -30,8 +30,9 @@
 
         <activity
             android:name=".TableSelectionActivity"
+            android:theme="@style/Theme.TableSelection"
             android:exported="true"
-            android:theme="@style/Theme.TicketApp.NoActionBar">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
