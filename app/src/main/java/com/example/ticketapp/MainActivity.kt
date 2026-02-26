@@ -32,6 +32,7 @@ import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.geometry.isEmpty
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
@@ -49,9 +50,11 @@ import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.example.ticketapp.OnAguaClickListener
+import kotlin.collections.map
+import kotlin.collections.toTypedArray
 
 class MainActivity : AppCompatActivity() {
 
@@ -80,15 +83,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var txtCombos: Map<String, TextView>
 
     private val preciosHamburguesas =
-        mapOf(
-            "Hamburguesa Clasica" to 65.0,
-            "Hamburguesa Hawaiana" to 80.0,
-            "Hamburguesa Pollo" to 70.0,
-            "Hamburguesa Champinones" to 90.0,
-            "Hamburguesa Arrachera" to 105.0,
-            "Hamburguesa Maggy" to 100.0,
-            "Hamburguesa Doble" to 110.0
-        )
+            mapOf(
+                    "Hamburguesa Clasica" to 65.0,
+                    "Hamburguesa Hawaiana" to 80.0,
+                    "Hamburguesa Pollo" to 70.0,
+                    "Hamburguesa Champinones" to 90.0,
+                    "Hamburguesa Arrachera" to 105.0,
+                    "Hamburguesa Maggy" to 100.0,
+                    "Hamburguesa Doble" to 110.0
+            )
 
     private val extraCombo = 30.0
     private val cantidadesNormales = mutableMapOf<String, Int>()
@@ -99,274 +102,274 @@ class MainActivity : AppCompatActivity() {
 
     // 🔹 MAPA DE VARIANTES DE PRODUCTOS
     private val productVariations =
-        mapOf(
-            "Quesadillas" to
-                    listOf(
-                        "Chorizo",
-                        "Huevo",
-                        "Huitlacoche",
-                        "Mole Verde",
-                        "Bisteck",
-                        "Pollo",
-                        "Champiñones",
-                        "Tinga",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Quesadilla/Queso" to
-                    listOf(
-                        "Chorizo",
-                        "Huevo",
-                        "Mole Verde",
-                        "Huitlacoche",
-                        "Bisteck",
-                        "Pollo",
-                        "Champiñones",
-                        "Tinga",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Volcanes" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "Huevo",
-                        "Bisteck",
-                        "Pollo",
-                        "Huitlacoche",
-                        "Champiñones",
-                        "Tinga",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Volcan Queso" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "Huevo",
-                        "Bisteck",
-                        "Pollo",
-                        "Huitlacoche",
-                        "Champiñones",
-                        "Tinga",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Guisado Extra" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "Huevo",
-                        "Bisteck",
-                        "Pollo",
-                        "Huitlacoche",
-                        "Champiñones",
-                        "Tinga",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Tostadas" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "pata",
-                        "Bisteck",
-                        "Huevo",
-                        "Pollo",
-                        "Champiñones",
-                        "Huitlacoche",
-                        "Tinga",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Pozole Grande" to listOf("pollo", "puerco", "combinado"),
-            "Pozole Chico" to listOf("pollo", "puerco", "combinado"),
-            "Guajoloyets Naturales Extra" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "Huevo",
-                        "Bisteck",
-                        "Huitlacoche",
-                        "Pollo",
-                        "Champiñones",
-                        "Tinga",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Guajoloyets Adobados Extra" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "Huevo",
-                        "Bisteck",
-                        "Huitlacoche",
-                        "Pollo",
-                        "Champiñones",
-                        "Tinga",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Pambazos Naturales" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "Bisteck",
-                        "Huevo",
-                        "Pollo",
-                        "Champiñones",
-                        "Huitlacoche",
-                        "Tinga",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Pambazos Naturales Combinados" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "Huevo",
-                        "Bisteck",
-                        "Pollo",
-                        "Champiñones",
-                        "Huitlacoche",
-                        "Tinga",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Pambazos Naturales Extra" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "Bisteck",
-                        "Huevo",
-                        "Pollo",
-                        "Champiñones",
-                        "Tinga",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Pambazos Naturales Combinados con Queso" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "Huevo",
-                        "Bisteck",
-                        "Pollo",
-                        "Champiñones",
-                        "Huitlacoche",
-                        "Tinga",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Pambazos Adobados" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "Bisteck",
-                        "Pollo",
-                        "Huevo",
-                        "Champiñones",
-                        "Tinga",
-                        "Picadillo",
-                        "Huitlacoche",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Pambazos Adobados Combinados" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "Bisteck",
-                        "Huevo",
-                        "Pollo",
-                        "Champiñones",
-                        "Tinga",
-                        "Huitlacoche",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Pambazos Adobados Combinados con Queso" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "Huevo",
-                        "Bisteck",
-                        "Pollo",
-                        "Champiñones",
-                        "Tinga",
-                        "Huitlacoche",
-                        "Picadillo",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Pambazos Adobados Extra" to
-                    listOf(
-                        "Chorizo",
-                        "Mole Verde",
-                        "Bisteck",
-                        "Pollo",
-                        "Huevo",
-                        "Champiñones",
-                        "Tinga",
-                        "Picadillo",
-                        "Huitlacoche",
-                        "Papa con chorizo",
-                        "Chicharrón Prensado",
-                        "Queso"
-                    ),
-            "Taco (c/u)" to
-                    listOf(
-                        "Costilla",
-                        "Arrachera",
-                        "Cecina",
-                        "Chorizo Argentino, chistora"
-                    ),
-            "Taco con Queso (c/u)" to
-                    listOf(
-                        "Costilla",
-                        "Arrachera",
-                        "Cecina",
-                        "Chorizo Argentino",
-                        "chistorra"
-                    ),
-            "Alitas 6 pzas" to
-                    listOf("BBQ", "BBQ Hot", "Búfalo", "Mango-Habanero", "Macha"),
-            "Alitas 10 pzas" to
-                    listOf("BBQ", "BBQ Hot", "Búfalo", "Mango-Habanero", "Macha"),
-            "Alitas 15 pzas" to
-                    listOf("BBQ", "BBQ Hot", "Búfalo", "Mango-Habanero", "Macha")
-        )
+            mapOf(
+                    "Quesadillas" to
+                            listOf(
+                                    "Chorizo",
+                                    "Huevo",
+                                    "Huitlacoche",
+                                    "Mole Verde",
+                                    "Bisteck",
+                                    "Pollo",
+                                    "Champiñones",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Quesadilla/Queso" to
+                            listOf(
+                                    "Chorizo",
+                                    "Huevo",
+                                    "Mole Verde",
+                                    "Huitlacoche",
+                                    "Bisteck",
+                                    "Pollo",
+                                    "Champiñones",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Volcanes" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "Huevo",
+                                    "Bisteck",
+                                    "Pollo",
+                                    "Huitlacoche",
+                                    "Champiñones",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Volcan Queso" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "Huevo",
+                                    "Bisteck",
+                                    "Pollo",
+                                    "Huitlacoche",
+                                    "Champiñones",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Guisado Extra" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "Huevo",
+                                    "Bisteck",
+                                    "Pollo",
+                                    "Huitlacoche",
+                                    "Champiñones",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Tostadas" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "pata",
+                                    "Bisteck",
+                                    "Huevo",
+                                    "Pollo",
+                                    "Champiñones",
+                                    "Huitlacoche",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Pozole Grande" to listOf("pollo", "puerco", "combinado"),
+                    "Pozole Chico" to listOf("pollo", "puerco", "combinado"),
+                    "Guajoloyets Naturales Extra" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "Huevo",
+                                    "Bisteck",
+                                    "Huitlacoche",
+                                    "Pollo",
+                                    "Champiñones",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Guajoloyets Adobados Extra" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "Huevo",
+                                    "Bisteck",
+                                    "Huitlacoche",
+                                    "Pollo",
+                                    "Champiñones",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Pambazos Naturales" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "Bisteck",
+                                    "Huevo",
+                                    "Pollo",
+                                    "Champiñones",
+                                    "Huitlacoche",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Pambazos Naturales Combinados" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "Huevo",
+                                    "Bisteck",
+                                    "Pollo",
+                                    "Champiñones",
+                                    "Huitlacoche",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Pambazos Naturales Extra" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "Bisteck",
+                                    "Huevo",
+                                    "Pollo",
+                                    "Champiñones",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Pambazos Naturales Combinados con Queso" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "Huevo",
+                                    "Bisteck",
+                                    "Pollo",
+                                    "Champiñones",
+                                    "Huitlacoche",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Pambazos Adobados" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "Bisteck",
+                                    "Pollo",
+                                    "Huevo",
+                                    "Champiñones",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Huitlacoche",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Pambazos Adobados Combinados" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "Bisteck",
+                                    "Huevo",
+                                    "Pollo",
+                                    "Champiñones",
+                                    "Tinga",
+                                    "Huitlacoche",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Pambazos Adobados Combinados con Queso" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "Huevo",
+                                    "Bisteck",
+                                    "Pollo",
+                                    "Champiñones",
+                                    "Tinga",
+                                    "Huitlacoche",
+                                    "Picadillo",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Pambazos Adobados Extra" to
+                            listOf(
+                                    "Chorizo",
+                                    "Mole Verde",
+                                    "Bisteck",
+                                    "Pollo",
+                                    "Huevo",
+                                    "Champiñones",
+                                    "Tinga",
+                                    "Picadillo",
+                                    "Huitlacoche",
+                                    "Papa con chorizo",
+                                    "Chicharrón Prensado",
+                                    "Queso"
+                            ),
+                    "Taco (c/u)" to
+                            listOf(
+                                    "Costilla",
+                                    "Arrachera",
+                                    "Cecina",
+                                    "Chorizo Argentino, chistora"
+                            ),
+                    "Taco con Queso (c/u)" to
+                            listOf(
+                                    "Costilla",
+                                    "Arrachera",
+                                    "Cecina",
+                                    "Chorizo Argentino",
+                                    "chistorra"
+                            ),
+                    "Alitas 6 pzas" to
+                            listOf("BBQ", "BBQ Hot", "Búfalo", "Mango-Habanero", "Macha"),
+                    "Alitas 10 pzas" to
+                            listOf("BBQ", "BBQ Hot", "Búfalo", "Mango-Habanero", "Macha"),
+                    "Alitas 15 pzas" to
+                            listOf("BBQ", "BBQ Hot", "Búfalo", "Mango-Habanero", "Macha")
+            )
 
     // 🔹 PRODUCTOS QUE USAN INPUT DE TEXTO PARA VARIANTES
-    private val textInputProducts = setOf("Refrescos", "Aguas de Sabor")
+    private val textInputProducts = setOf("Refrescos")
 
     // 🔹 LISTA PARA ALMACENAR PRODUCTOS CON VARIANTES SELECCIONADAS
     private val selectedVariations = mutableListOf<Producto>()
@@ -436,59 +439,60 @@ class MainActivity : AppCompatActivity() {
     private var bluetoothSocket: BluetoothSocket? = null
 
     private val requestBluetoothPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            if (permissions.entries.all { it.value }) {
-                Toast.makeText(this, "Permisos Bluetooth concedidos", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(
-                    this,
-                    "Se requieren permisos de Bluetooth para imprimir",
-                    Toast.LENGTH_LONG
-                )
-                    .show()
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+                    permissions ->
+                if (permissions.entries.all { it.value }) {
+                    Toast.makeText(this, "Permisos Bluetooth concedidos", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                                    this,
+                                    "Se requieren permisos de Bluetooth para imprimir",
+                                    Toast.LENGTH_LONG
+                            )
+                            .show()
+                }
             }
-        }
 
     private val enableBluetoothLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                Toast.makeText(this, "Bluetooth activado", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "No se pudo activar Bluetooth", Toast.LENGTH_SHORT).show()
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    Toast.makeText(this, "Bluetooth activado", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "No se pudo activar Bluetooth", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
 
     private val usbReceiver =
-        object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
+            object : BroadcastReceiver() {
+                override fun onReceive(context: Context?, intent: Intent?) {
 
-                if (ACTION_USB_PERMISSION == intent?.action) {
-                    synchronized(this) {
-                        val device: UsbDevice? =
-                            intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
-                        if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
-                        ) {
-                            device?.let {
-                                Log.d(TAG, "Permiso USB concedido para: ${it.deviceName}")
-                                setupUsbDevice(it)
+                    if (ACTION_USB_PERMISSION == intent?.action) {
+                        synchronized(this) {
+                            val device: UsbDevice? =
+                                    intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
+                            if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
+                            ) {
+                                device?.let {
+                                    Log.d(TAG, "Permiso USB concedido para: ${it.deviceName}")
+                                    setupUsbDevice(it)
+                                }
+                            } else {
+                                Log.d(TAG, "Permiso USB denegado para: ${device?.deviceName}")
+                                Toast.makeText(context, "Permiso USB denegado", Toast.LENGTH_SHORT)
+                                        .show()
                             }
-                        } else {
-                            Log.d(TAG, "Permiso USB denegado para: ${device?.deviceName}")
-                            Toast.makeText(context, "Permiso USB denegado", Toast.LENGTH_SHORT)
-                                .show()
                         }
                     }
                 }
             }
-        }
 
     // animación de flechitas para colapsar categorías
     fun View.rotateArrow(expanded: Boolean, duration: Long = 200L) {
         animate()
-            .rotation(if (expanded) 180f else 0f)
-            .setDuration(duration)
-            .setInterpolator(AccelerateDecelerateInterpolator())
-            .start()
+                .rotation(if (expanded) 180f else 0f)
+                .setDuration(duration)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .start()
     }
 
     var isExpanded = false
@@ -504,33 +508,33 @@ class MainActivity : AppCompatActivity() {
         txtTotal = findViewById(R.id.textViewTotal)
 
         txtNormales =
-            mapOf(
-                "Hamburguesa Clasica" to
-                        findViewById(R.id.cantidadHamburguesaClasicaNormal),
-                "Hamburguesa Hawaiana" to
-                        findViewById(R.id.cantidadHamburguesaHawaianaNormal),
-                "Hamburguesa Pollo" to findViewById(R.id.cantidadHamburguesaPolloNormal),
-                "Hamburguesa Champinones" to
-                        findViewById(R.id.cantidadHamburguesaChampinonesNormal),
-                "Hamburguesa Arrachera" to
-                        findViewById(R.id.cantidadHamburguesaArracheraNormal),
-                "Hamburguesa Maggy" to findViewById(R.id.cantidadHamburguesaMaggyNormal),
-                "Hamburguesa Doble" to findViewById(R.id.cantidadHamburguesaDobleNormal)
-            )
+                mapOf(
+                        "Hamburguesa Clasica" to
+                                findViewById(R.id.cantidadHamburguesaClasicaNormal),
+                        "Hamburguesa Hawaiana" to
+                                findViewById(R.id.cantidadHamburguesaHawaianaNormal),
+                        "Hamburguesa Pollo" to findViewById(R.id.cantidadHamburguesaPolloNormal),
+                        "Hamburguesa Champinones" to
+                                findViewById(R.id.cantidadHamburguesaChampinonesNormal),
+                        "Hamburguesa Arrachera" to
+                                findViewById(R.id.cantidadHamburguesaArracheraNormal),
+                        "Hamburguesa Maggy" to findViewById(R.id.cantidadHamburguesaMaggyNormal),
+                        "Hamburguesa Doble" to findViewById(R.id.cantidadHamburguesaDobleNormal)
+                )
 
         txtCombos =
-            mapOf(
-                "Hamburguesa Clasica" to findViewById(R.id.cantidadHamburguesaClasicaCombo),
-                "Hamburguesa Hawaiana" to
-                        findViewById(R.id.cantidadHamburguesaHawaianaCombo),
-                "Hamburguesa Pollo" to findViewById(R.id.cantidadHamburguesaPolloCombo),
-                "Hamburguesa Champinones" to
-                        findViewById(R.id.cantidadHamburguesaChampinonesCombo),
-                "Hamburguesa Arrachera" to
-                        findViewById(R.id.cantidadHamburguesaArracheraCombo),
-                "Hamburguesa Maggy" to findViewById(R.id.cantidadHamburguesaMaggyCombo),
-                "Hamburguesa Doble" to findViewById(R.id.cantidadHamburguesaDobleCombo)
-            )
+                mapOf(
+                        "Hamburguesa Clasica" to findViewById(R.id.cantidadHamburguesaClasicaCombo),
+                        "Hamburguesa Hawaiana" to
+                                findViewById(R.id.cantidadHamburguesaHawaianaCombo),
+                        "Hamburguesa Pollo" to findViewById(R.id.cantidadHamburguesaPolloCombo),
+                        "Hamburguesa Champinones" to
+                                findViewById(R.id.cantidadHamburguesaChampinonesCombo),
+                        "Hamburguesa Arrachera" to
+                                findViewById(R.id.cantidadHamburguesaArracheraCombo),
+                        "Hamburguesa Maggy" to findViewById(R.id.cantidadHamburguesaMaggyCombo),
+                        "Hamburguesa Doble" to findViewById(R.id.cantidadHamburguesaDobleCombo)
+                )
 
         // Inicializa cantidades
         for (nombre in preciosHamburguesas.keys) {
@@ -549,40 +553,40 @@ class MainActivity : AppCompatActivity() {
         }
 
         val botonesNormal =
-            mapOf(
-                "Hamburguesa Clasica" to
-                        findViewById<Button>(R.id.btnMasHamburguesaClasicaNormal),
-                "Hamburguesa Hawaiana" to
-                        findViewById<Button>(R.id.btnMasHamburguesaHawaianaNormal),
-                "Hamburguesa Pollo" to
-                        findViewById<Button>(R.id.btnMasHamburguesaPolloNormal),
-                "Hamburguesa Champinones" to
-                        findViewById<Button>(R.id.btnMasHamburguesaChampinonesNormal),
-                "Hamburguesa Arrachera" to
-                        findViewById<Button>(R.id.btnMasHamburguesaArracheraNormal),
-                "Hamburguesa Maggy" to
-                        findViewById<Button>(R.id.btnMasHamburguesaMaggyNormal),
-                "Hamburguesa Doble" to
-                        findViewById<Button>(R.id.btnMasHamburguesaDobleNormal)
-            )
+                mapOf(
+                        "Hamburguesa Clasica" to
+                                findViewById<Button>(R.id.btnMasHamburguesaClasicaNormal),
+                        "Hamburguesa Hawaiana" to
+                                findViewById<Button>(R.id.btnMasHamburguesaHawaianaNormal),
+                        "Hamburguesa Pollo" to
+                                findViewById<Button>(R.id.btnMasHamburguesaPolloNormal),
+                        "Hamburguesa Champinones" to
+                                findViewById<Button>(R.id.btnMasHamburguesaChampinonesNormal),
+                        "Hamburguesa Arrachera" to
+                                findViewById<Button>(R.id.btnMasHamburguesaArracheraNormal),
+                        "Hamburguesa Maggy" to
+                                findViewById<Button>(R.id.btnMasHamburguesaMaggyNormal),
+                        "Hamburguesa Doble" to
+                                findViewById<Button>(R.id.btnMasHamburguesaDobleNormal)
+                )
 
         val botonesCombo =
-            mapOf(
-                "Hamburguesa Clasica" to
-                        findViewById<Button>(R.id.btnMasHamburguesaClasicaCombo),
-                "Hamburguesa Hawaiana" to
-                        findViewById<Button>(R.id.btnMasHamburguesaHawaianaCombo),
-                "Hamburguesa Pollo" to
-                        findViewById<Button>(R.id.btnMasHamburguesaPolloCombo),
-                "Hamburguesa Champinones" to
-                        findViewById<Button>(R.id.btnMasHamburguesaChampinonesCombo),
-                "Hamburguesa Arrachera" to
-                        findViewById<Button>(R.id.btnMasHamburguesaArracheraCombo),
-                "Hamburguesa Maggy" to
-                        findViewById<Button>(R.id.btnMasHamburguesaMaggyCombo),
-                "Hamburguesa Doble" to
-                        findViewById<Button>(R.id.btnMasHamburguesaDobleCombo)
-            )
+                mapOf(
+                        "Hamburguesa Clasica" to
+                                findViewById<Button>(R.id.btnMasHamburguesaClasicaCombo),
+                        "Hamburguesa Hawaiana" to
+                                findViewById<Button>(R.id.btnMasHamburguesaHawaianaCombo),
+                        "Hamburguesa Pollo" to
+                                findViewById<Button>(R.id.btnMasHamburguesaPolloCombo),
+                        "Hamburguesa Champinones" to
+                                findViewById<Button>(R.id.btnMasHamburguesaChampinonesCombo),
+                        "Hamburguesa Arrachera" to
+                                findViewById<Button>(R.id.btnMasHamburguesaArracheraCombo),
+                        "Hamburguesa Maggy" to
+                                findViewById<Button>(R.id.btnMasHamburguesaMaggyCombo),
+                        "Hamburguesa Doble" to
+                                findViewById<Button>(R.id.btnMasHamburguesaDobleCombo)
+                )
 
         for ((nombre, boton) in botonesNormal) {
             boton.setOnClickListener {
@@ -617,46 +621,46 @@ class MainActivity : AppCompatActivity() {
 
         // --- HAMBURGUESAS COMMENT BUTTONS SETUP ---
         val botonesCommentNormal =
-            mapOf(
-                "Hamburguesa Clasica" to
-                        findViewById<ImageButton>(R.id.btnCommentHamburguesaClasicaNormal),
-                "Hamburguesa Hawaiana" to
-                        findViewById<ImageButton>(R.id.btnCommentHamburguesaHawaianaNormal),
-                "Hamburguesa Pollo" to
-                        findViewById<ImageButton>(R.id.btnCommentHamburguesaPolloNormal),
-                "Hamburguesa Champinones" to
-                        findViewById<ImageButton>(
-                            R.id.btnCommentHamburguesaChampinonesNormal
-                        ),
-                "Hamburguesa Arrachera" to
-                        findViewById<ImageButton>(
-                            R.id.btnCommentHamburguesaArracheraNormal
-                        ),
-                "Hamburguesa Maggy" to
-                        findViewById<ImageButton>(R.id.btnCommentHamburguesaMaggyNormal),
-                "Hamburguesa Doble" to
-                        findViewById<ImageButton>(R.id.btnCommentHamburguesaDobleNormal)
-            )
+                mapOf(
+                        "Hamburguesa Clasica" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaClasicaNormal),
+                        "Hamburguesa Hawaiana" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaHawaianaNormal),
+                        "Hamburguesa Pollo" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaPolloNormal),
+                        "Hamburguesa Champinones" to
+                                findViewById<ImageButton>(
+                                        R.id.btnCommentHamburguesaChampinonesNormal
+                                ),
+                        "Hamburguesa Arrachera" to
+                                findViewById<ImageButton>(
+                                        R.id.btnCommentHamburguesaArracheraNormal
+                                ),
+                        "Hamburguesa Maggy" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaMaggyNormal),
+                        "Hamburguesa Doble" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaDobleNormal)
+                )
 
         val botonesCommentCombo =
-            mapOf(
-                "Hamburguesa Clasica" to
-                        findViewById<ImageButton>(R.id.btnCommentHamburguesaClasicaCombo),
-                "Hamburguesa Hawaiana" to
-                        findViewById<ImageButton>(R.id.btnCommentHamburguesaHawaianaCombo),
-                "Hamburguesa Pollo" to
-                        findViewById<ImageButton>(R.id.btnCommentHamburguesaPolloCombo),
-                "Hamburguesa Champinones" to
-                        findViewById<ImageButton>(
-                            R.id.btnCommentHamburguesaChampinonesCombo
-                        ),
-                "Hamburguesa Arrachera" to
-                        findViewById<ImageButton>(R.id.btnCommentHamburguesaArracheraCombo),
-                "Hamburguesa Maggy" to
-                        findViewById<ImageButton>(R.id.btnCommentHamburguesaMaggyCombo),
-                "Hamburguesa Doble" to
-                        findViewById<ImageButton>(R.id.btnCommentHamburguesaDobleCombo)
-            )
+                mapOf(
+                        "Hamburguesa Clasica" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaClasicaCombo),
+                        "Hamburguesa Hawaiana" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaHawaianaCombo),
+                        "Hamburguesa Pollo" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaPolloCombo),
+                        "Hamburguesa Champinones" to
+                                findViewById<ImageButton>(
+                                        R.id.btnCommentHamburguesaChampinonesCombo
+                                ),
+                        "Hamburguesa Arrachera" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaArracheraCombo),
+                        "Hamburguesa Maggy" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaMaggyCombo),
+                        "Hamburguesa Doble" to
+                                findViewById<ImageButton>(R.id.btnCommentHamburguesaDobleCombo)
+                )
 
         for ((nombre, boton) in botonesCommentNormal) {
             boton.setOnClickListener { showCommentDialog(nombre) }
@@ -668,40 +672,40 @@ class MainActivity : AppCompatActivity() {
 
         // Botones de RESTAR
         val botonesMenosNormal =
-            mapOf(
-                "Hamburguesa Clasica" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaClasicaNormal),
-                "Hamburguesa Hawaiana" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaHawaianaNormal),
-                "Hamburguesa Pollo" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaPolloNormal),
-                "Hamburguesa Champinones" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaChampinonesNormal),
-                "Hamburguesa Arrachera" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaArracheraNormal),
-                "Hamburguesa Maggy" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaMaggyNormal),
-                "Hamburguesa Doble" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaDobleNormal)
-            )
+                mapOf(
+                        "Hamburguesa Clasica" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaClasicaNormal),
+                        "Hamburguesa Hawaiana" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaHawaianaNormal),
+                        "Hamburguesa Pollo" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaPolloNormal),
+                        "Hamburguesa Champinones" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaChampinonesNormal),
+                        "Hamburguesa Arrachera" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaArracheraNormal),
+                        "Hamburguesa Maggy" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaMaggyNormal),
+                        "Hamburguesa Doble" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaDobleNormal)
+                )
 
         val botonesMenosCombo =
-            mapOf(
-                "Hamburguesa Clasica" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaClasicaCombo),
-                "Hamburguesa Hawaiana" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaHawaianaCombo),
-                "Hamburguesa Pollo" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaPolloCombo),
-                "Hamburguesa Champinones" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaChampinonesCombo),
-                "Hamburguesa Arrachera" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaArracheraCombo),
-                "Hamburguesa Maggy" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaMaggyCombo),
-                "Hamburguesa Doble" to
-                        findViewById<Button>(R.id.btnMenosHamburguesaDobleCombo)
-            )
+                mapOf(
+                        "Hamburguesa Clasica" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaClasicaCombo),
+                        "Hamburguesa Hawaiana" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaHawaianaCombo),
+                        "Hamburguesa Pollo" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaPolloCombo),
+                        "Hamburguesa Champinones" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaChampinonesCombo),
+                        "Hamburguesa Arrachera" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaArracheraCombo),
+                        "Hamburguesa Maggy" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaMaggyCombo),
+                        "Hamburguesa Doble" to
+                                findViewById<Button>(R.id.btnMenosHamburguesaDobleCombo)
+                )
 
         for ((nombre, boton) in botonesMenosNormal) {
             boton.setOnClickListener {
@@ -756,13 +760,13 @@ class MainActivity : AppCompatActivity() {
 
         appDatabase = AppDatabase.getDatabase(applicationContext, lifecycleScope)
         adminOrderAdapter =
-            AdminOrderAdapter(
-                onDelete = { orderId -> eliminarPedido(orderId) },
+                AdminOrderAdapter(
+                        onDelete = { orderId -> eliminarPedido(orderId) },
 
-                // CORREGIDO: Llama a la nueva función que maneja la lógica
-                onOrderClick = { order -> mostrarResumenDeOrdenGuardada(order) },
-                onPrint = { order -> reimprimirTicket(order) }
-            )
+                        // CORREGIDO: Llama a la nueva función que maneja la lógica
+                        onOrderClick = { order -> mostrarResumenDeOrdenGuardada(order) },
+                        onPrint = { order -> reimprimirTicket(order) }
+                )
 
         recyclerViewOrders.adapter = adminOrderAdapter
         // Comienza a observar la lista de órdenes una vez que el adaptador está listo
@@ -817,6 +821,113 @@ class MainActivity : AppCompatActivity() {
 
     // --- Configuración de la UI (productos, botones, secciones colapsables) ---
 
+    private fun showAguaSaborDropdownDialog(productName: String) {
+        val opcionesSabor = arrayOf("Horchata", "Jamaica", "Limón", "Mamey", "Fresa")
+
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle("Selecciona el sabor de $productName")
+
+        builder.setItems(opcionesSabor) { _, which ->
+            val saborSeleccionado = opcionesSabor[which]
+            // Guardamos la variación (ej: "Aguas de Sabor - Horchata")
+            actualizarVariacionDinamica(productName, saborSeleccionado)
+        }
+
+        builder.setNegativeButton("Cancelar", null)
+        builder.show()
+    }
+    private fun showAguaSaborDropdown(productName: String, price: Double) {
+        // Usamos corrutinas para leer la BD sin bloquear la App
+        lifecycleScope.launch(Dispatchers.IO) {
+            // 1. Obtener datos de la BD (asumiendo que tienes acceso al database o dao)
+            val sabores = appDatabase.aguassaborDao().getAllSync()
+
+            withContext(Dispatchers.Main) {
+                if (sabores.isEmpty()) {
+                    Toast.makeText(this@MainActivity, "No hay sabores registrados", Toast.LENGTH_SHORT).show()
+                    return@withContext
+                }
+
+                // 2. Preparar los nombres para el diálogo
+                val nombres = sabores.map { it.flavorName }.toTypedArray()
+
+                // 3. Mostrar el Diálogo
+                AlertDialog.Builder(this@MainActivity)
+                    .setTitle("Seleccione sabor de $productName")
+                    .setItems(nombres) { _, which ->
+                        val saborElegido = nombres[which]
+
+                        // 4. Lógica para añadir al ticket
+                        val itemFinal = "$productName ($saborElegido)"
+                        updateQuantity(itemFinal, 1) // O tu función de agregar
+
+                        Toast.makeText(this@MainActivity, "Agregado: $saborElegido", Toast.LENGTH_SHORT).show()
+                    }
+                    .setNegativeButton("Cancelar", null)
+                    .show()
+            }
+        }
+    }
+
+    private fun actualizarVariacionDinamica(productBaseName: String, variacion: String) {
+        val nombreCompleto = "$productBaseName ($variacion)"
+        // Aquí actualizas tu mapa de cantidades o lista de pedidos
+        quantities[nombreCompleto] = (quantities[nombreCompleto] ?: 0) + 1
+
+        // Actualizar UI
+        val productosSeleccionados = obtenerProductosDesdeInputs()
+        mostrarResumen(productosSeleccionados)
+
+        android.widget.Toast.makeText(this, "Agregado: $nombreCompleto", android.widget.Toast.LENGTH_SHORT).show()
+    }
+    private fun showDynamicDropdown(categoryName: String, price: Double) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            // 1. Obtener los datos de la BD según la categoría
+            val nombres: Array<String> = when {
+                categoryName.contains("Agua", ignoreCase = true) -> {
+                    appDatabase.aguassaborDao().getAllSync().map { it.flavorName }.toTypedArray()
+                }
+                categoryName.contains("Refresco", ignoreCase = true) -> {
+                   appDatabase.refrescoDao().getAll().map { it.flavorName }.toTypedArray()
+                }
+                else -> emptyArray()
+            }
+
+            withContext(Dispatchers.Main) {
+                if (nombres.isEmpty()) {
+                    Toast.makeText(this@MainActivity, "No hay variedades registradas para $categoryName", Toast.LENGTH_SHORT).show()
+                    return@withContext
+                }
+
+                // 2. Crear el AlertDialog con los nombres obtenidos
+                AlertDialog.Builder(this@MainActivity, R.style.CustomAlertDialogTheme)
+                    .setTitle("Seleccione $categoryName")
+                    .setItems(nombres) { _, which ->
+                        val selectedVariant = nombres[which]
+                        val nombreCompleto = "$categoryName ($selectedVariant)"
+
+                        // 3. Crear el objeto Producto
+                        val newItem = Producto(
+                            nombre = nombreCompleto,
+                            precio = price,
+                            cantidad = 1,
+                            esCombo = false
+                        )
+
+                        // 4. Actualizar listas y UI (Usando tus funciones existentes)
+                        selectedVariations.add(newItem)
+                        updateQuantity(categoryName, 1)
+                        adjustCommentList(categoryName, (quantities[categoryName] ?: 0))
+
+                        Toast.makeText(this@MainActivity, "Agregado: $selectedVariant", Toast.LENGTH_SHORT).show()
+                    }
+                    .setNegativeButton("Cancelar", null)
+                    .show()
+            }
+        }
+
+    }
+
     private fun showVariationSelectionDialog(productName: String) {
         val variations = productVariations[productName] ?: return
         val builder = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
@@ -824,14 +935,13 @@ class MainActivity : AppCompatActivity() {
         builder.setItems(variations.toTypedArray()) { _, which ->
             val selectedVariant = variations[which]
             val productData = products[productName] ?: return@setItems
-
             val newItem =
-                Producto(
-                    nombre = "$productName ($selectedVariant)",
-                    precio = productData.precio,
-                    cantidad = 1,
-                    esCombo = false
-                )
+                    Producto(
+                            nombre = "$productName ($selectedVariant)",
+                            precio = productData.precio,
+                            cantidad = 1,
+                            esCombo = false
+                    )
             selectedVariations.add(newItem)
 
             // Actualizar contador UI
@@ -842,6 +952,9 @@ class MainActivity : AppCompatActivity() {
         builder.show()
     }
 
+    fun getFormattedName(name: String): String {
+        return name.uppercase()
+    }
     private fun showVariationRemovalDialog(productName: String) {
         val prefix = "$productName ("
         // Buscar items que empiecen con "NombreProducto ("
@@ -855,11 +968,11 @@ class MainActivity : AppCompatActivity() {
         // Agrupar para el diálogo: "Chorizo (x2)"
         val grouped = items.groupBy { it.nombre }
         val displayList =
-            grouped
-                .map {
-                    "${it.key.substringAfter("(").substringBefore(")")} (x${it.value.size})"
-                }
-                .toTypedArray()
+                grouped
+                        .map {
+                            "${it.key.substringAfter("(").substringBefore(")")} (x${it.value.size})"
+                        }
+                        .toTypedArray()
         val keyList = grouped.keys.toList()
 
         val builder = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
@@ -870,7 +983,7 @@ class MainActivity : AppCompatActivity() {
             // Buscar índice global relativo a la lista de variantes de este producto
             val prefix = "$productName ("
             val allVariantsOfThisProduct =
-                selectedVariations.filter { it.nombre.startsWith(prefix) }
+                    selectedVariations.filter { it.nombre.startsWith(prefix) }
             val itemToRemove = allVariantsOfThisProduct.firstOrNull { it.nombre == keyToRemove }
 
             if (itemToRemove != null) {
@@ -899,8 +1012,8 @@ class MainActivity : AppCompatActivity() {
         val input = EditText(this)
         input.hint = "Ej: Coca Cola, Jamaica, etc."
         input.inputType =
-            android.text.InputType.TYPE_CLASS_TEXT or
-                    android.text.InputType.TYPE_TEXT_FLAG_CAP_WORDS
+                android.text.InputType.TYPE_CLASS_TEXT or
+                        android.text.InputType.TYPE_TEXT_FLAG_CAP_WORDS
         input.setPadding(50, 30, 50, 30)
         builder.setView(input)
 
@@ -910,12 +1023,12 @@ class MainActivity : AppCompatActivity() {
                 val productData = products[productName] ?: return@setPositiveButton
 
                 val newItem =
-                    Producto(
-                        nombre = "$productName ($variant)",
-                        precio = productData.precio,
-                        cantidad = 1,
-                        esCombo = false
-                    )
+                        Producto(
+                                nombre = "$productName ($variant)",
+                                precio = productData.precio,
+                                cantidad = 1,
+                                esCombo = false
+                        )
                 selectedVariations.add(newItem)
                 updateQuantity(productName, 1)
                 adjustCommentList(productName, (quantities[productName] ?: 0))
@@ -926,9 +1039,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showSequentialGuisadoDialog(
-        productName: String,
-        productData: ProductData,
-        guisadosSeleccionados: MutableList<String> = mutableListOf()
+            productName: String,
+            productData: ProductData,
+            guisadosSeleccionados: MutableList<String> = mutableListOf()
     ) {
         val variations = productVariations[productName] ?: emptyList()
 
@@ -951,12 +1064,12 @@ class MainActivity : AppCompatActivity() {
                 val nombreCompleto = "$productName (${guisadosSeleccionados.joinToString(" + ")})"
 
                 val newItem =
-                    Producto(
-                        nombre = nombreCompleto,
-                        precio = productData.precio,
-                        cantidad = 1,
-                        esCombo = false
-                    )
+                        Producto(
+                                nombre = nombreCompleto,
+                                precio = productData.precio,
+                                cantidad = 1,
+                                esCombo = false
+                        )
                 selectedVariations.add(newItem)
 
                 // Actualizar contador UI
@@ -984,16 +1097,16 @@ class MainActivity : AppCompatActivity() {
             input.setPadding(padding, padding, padding, padding)
 
             AlertDialog.Builder(this)
-                .setTitle("Nota para $productName")
-                .setView(input)
-                .setPositiveButton("Guardar") { _, _ ->
-                    commentsList[0] = input.text.toString().trim()
-                    Toast.makeText(this, "Nota guardada", Toast.LENGTH_SHORT).show()
-                    val list = obtenerProductosDesdeInputs()
-                    mostrarResumen(list)
-                }
-                .setNegativeButton("Cancelar", null)
-                .show()
+                    .setTitle("Nota para $productName")
+                    .setView(input)
+                    .setPositiveButton("Guardar") { _, _ ->
+                        commentsList[0] = input.text.toString().trim()
+                        Toast.makeText(this, "Nota guardada", Toast.LENGTH_SHORT).show()
+                        val list = obtenerProductosDesdeInputs()
+                        mostrarResumen(list)
+                    }
+                    .setNegativeButton("Cancelar", null)
+                    .show()
             return
         }
 
@@ -1017,8 +1130,8 @@ class MainActivity : AppCompatActivity() {
             et.hint = "Comentario para #${index + 1}"
             et.setText(comment)
             et.inputType =
-                android.text.InputType.TYPE_CLASS_TEXT or
-                        android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+                    android.text.InputType.TYPE_CLASS_TEXT or
+                            android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             inputs.add(et)
             container.addView(et)
         }
@@ -1026,425 +1139,449 @@ class MainActivity : AppCompatActivity() {
         scrollView.addView(container)
 
         AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
-            .setTitle("Comentarios para $productName")
-            .setView(scrollView)
-            .setPositiveButton("Guardar Todos") { _, _ ->
-                inputs.forEachIndexed { index, editText ->
-                    if (index < commentsList.size) {
-                        commentsList[index] = editText.text.toString().trim()
+                .setTitle("Comentarios para $productName")
+                .setView(scrollView)
+                .setPositiveButton("Guardar Todos") { _, _ ->
+                    inputs.forEachIndexed { index, editText ->
+                        if (index < commentsList.size) {
+                            commentsList[index] = editText.text.toString().trim()
+                        }
                     }
+                    Toast.makeText(this, "Notas actualizadas", Toast.LENGTH_SHORT).show()
+                    val list = obtenerProductosDesdeInputs()
+                    mostrarResumen(list)
                 }
-                Toast.makeText(this, "Notas actualizadas", Toast.LENGTH_SHORT).show()
-                val list = obtenerProductosDesdeInputs()
-                mostrarResumen(list)
-            }
-            .setNeutralButton("1ro a todos") { _, _ ->
-                val firstComment = inputs.firstOrNull()?.text?.toString()?.trim() ?: ""
-                for (i in commentsList.indices) {
-                    commentsList[i] = firstComment
+                .setNeutralButton("1ro a todos") { _, _ ->
+                    val firstComment = inputs.firstOrNull()?.text?.toString()?.trim() ?: ""
+                    for (i in commentsList.indices) {
+                        commentsList[i] = firstComment
+                    }
+                    Toast.makeText(this, "Aplicado a todos", Toast.LENGTH_SHORT).show()
+                    val list = obtenerProductosDesdeInputs()
+                    mostrarResumen(list)
                 }
-                Toast.makeText(this, "Aplicado a todos", Toast.LENGTH_SHORT).show()
-                val list = obtenerProductosDesdeInputs()
-                mostrarResumen(list)
-            }
-            .setNegativeButton("Cancelar", null)
-            .show()
+                .setNegativeButton("Cancelar", null)
+                .show()
     }
 
     private fun setupProductViews() {
         // Mapeo de productos (nombre lógico -> views + precio)
         products["Quesadillas"] =
-            ProductData(
-                findViewById(R.id.cantidadQuesadillas),
-                findViewById(R.id.btnMenosQuesadillas),
-                findViewById(R.id.btnMasQuesadillas),
-                findViewById(R.id.btnCommentQuesadillas),
-                30.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadQuesadillas),
+                        findViewById(R.id.btnMenosQuesadillas),
+                        findViewById(R.id.btnMasQuesadillas),
+                        findViewById(R.id.btnCommentQuesadillas),
+                        30.0
+                )
         products["Quesadilla/Queso"] =
-            ProductData(
-                findViewById(R.id.cantidadQuesadillaQueso),
-                findViewById(R.id.btnMenosQuesadillaQueso),
-                findViewById(R.id.btnMasQuesadillaQueso),
-                findViewById(R.id.btnCommentQuesadillaQueso),
-                30.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadQuesadillaQueso),
+                        findViewById(R.id.btnMenosQuesadillaQueso),
+                        findViewById(R.id.btnMasQuesadillaQueso),
+                        findViewById(R.id.btnCommentQuesadillaQueso),
+                        30.0
+                )
         products["Pozole Grande"] =
-            ProductData(
-                findViewById(R.id.cantidadPozoleGrande),
-                findViewById(R.id.btnMenosPozoleGrande),
-                findViewById(R.id.btnMasPozoleGrande),
-                findViewById(R.id.btnCommentPozoleGrande),
-                110.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadPozoleGrande),
+                        findViewById(R.id.btnMenosPozoleGrande),
+                        findViewById(R.id.btnMasPozoleGrande),
+                        findViewById(R.id.btnCommentPozoleGrande),
+                        110.0
+                )
         products["Pozole Chico"] =
-            ProductData(
-                findViewById(R.id.cantidadPozoleChico),
-                findViewById(R.id.btnMenosPozoleChico),
-                findViewById(R.id.btnMasPozoleChico),
-                findViewById(R.id.btnCommentPozoleChico),
-                90.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadPozoleChico),
+                        findViewById(R.id.btnMenosPozoleChico),
+                        findViewById(R.id.btnMasPozoleChico),
+                        findViewById(R.id.btnCommentPozoleChico),
+                        90.0
+                )
         products["Tostadas"] =
-            ProductData(
-                findViewById(R.id.cantidadTostadas),
-                findViewById(R.id.btnMenosTostadas),
-                findViewById(R.id.btnMasTostadas),
-                findViewById(R.id.btnCommentTostadas),
-                35.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadTostadas),
+                        findViewById(R.id.btnMenosTostadas),
+                        findViewById(R.id.btnMasTostadas),
+                        findViewById(R.id.btnCommentTostadas),
+                        35.0
+                )
         products["Volcanes"] =
-            ProductData(
-                findViewById(R.id.cantidadVolcanes),
-                findViewById(R.id.btnMenosVolcanes),
-                findViewById(R.id.btnMasVolcanes),
-                findViewById(R.id.btnCommentVolcanes),
-                60.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadVolcanes),
+                        findViewById(R.id.btnMenosVolcanes),
+                        findViewById(R.id.btnMasVolcanes),
+                        findViewById(R.id.btnCommentVolcanes),
+                        60.0
+                )
         products["Volcan Queso"] =
-            ProductData(
-                findViewById(R.id.cantidadVolcanQueso),
-                findViewById(R.id.btnMenosVolcanQueso),
-                findViewById(R.id.btnMasVolcanQueso),
-                findViewById(R.id.btnCommentVolcanQueso),
-                72.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadVolcanQueso),
+                        findViewById(R.id.btnMenosVolcanQueso),
+                        findViewById(R.id.btnMasVolcanQueso),
+                        findViewById(R.id.btnCommentVolcanQueso),
+                        72.0
+                )
         products["Guisado Extra"] =
-            ProductData(
-                findViewById(R.id.cantidadGuisadoExtra),
-                findViewById(R.id.btnMenosGuisadoExtra),
-                findViewById(R.id.btnMasGuisadoExtra),
-                findViewById(R.id.btnCommentGuisadoExtra),
-                72.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadGuisadoExtra),
+                        findViewById(R.id.btnMenosGuisadoExtra),
+                        findViewById(R.id.btnMasGuisadoExtra),
+                        findViewById(R.id.btnCommentGuisadoExtra),
+                        72.0
+                )
         products["Guajoloyets Naturales"] =
-            ProductData(
-                findViewById(R.id.cantidadGuajoloyetNatural),
-                findViewById(R.id.btnMenosGuajoloyetNatural),
-                findViewById(R.id.btnMasGuajoloyetNatural),
-                findViewById(R.id.btnCommentGuajoloyetNatural),
-                60.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadGuajoloyetNatural),
+                        findViewById(R.id.btnMenosGuajoloyetNatural),
+                        findViewById(R.id.btnMasGuajoloyetNatural),
+                        findViewById(R.id.btnCommentGuajoloyetNatural),
+                        60.0
+                )
         products["Guajoloyets Naturales Extra"] =
-            ProductData(
-                findViewById(R.id.cantidadGujoloyetNaturalExtra),
-                findViewById(R.id.btnMenosGujoloyetNaturalExtra),
-                findViewById(R.id.btnMasGujoloyetNaturalExtra),
-                findViewById(R.id.btnCommentGujoloyetNaturalExtra),
-                72.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadGujoloyetNaturalExtra),
+                        findViewById(R.id.btnMenosGujoloyetNaturalExtra),
+                        findViewById(R.id.btnMasGujoloyetNaturalExtra),
+                        findViewById(R.id.btnCommentGujoloyetNaturalExtra),
+                        72.0
+                )
         products["Guajoloyets Adobados"] =
-            ProductData(
-                findViewById(R.id.cantidadGuajoloyetAdobado),
-                findViewById(R.id.btnMenosGuajoloyetAdobado),
-                findViewById(R.id.btnMasGuajoloyetAdobado),
-                findViewById(R.id.btnCommentGuajoloyetAdobado),
-                65.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadGuajoloyetAdobado),
+                        findViewById(R.id.btnMenosGuajoloyetAdobado),
+                        findViewById(R.id.btnMasGuajoloyetAdobado),
+                        findViewById(R.id.btnCommentGuajoloyetAdobado),
+                        65.0
+                )
         products["Guajoloyets Adobados Extra"] =
-            ProductData(
-                findViewById(R.id.cantidadGujoloyetAdobadoExtra),
-                findViewById(R.id.btnMenosGujoloyetAdobadoExtra),
-                findViewById(R.id.btnMasGujoloyetAdobadoExtra),
-                findViewById(R.id.btnCommentGujoloyetAdobadoExtra),
-                77.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadGujoloyetAdobadoExtra),
+                        findViewById(R.id.btnMenosGujoloyetAdobadoExtra),
+                        findViewById(R.id.btnMasGujoloyetAdobadoExtra),
+                        findViewById(R.id.btnCommentGujoloyetAdobadoExtra),
+                        77.0
+                )
         products["Pambazos Naturales"] =
-            ProductData(
-                findViewById(R.id.cantidadPambazosNaturales),
-                findViewById(R.id.btnMenosPambazosNaturales),
-                findViewById(R.id.btnMasPambazosNaturales),
-                findViewById(R.id.btnCommentPambazosNaturales),
-                35.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadPambazosNaturales),
+                        findViewById(R.id.btnMenosPambazosNaturales),
+                        findViewById(R.id.btnMasPambazosNaturales),
+                        findViewById(R.id.btnCommentPambazosNaturales),
+                        35.0
+                )
         products["Pambazos Naturales Combinados"] =
-            ProductData(
-                findViewById(R.id.cantidadPambazosNaturalesCombinados),
-                findViewById(R.id.btnMenosPambazosNaturalesCombinados),
-                findViewById(R.id.btnMasPambazosNaturalesCombinados),
-                findViewById(R.id.btnCommentPambazosNaturalesCombinados),
-                42.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadPambazosNaturalesCombinados),
+                        findViewById(R.id.btnMenosPambazosNaturalesCombinados),
+                        findViewById(R.id.btnMasPambazosNaturalesCombinados),
+                        findViewById(R.id.btnCommentPambazosNaturalesCombinados),
+                        42.0
+                )
         products["Pambazos Naturales Combinados con Queso"] =
-            ProductData(
-                findViewById(R.id.cantidadPambazosNaturalesCombinadosQueso),
-                findViewById(R.id.btnMenosPambazosNaturalesCombinadosQueso),
-                findViewById(R.id.btnMasPambazosNaturalesCombinadosQueso),
-                findViewById(R.id.btnCommentPambazosNaturalesCombinadosQueso),
-                54.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadPambazosNaturalesCombinadosQueso),
+                        findViewById(R.id.btnMenosPambazosNaturalesCombinadosQueso),
+                        findViewById(R.id.btnMasPambazosNaturalesCombinadosQueso),
+                        findViewById(R.id.btnCommentPambazosNaturalesCombinadosQueso),
+                        54.0
+                )
         products["Pambazos Naturales Extra"] =
-            ProductData(
-                findViewById(R.id.cantidadPambazosNaturalesQueso),
-                findViewById(R.id.btnMenosPambazosNaturalesQueso),
-                findViewById(R.id.btnMasPambazosNaturalesQueso),
-                findViewById(R.id.btnCommentPambazosNaturalesQueso),
-                47.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadPambazosNaturalesQueso),
+                        findViewById(R.id.btnMenosPambazosNaturalesQueso),
+                        findViewById(R.id.btnMasPambazosNaturalesQueso),
+                        findViewById(R.id.btnCommentPambazosNaturalesQueso),
+                        47.0
+                )
         products["Pambazos Adobados"] =
-            ProductData(
-                findViewById(R.id.cantidadPambazosAdobados),
-                findViewById(R.id.btnMenosPambazosAdobados),
-                findViewById(R.id.btnMasPambazosAdobados),
-                findViewById(R.id.btnCommentPambazosAdobados),
-                40.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadPambazosAdobados),
+                        findViewById(R.id.btnMenosPambazosAdobados),
+                        findViewById(R.id.btnMasPambazosAdobados),
+                        findViewById(R.id.btnCommentPambazosAdobados),
+                        40.0
+                )
         products["Pambazos Adobados Combinados"] =
-            ProductData(
-                findViewById(R.id.cantidadPambazosAdobadosCombinados),
-                findViewById(R.id.btnMenosPambazosAdobadosCombinados),
-                findViewById(R.id.btnMasPambazosAdobadosCombinados),
-                findViewById(R.id.btnCommentPambazosAdobadosCombinados),
-                47.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadPambazosAdobadosCombinados),
+                        findViewById(R.id.btnMenosPambazosAdobadosCombinados),
+                        findViewById(R.id.btnMasPambazosAdobadosCombinados),
+                        findViewById(R.id.btnCommentPambazosAdobadosCombinados),
+                        47.0
+                )
         products["Pambazos Adobados Combinados con Queso"] =
-            ProductData(
-                findViewById(R.id.cantidadPambazosAdobadosCombinadosQueso),
-                findViewById(R.id.btnMenosPambazosAdobadosCombinadosQueso),
-                findViewById(R.id.btnMasPambazosAdobadosCombinadosQueso),
-                findViewById(R.id.btnCommentPambazosAdobadosCombinadosQueso),
-                59.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadPambazosAdobadosCombinadosQueso),
+                        findViewById(R.id.btnMenosPambazosAdobadosCombinadosQueso),
+                        findViewById(R.id.btnMasPambazosAdobadosCombinadosQueso),
+                        findViewById(R.id.btnCommentPambazosAdobadosCombinadosQueso),
+                        59.0
+                )
         products["Pambazos Adobados Extra"] =
-            ProductData(
-                findViewById(R.id.cantidadPambazosAdobadosExtra),
-                findViewById(R.id.btnMenosPambazosAdobadosExtra),
-                findViewById(R.id.btnMasPambazosAdobadosExtra),
-                findViewById(R.id.btnCommentPambazosAdobadosExtra),
-                52.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadPambazosAdobadosExtra),
+                        findViewById(R.id.btnMenosPambazosAdobadosExtra),
+                        findViewById(R.id.btnMasPambazosAdobadosExtra),
+                        findViewById(R.id.btnCommentPambazosAdobadosExtra),
+                        52.0
+                )
         products["Chalupas"] =
-            ProductData(
-                findViewById(R.id.cantidadChalupas),
-                findViewById(R.id.btnMenosChalupas),
-                findViewById(R.id.btnMasChalupas),
-                findViewById(R.id.btnCommentChalupas),
-                5.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadChalupas),
+                        findViewById(R.id.btnMenosChalupas),
+                        findViewById(R.id.btnMasChalupas),
+                        findViewById(R.id.btnCommentChalupas),
+                        5.0
+                )
         products["Alones"] =
-            ProductData(
-                findViewById(R.id.cantidadAlones),
-                findViewById(R.id.btnMenosAlones),
-                findViewById(R.id.btnMasAlones),
-                findViewById(R.id.btnCommentAlones),
-                25.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadAlones),
+                        findViewById(R.id.btnMenosAlones),
+                        findViewById(R.id.btnMasAlones),
+                        findViewById(R.id.btnCommentAlones),
+                        25.0
+                )
         products["Mollejas"] =
-            ProductData(
-                findViewById(R.id.cantidadMollejas),
-                findViewById(R.id.btnMenosMollejas),
-                findViewById(R.id.btnMasMollejas),
-                findViewById(R.id.btnCommentMollejas),
-                25.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadMollejas),
+                        findViewById(R.id.btnMenosMollejas),
+                        findViewById(R.id.btnMasMollejas),
+                        findViewById(R.id.btnCommentMollejas),
+                        25.0
+                )
         products["Higados"] =
-            ProductData(
-                findViewById(R.id.cantidadHigados),
-                findViewById(R.id.btnMenosHigados),
-                findViewById(R.id.btnMasHigados),
-                findViewById(R.id.btnCommentHigados),
-                22.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadHigados),
+                        findViewById(R.id.btnMenosHigados),
+                        findViewById(R.id.btnMasHigados),
+                        findViewById(R.id.btnCommentHigados),
+                        22.0
+                )
         products["Patitas"] =
-            ProductData(
-                findViewById(R.id.cantidadPatitas),
-                findViewById(R.id.btnMenosPatitas),
-                findViewById(R.id.btnMasPatitas),
-                findViewById(R.id.btnCommentPatitas),
-                22.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadPatitas),
+                        findViewById(R.id.btnMenosPatitas),
+                        findViewById(R.id.btnMasPatitas),
+                        findViewById(R.id.btnCommentPatitas),
+                        22.0
+                )
         products["Huevos"] =
-            ProductData(
-                findViewById(R.id.cantidadHuevos),
-                findViewById(R.id.btnMenosHuevos),
-                findViewById(R.id.btnMasHuevos),
-                findViewById(R.id.btnCommentHuevos),
-                20.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadHuevos),
+                        findViewById(R.id.btnMenosHuevos),
+                        findViewById(R.id.btnMasHuevos),
+                        findViewById(R.id.btnCommentHuevos),
+                        20.0
+                )
         products["Refrescos"] =
-            ProductData(
-                findViewById(R.id.cantidadRefrescos),
-                findViewById(R.id.btnMenosRefrescos),
-                findViewById(R.id.btnMasRefrescos),
-                findViewById(R.id.btnCommentRefrescos),
-                26.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadRefrescos),
+                        findViewById(R.id.btnMenosRefrescos),
+                        findViewById(R.id.btnMasRefrescos),
+                        findViewById(R.id.btnCommentRefrescos),
+                        26.0
+                )
         products["Cafe"] =
-            ProductData(
-                findViewById(R.id.cantidadCafe),
-                findViewById(R.id.btnMenosCafe),
-                findViewById(R.id.btnMasCafe),
-                findViewById(R.id.btnCommentCafe),
-                22.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadCafe),
+                        findViewById(R.id.btnMenosCafe),
+                        findViewById(R.id.btnMasCafe),
+                        findViewById(R.id.btnCommentCafe),
+                        22.0
+                )
         products["Aguas de Sabor"] =
-            ProductData(
-                findViewById(R.id.cantidadAguasSabor),
-                findViewById(R.id.btnMenosAguasSabor),
-                findViewById(R.id.btnMasAguasSabor),
-                findViewById(R.id.btnCommentAguasSabor),
-                25.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadAguasSabor),
+                        findViewById(R.id.btnMenosAguasSabor),
+                        findViewById(R.id.btnMasAguasSabor),
+                        findViewById(R.id.btnCommentAguasSabor),
+                        25.0
+                )
         products["Agua Natural"] =
-            ProductData(
-                findViewById(R.id.cantidadAguasNat),
-                findViewById(R.id.btnMenosAguasNat),
-                findViewById(R.id.btnMasAguasNat),
-                findViewById(R.id.btnCommentAguasNat),
-                20.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadAguasNat),
+                        findViewById(R.id.btnMenosAguasNat),
+                        findViewById(R.id.btnMasAguasNat),
+                        findViewById(R.id.btnCommentAguasNat),
+                        20.0
+                )
         products["Agua para Te"] =
-            ProductData(
-                findViewById(R.id.cantidadAguaTe),
-                findViewById(R.id.btnMenosAguaTe),
-                findViewById(R.id.btnMasAguaTe),
-                findViewById(R.id.btnCommentAguaTe),
-                20.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadAguaTe),
+                        findViewById(R.id.btnMenosAguaTe),
+                        findViewById(R.id.btnMasAguaTe),
+                        findViewById(R.id.btnCommentAguaTe),
+                        20.0
+                )
 
         // ===== PAPAS =====
         products["Orden de Papas Sencillas"] =
-            ProductData(
-                findViewById(R.id.cantidadPapasSencillas),
-                findViewById(R.id.btnMenosPapasSencillas),
-                findViewById(R.id.btnMasPapasSencillas),
-                findViewById(R.id.btnCommentPapasSencillas),
-                50.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadPapasSencillas),
+                        findViewById(R.id.btnMenosPapasSencillas),
+                        findViewById(R.id.btnMasPapasSencillas),
+                        findViewById(R.id.btnCommentPapasSencillas),
+                        50.0
+                )
 
         products["Orden de Papas Queso y Tocino"] =
-            ProductData(
-                findViewById(R.id.cantidadPapasQuesoTocino),
-                findViewById(R.id.btnMenosPapasQuesoTocino),
-                findViewById(R.id.btnMasPapasQuesoTocino),
-                findViewById(R.id.btnCommentPapasQuesoTocino),
-                65.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadPapasQuesoTocino),
+                        findViewById(R.id.btnMenosPapasQuesoTocino),
+                        findViewById(R.id.btnMasPapasQuesoTocino),
+                        findViewById(R.id.btnCommentPapasQuesoTocino),
+                        65.0
+                )
 
         // ===== TACOS (precio por pieza) =====
         products["Taco (c/u)"] =
-            ProductData(
-                findViewById(R.id.cantidadTacoUnitario),
-                findViewById(R.id.btnMenosTacoUnitario),
-                findViewById(R.id.btnMasTacoUnitario),
-                findViewById(R.id.btnCommentTacoUnitario),
-                25.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadTacoUnitario),
+                        findViewById(R.id.btnMenosTacoUnitario),
+                        findViewById(R.id.btnMasTacoUnitario),
+                        findViewById(R.id.btnCommentTacoUnitario),
+                        25.0
+                )
 
         products["Taco con Queso (c/u)"] =
-            ProductData(
-                findViewById(R.id.cantidadTacoConQueso),
-                findViewById(R.id.btnMenosTacoConQueso),
-                findViewById(R.id.btnMasTacoConQueso),
-                findViewById(R.id.btnCommentTacoConQueso),
-                30.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadTacoConQueso),
+                        findViewById(R.id.btnMenosTacoConQueso),
+                        findViewById(R.id.btnMasTacoConQueso),
+                        findViewById(R.id.btnCommentTacoConQueso),
+                        30.0
+                )
 
         // ===== ALITAS =====
         products["Alitas 6 pzas"] =
-            ProductData(
-                findViewById(R.id.cantidadAlitas6),
-                findViewById(R.id.btnMenosAlitas6),
-                findViewById(R.id.btnMasAlitas6),
-                findViewById(R.id.btnCommentAlitas6),
-                65.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadAlitas6),
+                        findViewById(R.id.btnMenosAlitas6),
+                        findViewById(R.id.btnMasAlitas6),
+                        findViewById(R.id.btnCommentAlitas6),
+                        65.0
+                )
 
         products["Alitas 10 pzas"] =
-            ProductData(
-                findViewById(R.id.cantidadAlitas10),
-                findViewById(R.id.btnMenosAlitas10),
-                findViewById(R.id.btnMasAlitas10),
-                findViewById(R.id.btnCommentAlitas10),
-                100.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadAlitas10),
+                        findViewById(R.id.btnMenosAlitas10),
+                        findViewById(R.id.btnMasAlitas10),
+                        findViewById(R.id.btnCommentAlitas10),
+                        100.0
+                )
 
         products["Alitas 15 pzas"] =
-            ProductData(
-                findViewById(R.id.cantidadAlitas15),
-                findViewById(R.id.btnMenosAlitas15),
-                findViewById(R.id.btnMasAlitas15),
-                findViewById(R.id.btnCommentAlitas15),
-                140.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadAlitas15),
+                        findViewById(R.id.btnMenosAlitas15),
+                        findViewById(R.id.btnMasAlitas15),
+                        findViewById(R.id.btnCommentAlitas15),
+                        140.0
+                )
         products["Combo"] =
-            ProductData(
-                findViewById(R.id.cantidadCombo),
-                findViewById(R.id.btnMenosCombo),
-                findViewById(R.id.btnMasCombo),
-                findViewById(R.id.btnCommentCombo),
-                30.0
-            )
+                ProductData(
+                        findViewById(R.id.cantidadCombo),
+                        findViewById(R.id.btnMenosCombo),
+                        findViewById(R.id.btnMasCombo),
+                        findViewById(R.id.btnCommentCombo),
+                        30.0
+                )
 
         products.forEach { (productName, productData) ->
             quantities[productName] = 0
 
             productData.btnComment.setOnClickListener { showCommentDialog(productName) }
 
-            productData.btnMas.setOnClickListener {
 
-                when {
-                    // Productos combinados usan diálogos secuenciales
-                    productName.contains("Combinados", ignoreCase = true) -> {
-                        showSequentialGuisadoDialog(productName, productData)
+            // ACCESO A INVENTARIO DE REFRESCOS (Long Click en botón + de bebidas)
+
+            val bebidas =
+            listOf("Refrescos")
+            if (productName in bebidas) {
+                productData.btnMas.setOnLongClickListener {
+                    try {
+                        val intent =
+                            android.content.Intent(
+                                this@MainActivity,
+                                InventoryRefrescoActivity::class.java
+                            )
+                        startActivity(intent)
+                    } catch (e: Exception) {
+                        android.widget.Toast.makeText(
+                            this@MainActivity,
+                            "Error: ${e.message}",
+                            android.widget.Toast.LENGTH_SHORT
+                        )
+                            .show()
+                        e.printStackTrace()
                     }
-
-                    textInputProducts.contains(productName) ->
-                        showTextInputVariationDialog(productName)
-
-                    productVariations.containsKey(productName) ->
-                        showVariationSelectionDialog(productName)
-
-                    else -> updateQuantity(productName, 1)
+                    true
                 }
             }
-            productData.btnMenos.setOnClickListener {
 
+            productData.btnMas.setOnLongClickListener {
+                val intent = when {
+                    productName.contains("Refresco", true) -> Intent(this, InventoryRefrescoActivity::class.java)
+                    productName.contains("Agua", true) -> Intent(this, InventoryAguaActivity::class.java)
+                    else -> null
+                }
+                intent?.let { startActivity(it); true } ?: false
+            }
+
+            // CLICK CORTO: Abre el menú desplegable dinámico
+            productData.btnMas.setOnClickListener {
+                if (productName.contains("Refresco", true) || productName.contains("Agua", true)) {
+                    showDynamicDropdown(productName, productData.precio)
+                } else {
+                    updateQuantity(productName, 1) // Comportamiento normal para otros productos
+                }
+            }
+
+            productData.btnMenos.setOnClickListener {
                 when {
                     textInputProducts.contains(productName) && (quantities[productName] ?: 0) > 0 ->
-                        showVariationRemovalDialog(productName)
-
+                            showVariationRemovalDialog(productName)
                     productVariations.containsKey(productName) &&
                             (quantities[productName] ?: 0) > 0 ->
-                        showVariationRemovalDialog(productName)
-
+                            showVariationRemovalDialog(productName)
                     else -> updateQuantity(productName, -1)
                 }
             }
 
+
             // chalupas es EditText libre
             if (productName == "Chalupas" && productData.cantidadTV is EditText) {
                 productData.cantidadTV.addTextChangedListener(
-                    object : TextWatcher {
-                        override fun beforeTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            count: Int,
-                            after: Int
-                        ) {
-                        }
+                        object : TextWatcher {
+                            override fun beforeTextChanged(
+                                    s: CharSequence?,
+                                    start: Int,
+                                    count: Int,
+                                    after: Int
+                            ) {}
 
-                        override fun onTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            before: Int,
-                            count: Int
-                        ) {
-                        }
+                            override fun onTextChanged(
+                                    s: CharSequence?,
+                                    start: Int,
+                                    before: Int,
+                                    count: Int
+                            ) {}
 
-                        override fun afterTextChanged(s: Editable?) {
-                            val currentQuantity = quantities[productName] ?: 0
-                            val newValue = s?.toString()?.toIntOrNull() ?: 0
-                            if (currentQuantity != newValue) {
-                                quantities[productName] = newValue
+                            override fun afterTextChanged(s: Editable?) {
+                                val currentQuantity = quantities[productName] ?: 0
+                                val newValue = s?.toString()?.toIntOrNull() ?: 0
+                                if (currentQuantity != newValue) {
+                                    quantities[productName] = newValue
+                                }
+                                // Actualizar resumen en tiempo real al
+                                // cambiar la cantidad de
+                                // chalupas
+                                val productosSeleccionados = obtenerProductosDesdeInputs()
+                                mostrarResumen(productosSeleccionados)
                             }
-                            // Actualizar resumen en tiempo real al
-                            // cambiar la cantidad de
-                            // chalupas
-                            val productosSeleccionados = obtenerProductosDesdeInputs()
-                            mostrarResumen(productosSeleccionados)
                         }
-                    }
                 )
             }
         }
@@ -1453,29 +1590,29 @@ class MainActivity : AppCompatActivity() {
     // plegables por categoría
     private fun setupCollapsibleCategories() {
         setupCollapsibleView(
-            findViewById(R.id.headerPlatillos),
-            findViewById(R.id.gridPlatillos),
-            findViewById(R.id.arrowPlatillos)
+                findViewById(R.id.headerPlatillos),
+                findViewById(R.id.gridPlatillos),
+                findViewById(R.id.arrowPlatillos)
         )
         setupCollapsibleView(
-            findViewById(R.id.headerPambazos),
-            findViewById(R.id.gridPambazos),
-            findViewById(R.id.arrowPambazos)
+                findViewById(R.id.headerPambazos),
+                findViewById(R.id.gridPambazos),
+                findViewById(R.id.arrowPambazos)
         )
         setupCollapsibleView(
-            findViewById(R.id.headerGuajoloyets),
-            findViewById(R.id.gridGuajoloyets),
-            findViewById(R.id.arrowGuajoloyets)
+                findViewById(R.id.headerGuajoloyets),
+                findViewById(R.id.gridGuajoloyets),
+                findViewById(R.id.arrowGuajoloyets)
         )
         setupCollapsibleView(
-            findViewById(R.id.headerEntradas),
-            findViewById(R.id.gridEntradas),
-            findViewById(R.id.arrowEntradas)
+                findViewById(R.id.headerEntradas),
+                findViewById(R.id.gridEntradas),
+                findViewById(R.id.arrowEntradas)
         )
         setupCollapsibleView(
-            findViewById(R.id.headerBebidas),
-            findViewById(R.id.gridBebidas),
-            findViewById(R.id.arrowBebidas)
+                findViewById(R.id.headerBebidas),
+                findViewById(R.id.gridBebidas),
+                findViewById(R.id.arrowBebidas)
         )
         // ACCESO A INVENTARIO DE REFRESCOS (Long Click)
         findViewById<View>(R.id.headerBebidas).setOnLongClickListener {
@@ -1484,34 +1621,34 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             } catch (e: Exception) {
                 android.widget.Toast.makeText(
-                    this,
-                    "Error: ${e.message}",
-                    android.widget.Toast.LENGTH_SHORT
-                )
-                    .show()
+                                this,
+                                "Error: ${e.message}",
+                                android.widget.Toast.LENGTH_SHORT
+                        )
+                        .show()
                 e.printStackTrace()
             }
             true
         }
         setupCollapsibleView(
-            findViewById(R.id.headerHamburguesas),
-            findViewById(R.id.gridHamburguesas),
-            findViewById(R.id.arrowHamburguesas)
+                findViewById(R.id.headerHamburguesas),
+                findViewById(R.id.gridHamburguesas),
+                findViewById(R.id.arrowHamburguesas)
         )
         setupCollapsibleView(
-            findViewById(R.id.headerTacos),
-            findViewById(R.id.gridTacos),
-            findViewById(R.id.arrowTacos)
+                findViewById(R.id.headerTacos),
+                findViewById(R.id.gridTacos),
+                findViewById(R.id.arrowTacos)
         )
         setupCollapsibleView(
-            findViewById(R.id.headerAlitas),
-            findViewById(R.id.gridAlitas),
-            findViewById(R.id.arrowAlitas)
+                findViewById(R.id.headerAlitas),
+                findViewById(R.id.gridAlitas),
+                findViewById(R.id.arrowAlitas)
         )
         setupCollapsibleView(
-            findViewById(R.id.headerPostres),
-            findViewById(R.id.containerNotasExtras),
-            findViewById(R.id.arrowPostres)
+                findViewById(R.id.headerPostres),
+                findViewById(R.id.containerNotasExtras),
+                findViewById(R.id.arrowPostres)
         )
     }
 
@@ -1541,48 +1678,48 @@ class MainActivity : AppCompatActivity() {
         lateinit var adapter: CartAdapter
 
         adapter =
-            CartAdapter(
-                currentProducts,
-                onUpdate = { product, newQuantity ->
-                    // 1. Update Main UI Source of Truth
-                    updateMainUI(product.nombre, newQuantity)
+                CartAdapter(
+                        currentProducts,
+                        onUpdate = { product, newQuantity ->
+                            // 1. Update Main UI Source of Truth
+                            updateMainUI(product.nombre, newQuantity)
 
-                    // 2. Refresh List
-                    currentProducts = obtenerProductosDesdeInputs().toMutableList()
-                    adapter.updateList(currentProducts)
+                            // 2. Refresh List
+                            currentProducts = obtenerProductosDesdeInputs().toMutableList()
+                            adapter.updateList(currentProducts)
 
-                    // 3. Update Total
-                    val total = currentProducts.sumOf { it.precio * it.cantidad }
-                    tvTotal.text = "Total: " + total.formatMoney()
-                },
-                onCommentUpdate = { product, newComment ->
-                    val safeNewComment = newComment ?: ""
-                    val oldComment = product.comment ?: ""
-                    val commentsList = productComments[product.nombre]
+                            // 3. Update Total
+                            val total = currentProducts.sumOf { it.precio * it.cantidad }
+                            tvTotal.text = "Total: " + total.formatMoney()
+                        },
+                        onCommentUpdate = { product, newComment ->
+                            val safeNewComment = newComment ?: ""
+                            val oldComment = product.comment ?: ""
+                            val commentsList = productComments[product.nombre]
 
-                    if (commentsList != null) {
-                        // Reemplazar todas las ocurrencias del comentario antiguo con el
-                        // nuevo
-                        for (i in commentsList.indices) {
-                            val currentValues = commentsList[i]
-                            // Compara con cadena vacía si es null
-                            val safeCurrent =
-                                if (currentValues.isBlank()) "" else currentValues
-                            if (safeCurrent == oldComment) {
-                                commentsList[i] = safeNewComment
+                            if (commentsList != null) {
+                                // Reemplazar todas las ocurrencias del comentario antiguo con el
+                                // nuevo
+                                for (i in commentsList.indices) {
+                                    val currentValues = commentsList[i]
+                                    // Compara con cadena vacía si es null
+                                    val safeCurrent =
+                                            if (currentValues.isBlank()) "" else currentValues
+                                    if (safeCurrent == oldComment) {
+                                        commentsList[i] = safeNewComment
+                                    }
+                                }
                             }
+
+                            // 2. Refresh List
+                            currentProducts = obtenerProductosDesdeInputs().toMutableList()
+                            adapter.updateList(currentProducts)
+
+                            // 3. Update Total
+                            val total = currentProducts.sumOf { it.precio * it.cantidad }
+                            tvTotal.text = "Total: " + total.formatMoney()
                         }
-                    }
-
-                    // 2. Refresh List
-                    currentProducts = obtenerProductosDesdeInputs().toMutableList()
-                    adapter.updateList(currentProducts)
-
-                    // 3. Update Total
-                    val total = currentProducts.sumOf { it.precio * it.cantidad }
-                    tvTotal.text = "Total: " + total.formatMoney()
-                }
-            )
+                )
 
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
@@ -1660,11 +1797,11 @@ class MainActivity : AppCompatActivity() {
                     if (productosSeleccionados.isEmpty()) {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(
-                                this@MainActivity,
-                                "No hay productos seleccionados",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
+                                            this@MainActivity,
+                                            "No hay productos seleccionados",
+                                            Toast.LENGTH_SHORT
+                                    )
+                                    .show()
                         }
                         isPrinting = false
                         return@launch
@@ -1672,7 +1809,7 @@ class MainActivity : AppCompatActivity() {
 
                     // 2️⃣ Obtener número diario (si ya existe para esta orden, reusarlo)
                     val dailyNumber =
-                        if (currentDailyId != null) currentDailyId!! else getDailyOrderNumber()
+                            if (currentDailyId != null) currentDailyId!! else getDailyOrderNumber()
                     currentDailyId = dailyNumber // assign to current
 
                     // 3️⃣ Generar el texto del ticket UNA vez
@@ -1690,18 +1827,18 @@ class MainActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         if (exito) {
                             Toast.makeText(
-                                this@MainActivity,
-                                "Ticket impreso correctamente",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
+                                            this@MainActivity,
+                                            "Ticket impreso correctamente",
+                                            Toast.LENGTH_SHORT
+                                    )
+                                    .show()
                         } else {
                             Toast.makeText(
-                                this@MainActivity,
-                                "No se pudo imprimir el ticket",
-                                Toast.LENGTH_LONG
-                            )
-                                .show()
+                                            this@MainActivity,
+                                            "No se pudo imprimir el ticket",
+                                            Toast.LENGTH_LONG
+                                    )
+                                    .show()
                         }
                         // No actualizamos el resumen al imprimir; éste se
                         // actualiza en tiempo real
@@ -1711,11 +1848,11 @@ class MainActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
-                            this@MainActivity,
-                            "Error al generar ticket: ${e.message}",
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
+                                        this@MainActivity,
+                                        "Error al generar ticket: ${e.message}",
+                                        Toast.LENGTH_LONG
+                                )
+                                .show()
                     }
                     isPrinting = false
                 }
@@ -1728,11 +1865,11 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             } else {
                 Toast.makeText(
-                    this,
-                    "No se pudo abrir la configuración de Bluetooth",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+                                this,
+                                "No se pudo abrir la configuración de Bluetooth",
+                                Toast.LENGTH_SHORT
+                        )
+                        .show()
             }
         }
 
@@ -1751,11 +1888,11 @@ class MainActivity : AppCompatActivity() {
                     appDatabase.orderDao().closeOrder(currentOrderId)
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
-                            this@MainActivity,
-                            "Pedido terminado y mesa liberada",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
+                                        this@MainActivity,
+                                        "Pedido terminado y mesa liberada",
+                                        Toast.LENGTH_SHORT
+                                )
+                                .show()
                         finish() // Regresar a selección de mesas
                     }
                 }
@@ -1775,17 +1912,17 @@ class MainActivity : AppCompatActivity() {
     private fun setupProductSalesFilter() {
         // Poblar spinner de productos: une nombres de hamburguesas y otros productos
         val productNames: MutableList<String> =
-            mutableSetOf<String>()
-                .apply {
-                    // nombres de hamburguesas (normales y combos comparten
-                    // nombre base)
-                    addAll(preciosHamburguesas.keys)
-                    // nombres de productos generales (otros platillos y extras)
-                    addAll(products.keys)
-                }
-                .toMutableList()
-                .sorted()
-                .toMutableList()
+                mutableSetOf<String>()
+                        .apply {
+                            // nombres de hamburguesas (normales y combos comparten
+                            // nombre base)
+                            addAll(preciosHamburguesas.keys)
+                            // nombres de productos generales (otros platillos y extras)
+                            addAll(products.keys)
+                        }
+                        .toMutableList()
+                        .sorted()
+                        .toMutableList()
 
         // Adaptador para el spinner de productos
         val productoAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, productNames)
@@ -1805,32 +1942,32 @@ class MainActivity : AppCompatActivity() {
 
         // Mostrar u ocultar el spinner de tipo según si el producto tiene variante combo
         spinnerProductFilter.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val selectedName = productNames[position]
-                    // Si es una hamburguesa, mostrar el spinner de tipo; de lo
-                    // contrario
-                    // ocultarlo
-                    if (preciosHamburguesas.containsKey(selectedName)) {
-                        spinnerTypeFilter.visibility = View.VISIBLE
-                        // por defecto, seleccionar "Todos" para combos y
-                        // normales
-                        spinnerTypeFilter.setSelection(0)
-                    } else {
-                        spinnerTypeFilter.visibility = View.GONE
-                        // si se oculta, seleccionar "Todos" para evitar
-                        // null
-                        spinnerTypeFilter.setSelection(0)
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                            parent: AdapterView<*>,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                    ) {
+                        val selectedName = productNames[position]
+                        // Si es una hamburguesa, mostrar el spinner de tipo; de lo
+                        // contrario
+                        // ocultarlo
+                        if (preciosHamburguesas.containsKey(selectedName)) {
+                            spinnerTypeFilter.visibility = View.VISIBLE
+                            // por defecto, seleccionar "Todos" para combos y
+                            // normales
+                            spinnerTypeFilter.setSelection(0)
+                        } else {
+                            spinnerTypeFilter.visibility = View.GONE
+                            // si se oculta, seleccionar "Todos" para evitar
+                            // null
+                            spinnerTypeFilter.setSelection(0)
+                        }
                     }
-                }
 
-                override fun onNothingSelected(parent: AdapterView<*>) {}
-            }
+                    override fun onNothingSelected(parent: AdapterView<*>) {}
+                }
         // Opciones de periodo
         val periodOptions = listOf("Hoy", "Esta semana", "Este mes", "Rango específico")
         val periodAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, periodOptions)
@@ -1839,25 +1976,25 @@ class MainActivity : AppCompatActivity() {
 
         // Mostrar u ocultar el rango personalizado según la selección del periodo
         spinnerPeriodFilter.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val selected = periodOptions[position]
-                    if (selected == "Rango específico") {
-                        layoutCustomRange.visibility = View.VISIBLE
-                    } else {
-                        layoutCustomRange.visibility = View.GONE
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                            parent: AdapterView<*>,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                    ) {
+                        val selected = periodOptions[position]
+                        if (selected == "Rango específico") {
+                            layoutCustomRange.visibility = View.VISIBLE
+                        } else {
+                            layoutCustomRange.visibility = View.GONE
+                        }
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>) {
+                        // No hacer nada
                     }
                 }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // No hacer nada
-                }
-            }
 
         // Configurar date pickers para seleccionar fechas de inicio y fin
         editStartDate.setOnClickListener { showDatePicker(editStartDate) }
@@ -1866,71 +2003,67 @@ class MainActivity : AppCompatActivity() {
         // Listener para el botón de calcular ventas
         btnCalcularVentas.setOnClickListener {
             val selectedProduct =
-                spinnerProductFilter.selectedItem as? String ?: return@setOnClickListener
+                    spinnerProductFilter.selectedItem as? String ?: return@setOnClickListener
             val selectedPeriod =
-                spinnerPeriodFilter.selectedItem as? String ?: return@setOnClickListener
+                    spinnerPeriodFilter.selectedItem as? String ?: return@setOnClickListener
             val selectedType = spinnerTypeFilter.selectedItem as? String ?: "Todos"
 
             // Determinar las fechas de inicio y fin según el periodo seleccionado
             val range: Pair<Long, Long>? =
-                when (selectedPeriod) {
-                    "Hoy" -> {
-                        val now = Date()
-                        Pair(getStartOfDay(now), getEndOfDay(now))
-                    }
-
-                    "Esta semana" -> {
-                        getStartAndEndOfWeek(Date())
-                    }
-
-                    "Este mes" -> {
-                        getStartAndEndOfMonth(Date())
-                    }
-
-                    "Rango específico" -> {
-                        // Obtener fechas de los EditText. Si están vacías,
-                        // mostrar mensaje y
-                        // regresar
-                        val startStr = editStartDate.text.toString().trim()
-                        val endStr = editEndDate.text.toString().trim()
-                        if (startStr.isEmpty() || endStr.isEmpty()) {
-                            Toast.makeText(
-                                this,
-                                "Seleccione las fechas de inicio y fin",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
-                            return@setOnClickListener
+                    when (selectedPeriod) {
+                        "Hoy" -> {
+                            val now = Date()
+                            Pair(getStartOfDay(now), getEndOfDay(now))
                         }
-                        try {
-                            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                            val startDate = sdf.parse(startStr) ?: Date()
-                            val endDate = sdf.parse(endStr) ?: Date()
-                            // Validar que la fecha inicio no sea mayor
-                            // a fin
-                            if (startDate.after(endDate)) {
+                        "Esta semana" -> {
+                            getStartAndEndOfWeek(Date())
+                        }
+                        "Este mes" -> {
+                            getStartAndEndOfMonth(Date())
+                        }
+                        "Rango específico" -> {
+                            // Obtener fechas de los EditText. Si están vacías,
+                            // mostrar mensaje y
+                            // regresar
+                            val startStr = editStartDate.text.toString().trim()
+                            val endStr = editEndDate.text.toString().trim()
+                            if (startStr.isEmpty() || endStr.isEmpty()) {
                                 Toast.makeText(
-                                    this,
-                                    "La fecha de inicio no puede ser posterior a la fecha de fin",
-                                    Toast.LENGTH_LONG
-                                )
-                                    .show()
+                                                this,
+                                                "Seleccione las fechas de inicio y fin",
+                                                Toast.LENGTH_SHORT
+                                        )
+                                        .show()
                                 return@setOnClickListener
                             }
-                            Pair(getStartOfDay(startDate), getEndOfDay(endDate))
-                        } catch (e: Exception) {
-                            Toast.makeText(
-                                this,
-                                "Formato de fecha inválido",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
-                            return@setOnClickListener
+                            try {
+                                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                                val startDate = sdf.parse(startStr) ?: Date()
+                                val endDate = sdf.parse(endStr) ?: Date()
+                                // Validar que la fecha inicio no sea mayor
+                                // a fin
+                                if (startDate.after(endDate)) {
+                                    Toast.makeText(
+                                                    this,
+                                                    "La fecha de inicio no puede ser posterior a la fecha de fin",
+                                                    Toast.LENGTH_LONG
+                                            )
+                                            .show()
+                                    return@setOnClickListener
+                                }
+                                Pair(getStartOfDay(startDate), getEndOfDay(endDate))
+                            } catch (e: Exception) {
+                                Toast.makeText(
+                                                this,
+                                                "Formato de fecha inválido",
+                                                Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+                                return@setOnClickListener
+                            }
                         }
+                        else -> null
                     }
-
-                    else -> null
-                }
 
             if (range != null) {
                 calcularVentasProducto(selectedProduct, range.first, range.second, selectedType)
@@ -1942,18 +2075,18 @@ class MainActivity : AppCompatActivity() {
     private fun showDatePicker(targetEdit: EditText) {
         val calendar = Calendar.getInstance()
         val datePicker =
-            android.app.DatePickerDialog(
-                this,
-                { _, year, month, dayOfMonth ->
-                    val cal = Calendar.getInstance()
-                    cal.set(year, month, dayOfMonth)
-                    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    targetEdit.setText(sdf.format(cal.time))
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            )
+                android.app.DatePickerDialog(
+                        this,
+                        { _, year, month, dayOfMonth ->
+                            val cal = Calendar.getInstance()
+                            cal.set(year, month, dayOfMonth)
+                            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                            targetEdit.setText(sdf.format(cal.time))
+                        },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                )
         datePicker.show()
     }
 
@@ -1972,10 +2105,10 @@ class MainActivity : AppCompatActivity() {
      * ignora.
      */
     private fun calcularVentasProducto(
-        nombreProducto: String,
-        inicio: Long,
-        fin: Long,
-        tipo: String = "Todos"
+            nombreProducto: String,
+            inicio: Long,
+            fin: Long,
+            tipo: String = "Todos"
     ) {
         lifecycleScope.launch(Dispatchers.IO) {
             // Obtener todas las órdenes
@@ -1986,21 +2119,21 @@ class MainActivity : AppCompatActivity() {
             var unidadesCombos = 0
             // Filtrar por rango de fechas
             val filteredOrders =
-                orders.filter { order -> order.createdAt >= inicio && order.createdAt <= fin }
+                    orders.filter { order -> order.createdAt >= inicio && order.createdAt <= fin }
             // Para cada orden en el rango, sumar las ventas del producto
             for (order in filteredOrders) {
                 val items = appDatabase.orderDao().getItemsForOrder(order.orderId)
                 for (item in items) {
                     // Extraer el nombre base sin sufijo de combo si existe
                     val baseName =
-                        if (item.esCombo) {
-                            // Soporta tanto los nombres persistidos
-                            // antiguos " (Combo)" como el
-                            // nuevo formato " + Combo"
-                            item.name.substringBefore(" + Combo").substringBefore(" (Combo)")
-                        } else {
-                            item.name
-                        }
+                            if (item.esCombo) {
+                                // Soporta tanto los nombres persistidos
+                                // antiguos " (Combo)" como el
+                                // nuevo formato " + Combo"
+                                item.name.substringBefore(" + Combo").substringBefore(" (Combo)")
+                            } else {
+                                item.name
+                            }
                     if (baseName == nombreProducto) {
                         if (item.esCombo) {
                             totalCombos += item.unitPrice * item.quantity
@@ -2014,48 +2147,46 @@ class MainActivity : AppCompatActivity() {
             }
             // Determinar resultados según el tipo
             val (unidadesVendidas, totalVentas) =
-                when (tipo) {
-                    "Normal" -> unidadesNormales to totalNormales
-                    "Combo" -> unidadesCombos to totalCombos
-                    else -> (unidadesNormales + unidadesCombos) to (totalNormales + totalCombos)
-                }
+                    when (tipo) {
+                        "Normal" -> unidadesNormales to totalNormales
+                        "Combo" -> unidadesCombos to totalCombos
+                        else -> (unidadesNormales + unidadesCombos) to (totalNormales + totalCombos)
+                    }
             withContext(Dispatchers.Main) {
                 // Actualizar resultado en la UI
                 val resultadoTexto: String =
-                    if (unidadesVendidas > 0) {
-                        when (tipo) {
-                            "Normal" ->
-                                "Ventas de $nombreProducto (normal): $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
-
-                            "Combo" ->
-                                "Ventas de $nombreProducto combo: $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
-
-                            else -> {
-                                // Mostrar resumen separado si hay
-                                // ventas en ambas variantes
-                                val partes = mutableListOf<String>()
-                                if (unidadesNormales > 0) {
-                                    partes.add(
-                                        "Normales: $unidadesNormales unidad(es), Total: ${totalNormales.formatMoney()}"
-                                    )
-                                }
-                                if (unidadesCombos > 0) {
-                                    partes.add(
-                                        "Combo: $unidadesCombos unidad(es), Total: ${totalCombos.formatMoney()}"
-                                    )
-                                }
-                                if (partes.isNotEmpty()) {
-                                    "Ventas de $nombreProducto:\n" + partes.joinToString("\n")
-                                } else {
-                                    // Fallback por si acaso (no
-                                    // debería ocurrir)
-                                    "Ventas de $nombreProducto: $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
+                        if (unidadesVendidas > 0) {
+                            when (tipo) {
+                                "Normal" ->
+                                        "Ventas de $nombreProducto (normal): $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
+                                "Combo" ->
+                                        "Ventas de $nombreProducto combo: $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
+                                else -> {
+                                    // Mostrar resumen separado si hay
+                                    // ventas en ambas variantes
+                                    val partes = mutableListOf<String>()
+                                    if (unidadesNormales > 0) {
+                                        partes.add(
+                                                "Normales: $unidadesNormales unidad(es), Total: ${totalNormales.formatMoney()}"
+                                        )
+                                    }
+                                    if (unidadesCombos > 0) {
+                                        partes.add(
+                                                "Combo: $unidadesCombos unidad(es), Total: ${totalCombos.formatMoney()}"
+                                        )
+                                    }
+                                    if (partes.isNotEmpty()) {
+                                        "Ventas de $nombreProducto:\n" + partes.joinToString("\n")
+                                    } else {
+                                        // Fallback por si acaso (no
+                                        // debería ocurrir)
+                                        "Ventas de $nombreProducto: $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
+                                    }
                                 }
                             }
+                        } else {
+                            "No se encontraron ventas para $nombreProducto en el periodo seleccionado"
                         }
-                    } else {
-                        "No se encontraron ventas para $nombreProducto en el periodo seleccionado"
-                    }
                 tvProductSalesResult.text = resultadoTexto
             }
         }
@@ -2185,27 +2316,27 @@ class MainActivity : AppCompatActivity() {
 
         // 🔹 3) TextViews de hamburguesas normales
         val idsNormales =
-            listOf(
-                R.id.cantidadHamburguesaClasicaNormal,
-                R.id.cantidadHamburguesaHawaianaNormal,
-                R.id.cantidadHamburguesaPolloNormal,
-                R.id.cantidadHamburguesaChampinonesNormal,
-                R.id.cantidadHamburguesaArracheraNormal,
-                R.id.cantidadHamburguesaMageyNormal,
-                R.id.cantidadHamburguesaDobleNormal
-            )
+                listOf(
+                        R.id.cantidadHamburguesaClasicaNormal,
+                        R.id.cantidadHamburguesaHawaianaNormal,
+                        R.id.cantidadHamburguesaPolloNormal,
+                        R.id.cantidadHamburguesaChampinonesNormal,
+                        R.id.cantidadHamburguesaArracheraNormal,
+                        R.id.cantidadHamburguesaMageyNormal,
+                        R.id.cantidadHamburguesaDobleNormal
+                )
 
         // 🔹 4) TextViews de hamburguesas combo
         val idsCombos =
-            listOf(
-                R.id.cantidadHamburguesaClasicaCombo,
-                R.id.cantidadHamburguesaHawaianaCombo,
-                R.id.cantidadHamburguesaPolloCombo,
-                R.id.cantidadHamburguesaChampinonesCombo,
-                R.id.cantidadHamburguesaArracheraCombo,
-                R.id.cantidadHamburguesaMageyCombo,
-                R.id.cantidadHamburguesaDobleCombo
-            )
+                listOf(
+                        R.id.cantidadHamburguesaClasicaCombo,
+                        R.id.cantidadHamburguesaHawaianaCombo,
+                        R.id.cantidadHamburguesaPolloCombo,
+                        R.id.cantidadHamburguesaChampinonesCombo,
+                        R.id.cantidadHamburguesaArracheraCombo,
+                        R.id.cantidadHamburguesaMageyCombo,
+                        R.id.cantidadHamburguesaDobleCombo
+                )
 
         // 🔹 5) Establecer textos en “Normales: 0” y “Combos: 0”
         idsNormales.forEach { id -> findViewById<TextView>(id)?.text = "Normales: 0" }
@@ -2233,11 +2364,11 @@ class MainActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 if (productosSeleccionados.isEmpty()) {
                     Toast.makeText(
-                        this@MainActivity,
-                        "No hay productos seleccionados",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                                    this@MainActivity,
+                                    "No hay productos seleccionados",
+                                    Toast.LENGTH_SHORT
+                            )
+                            .show()
                     return@withContext
                 }
             }
@@ -2247,52 +2378,52 @@ class MainActivity : AppCompatActivity() {
 
             withContext(Dispatchers.Main) {
                 AlertDialog.Builder(this@MainActivity)
-                    .setTitle("Vista previa del ticket")
-                    .setMessage(ticketTexto)
-                    .setPositiveButton("Imprimir") { _, _ ->
-                        lifecycleScope.launch(Dispatchers.IO) {
-                            val printed =
-                                printViaUsb(ticketTexto) || printViaBluetooth(ticketTexto)
-                            withContext(Dispatchers.Main) {
-                                if (printed) {
-                                    Toast.makeText(
-                                        this@MainActivity,
-                                        "Ticket impreso correctamente",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                        .show()
-                                } else {
-                                    Toast.makeText(
-                                        this@MainActivity,
-                                        "No se pudo imprimir el ticket",
-                                        Toast.LENGTH_LONG
-                                    )
-                                        .show()
+                        .setTitle("Vista previa del ticket")
+                        .setMessage(ticketTexto)
+                        .setPositiveButton("Imprimir") { _, _ ->
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                val printed =
+                                        printViaUsb(ticketTexto) || printViaBluetooth(ticketTexto)
+                                withContext(Dispatchers.Main) {
+                                    if (printed) {
+                                        Toast.makeText(
+                                                        this@MainActivity,
+                                                        "Ticket impreso correctamente",
+                                                        Toast.LENGTH_SHORT
+                                                )
+                                                .show()
+                                    } else {
+                                        Toast.makeText(
+                                                        this@MainActivity,
+                                                        "No se pudo imprimir el ticket",
+                                                        Toast.LENGTH_LONG
+                                                )
+                                                .show()
+                                    }
                                 }
                             }
                         }
-                    }
-                    .setNegativeButton("Cancelar", null)
-                    .show()
+                        .setNegativeButton("Cancelar", null)
+                        .show()
             }
         }
     }
 
     private fun checkAndRequestBluetoothPermissions() {
         val permissions =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                arrayOf(
-                    Manifest.permission.BLUETOOTH_CONNECT,
-                    Manifest.permission.BLUETOOTH_SCAN
-                )
-            } else {
-                arrayOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
-            }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    arrayOf(
+                            Manifest.permission.BLUETOOTH_CONNECT,
+                            Manifest.permission.BLUETOOTH_SCAN
+                    )
+                } else {
+                    arrayOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
+                }
 
         val allPermissionsGranted =
-            permissions.all {
-                ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-            }
+                permissions.all {
+                    ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+                }
 
         if (!allPermissionsGranted) {
             requestBluetoothPermissionLauncher.launch(permissions)
@@ -2315,144 +2446,143 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private suspend fun connectToBluetoothPrinter(): BluetoothSocket? =
-        withContext(Dispatchers.IO) {
-            val adapter = bluetoothAdapter
-            if (adapter == null) {
-                Log.e(TAG, "Adaptador Bluetooth no disponible.")
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Bluetooth no disponible en este dispositivo",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-                return@withContext null
-            }
-
-            if (!adapter.isEnabled) {
-                Log.i(TAG, "Bluetooth no activado. Solicitando activación.")
-                withContext(Dispatchers.Main) {
-                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                    enableBluetoothLauncher.launch(enableBtIntent)
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Activando Bluetooth...",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-                return@withContext null
-            }
-
-            val pairedDevices: Set<BluetoothDevice>? = adapter.bondedDevices
-            if (pairedDevices.isNullOrEmpty()) {
-                Log.e(TAG, "No hay dispositivos emparejados")
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "No hay dispositivos Bluetooth emparejados",
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
-                }
-                return@withContext null
-            }
-
-            // Buscar impresora cuyo nombre contenga "POS-58", "5890", etc.
-            val printerDevice =
-                pairedDevices.firstOrNull { device ->
-                    val name = device.name ?: ""
-                    PRINTER_BT_NAMES.any { sig -> name.contains(sig, ignoreCase = true) }
+            withContext(Dispatchers.IO) {
+                val adapter = bluetoothAdapter
+                if (adapter == null) {
+                    Log.e(TAG, "Adaptador Bluetooth no disponible.")
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                                        this@MainActivity,
+                                        "Bluetooth no disponible en este dispositivo",
+                                        Toast.LENGTH_SHORT
+                                )
+                                .show()
+                    }
+                    return@withContext null
                 }
 
-            if (printerDevice == null) {
-                Log.e(TAG, "No encontré impresora tipo POS-58 entre los emparejados")
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "No encontré impresora POS-58 emparejada",
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
+                if (!adapter.isEnabled) {
+                    Log.i(TAG, "Bluetooth no activado. Solicitando activación.")
+                    withContext(Dispatchers.Main) {
+                        val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                        enableBluetoothLauncher.launch(enableBtIntent)
+                        Toast.makeText(
+                                        this@MainActivity,
+                                        "Activando Bluetooth...",
+                                        Toast.LENGTH_SHORT
+                                )
+                                .show()
+                    }
+                    return@withContext null
                 }
-                return@withContext null
-            }
 
-            Log.d(
-                TAG,
-                "Intentando conectar con la impresora Bluetooth: ${printerDevice.name} [${printerDevice.address}]"
-            )
-
-            return@withContext try {
-                val socket = printerDevice.createRfcommSocketToServiceRecord(PRINTER_UUID)
-                adapter.cancelDiscovery()
-                socket.connect()
-                Log.d(TAG, "Conexión Bluetooth establecida con ${printerDevice.name}")
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Conectado a ${printerDevice.name}",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                val pairedDevices: Set<BluetoothDevice>? = adapter.bondedDevices
+                if (pairedDevices.isNullOrEmpty()) {
+                    Log.e(TAG, "No hay dispositivos emparejados")
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                                        this@MainActivity,
+                                        "No hay dispositivos Bluetooth emparejados",
+                                        Toast.LENGTH_LONG
+                                )
+                                .show()
+                    }
+                    return@withContext null
                 }
-                bluetoothSocket = socket
-                socket
-            } catch (e: IOException) {
-                Log.e(
-                    TAG,
-                    "Error al conectar por Bluetooth con ${printerDevice.name}: ${e.message}",
-                    e
+
+                // Buscar impresora cuyo nombre contenga "POS-58", "5890", etc.
+                val printerDevice =
+                        pairedDevices.firstOrNull { device ->
+                            val name = device.name ?: ""
+                            PRINTER_BT_NAMES.any { sig -> name.contains(sig, ignoreCase = true) }
+                        }
+
+                if (printerDevice == null) {
+                    Log.e(TAG, "No encontré impresora tipo POS-58 entre los emparejados")
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                                        this@MainActivity,
+                                        "No encontré impresora POS-58 emparejada",
+                                        Toast.LENGTH_LONG
+                                )
+                                .show()
+                    }
+                    return@withContext null
+                }
+
+                Log.d(
+                        TAG,
+                        "Intentando conectar con la impresora Bluetooth: ${printerDevice.name} [${printerDevice.address}]"
                 )
-                try {
-                    bluetoothSocket?.close()
-                } catch (_: IOException) {
+
+                return@withContext try {
+                    val socket = printerDevice.createRfcommSocketToServiceRecord(PRINTER_UUID)
+                    adapter.cancelDiscovery()
+                    socket.connect()
+                    Log.d(TAG, "Conexión Bluetooth establecida con ${printerDevice.name}")
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                                        this@MainActivity,
+                                        "Conectado a ${printerDevice.name}",
+                                        Toast.LENGTH_SHORT
+                                )
+                                .show()
+                    }
+                    bluetoothSocket = socket
+                    socket
+                } catch (e: IOException) {
+                    Log.e(
+                            TAG,
+                            "Error al conectar por Bluetooth con ${printerDevice.name}: ${e.message}",
+                            e
+                    )
+                    try {
+                        bluetoothSocket?.close()
+                    } catch (_: IOException) {}
+                    bluetoothSocket = null
+                    null
                 }
-                bluetoothSocket = null
-                null
             }
-        }
 
     @SuppressLint("MissingPermission")
     private suspend fun printViaBluetooth(textoTicket: String): Boolean =
-        withContext(Dispatchers.IO) {
-            try {
-                val socket = bluetoothSocket ?: connectToBluetoothPrinter()
-                if (socket == null || !socket.isConnected) {
-                    Log.e(TAG, "No se pudo conectar a la impresora Bluetooth")
-                    return@withContext false
+            withContext(Dispatchers.IO) {
+                try {
+                    val socket = bluetoothSocket ?: connectToBluetoothPrinter()
+                    if (socket == null || !socket.isConnected) {
+                        Log.e(TAG, "No se pudo conectar a la impresora Bluetooth")
+                        return@withContext false
+                    }
+
+                    val outputStream: OutputStream = socket.outputStream
+
+                    // ESC @ -> reset impresora
+                    val initPrinter = byteArrayOf(0x1B, 0x40)
+
+                    // Texto del ticket con codificación occidental
+                    // (windows-1252 imprime bien ñ, acentos en muchas POS 58mm)
+                    val ticketBytes = textoTicket.toByteArray(Charset.forName("windows-1252"))
+
+                    // Alimentar papel y comando de corte (ignorado si no tiene
+                    // cortador)
+                    val feedAndCut = byteArrayOf(0x0A, 0x0A, 0x0A, 0x0A, 0x1D, 0x56, 0x42, 0x00)
+
+                    outputStream.write(initPrinter)
+                    outputStream.write(ticketBytes)
+                    outputStream.write(feedAndCut)
+                    outputStream.flush()
+
+                    true
+                } catch (e: IOException) {
+                    Log.e(TAG, "Error de E/S al imprimir por Bluetooth: ${e.message}", e)
+                    false
+                } catch (e: SecurityException) {
+                    Log.e(TAG, "Error de permisos BT al imprimir: ${e.message}", e)
+                    false
+                } finally {
+                    closeBluetoothSocket()
                 }
-
-                val outputStream: OutputStream = socket.outputStream
-
-                // ESC @ -> reset impresora
-                val initPrinter = byteArrayOf(0x1B, 0x40)
-
-                // Texto del ticket con codificación occidental
-                // (windows-1252 imprime bien ñ, acentos en muchas POS 58mm)
-                val ticketBytes = textoTicket.toByteArray(Charset.forName("windows-1252"))
-
-                // Alimentar papel y comando de corte (ignorado si no tiene
-                // cortador)
-                val feedAndCut = byteArrayOf(0x0A, 0x0A, 0x0A, 0x0A, 0x1D, 0x56, 0x42, 0x00)
-
-                outputStream.write(initPrinter)
-                outputStream.write(ticketBytes)
-                outputStream.write(feedAndCut)
-                outputStream.flush()
-
-                true
-            } catch (e: IOException) {
-                Log.e(TAG, "Error de E/S al imprimir por Bluetooth: ${e.message}", e)
-                false
-            } catch (e: SecurityException) {
-                Log.e(TAG, "Error de permisos BT al imprimir: ${e.message}", e)
-                false
-            } finally {
-                closeBluetoothSocket()
             }
-        }
 
     private fun closeBluetoothSocket() {
         try {
@@ -2477,18 +2607,18 @@ class MainActivity : AppCompatActivity() {
 
         // 1. Buscar vendor/product conocidos
         var printerDevice =
-            deviceList.firstOrNull { dev ->
-                PRINTER_USB_IDS.contains(Pair(dev.vendorId, dev.productId))
-            }
+                deviceList.firstOrNull { dev ->
+                    PRINTER_USB_IDS.contains(Pair(dev.vendorId, dev.productId))
+                }
 
         // 2. Si no, buscar interfaz con clase PRINTER
         if (printerDevice == null) {
             printerDevice =
-                deviceList.firstOrNull { dev ->
-                    (0 until dev.interfaceCount).any { idx ->
-                        dev.getInterface(idx).interfaceClass == UsbConstants.USB_CLASS_PRINTER
+                    deviceList.firstOrNull { dev ->
+                        (0 until dev.interfaceCount).any { idx ->
+                            dev.getInterface(idx).interfaceClass == UsbConstants.USB_CLASS_PRINTER
+                        }
                     }
-                }
         }
 
         // 3. Fallback: primero disponible
@@ -2507,12 +2637,12 @@ class MainActivity : AppCompatActivity() {
         } else {
             Log.d(TAG, "Solicitando permiso USB para: ${printerDevice.deviceName}")
             val permissionIntent =
-                PendingIntent.getBroadcast(
-                    this,
-                    0,
-                    Intent(ACTION_USB_PERMISSION),
-                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-                )
+                    PendingIntent.getBroadcast(
+                            this,
+                            0,
+                            Intent(ACTION_USB_PERMISSION),
+                            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                    )
             usbManager.requestPermission(printerDevice, permissionIntent)
         }
     }
@@ -2534,7 +2664,7 @@ class MainActivity : AppCompatActivity() {
                 for (j in 0 until usbIface.endpointCount) {
                     val endpoint = usbIface.getEndpoint(j)
                     if (endpoint.type == UsbConstants.USB_ENDPOINT_XFER_BULK &&
-                        endpoint.direction == UsbConstants.USB_DIR_OUT
+                                    endpoint.direction == UsbConstants.USB_DIR_OUT
                     ) {
                         usbEndpointOut = endpoint
                     }
@@ -2544,7 +2674,7 @@ class MainActivity : AppCompatActivity() {
 
         if (usbInterface == null || usbEndpointOut == null) {
             Toast.makeText(this, "No se encontró interfaz de impresora USB", Toast.LENGTH_SHORT)
-                .show()
+                    .show()
             releaseUsbDevice()
             return
         }
@@ -2560,72 +2690,72 @@ class MainActivity : AppCompatActivity() {
     }
 
     private suspend fun printViaUsb(data: String): Boolean =
-        withContext(Dispatchers.IO) {
-            if (usbDeviceConnection == null || usbEndpointOut == null) {
-                Log.w(TAG, "Dispositivo USB no configurado. Reintentando detección.")
-                withContext(Dispatchers.Main) { detectAndRequestUsbPermission() }
-                return@withContext false
-            }
+            withContext(Dispatchers.IO) {
+                if (usbDeviceConnection == null || usbEndpointOut == null) {
+                    Log.w(TAG, "Dispositivo USB no configurado. Reintentando detección.")
+                    withContext(Dispatchers.Main) { detectAndRequestUsbPermission() }
+                    return@withContext false
+                }
 
-            try {
-                // ESC @ -> reset impresora
-                val initPrinter = byteArrayOf(0x1B, 0x40)
+                try {
+                    // ESC @ -> reset impresora
+                    val initPrinter = byteArrayOf(0x1B, 0x40)
 
-                // Ticket con acentos correcto
-                val ticketBytes = data.toByteArray(Charset.forName("windows-1252"))
+                    // Ticket con acentos correcto
+                    val ticketBytes = data.toByteArray(Charset.forName("windows-1252"))
 
-                // Alimentación y corte opcional
-                val feedAndCut = byteArrayOf(0x0A, 0x0A, 0x0A, 0x0A, 0x1D, 0x56, 0x42, 0x00)
+                    // Alimentación y corte opcional
+                    val feedAndCut = byteArrayOf(0x0A, 0x0A, 0x0A, 0x0A, 0x1D, 0x56, 0x42, 0x00)
 
-                val fullJob = ByteArray(initPrinter.size + ticketBytes.size + feedAndCut.size)
-                System.arraycopy(initPrinter, 0, fullJob, 0, initPrinter.size)
-                System.arraycopy(ticketBytes, 0, fullJob, initPrinter.size, ticketBytes.size)
-                System.arraycopy(
-                    feedAndCut,
-                    0,
-                    fullJob,
-                    initPrinter.size + ticketBytes.size,
-                    feedAndCut.size
-                )
-
-                val sentBytes =
-                    usbDeviceConnection!!.bulkTransfer(
-                        usbEndpointOut!!,
-                        fullJob,
-                        fullJob.size,
-                        5000
+                    val fullJob = ByteArray(initPrinter.size + ticketBytes.size + feedAndCut.size)
+                    System.arraycopy(initPrinter, 0, fullJob, 0, initPrinter.size)
+                    System.arraycopy(ticketBytes, 0, fullJob, initPrinter.size, ticketBytes.size)
+                    System.arraycopy(
+                            feedAndCut,
+                            0,
+                            fullJob,
+                            initPrinter.size + ticketBytes.size,
+                            feedAndCut.size
                     )
 
-                if (sentBytes >= 0) {
-                    Log.d(TAG, "Enviados $sentBytes bytes vía USB.")
-                    true
-                } else {
-                    Log.e(TAG, "Error al enviar datos USB, sentBytes=$sentBytes")
+                    val sentBytes =
+                            usbDeviceConnection!!.bulkTransfer(
+                                    usbEndpointOut!!,
+                                    fullJob,
+                                    fullJob.size,
+                                    5000
+                            )
+
+                    if (sentBytes >= 0) {
+                        Log.d(TAG, "Enviados $sentBytes bytes vía USB.")
+                        true
+                    } else {
+                        Log.e(TAG, "Error al enviar datos USB, sentBytes=$sentBytes")
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                            this@MainActivity,
+                                            "Error de transmisión USB",
+                                            Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                        }
+                        releaseUsbDevice()
+                        false
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Excepción USB al imprimir: ${e.message}", e)
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
-                            this@MainActivity,
-                            "Error de transmisión USB",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
+                                        this@MainActivity,
+                                        "Excepción de USB: ${e.message}",
+                                        Toast.LENGTH_SHORT
+                                )
+                                .show()
                     }
                     releaseUsbDevice()
                     false
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Excepción USB al imprimir: ${e.message}", e)
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Excepción de USB: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-                releaseUsbDevice()
-                false
             }
-        }
 
     private fun releaseUsbDevice() {
         usbDeviceConnection?.let { conn ->
@@ -2704,15 +2834,15 @@ class MainActivity : AppCompatActivity() {
             val itemsDeLaOrden = appDatabase.orderDao().getItemsForOrder(order.orderId)
 
             val productosParaResumen =
-                itemsDeLaOrden.map { itemEntity ->
-                    Producto(
-                        nombre = itemEntity.name,
-                        precio = itemEntity.unitPrice,
-                        cantidad = itemEntity.quantity,
-                        esCombo = itemEntity.esCombo,
-                        comment = itemEntity.comment
-                    )
-                }
+                    itemsDeLaOrden.map { itemEntity ->
+                        Producto(
+                                nombre = itemEntity.name,
+                                precio = itemEntity.unitPrice,
+                                cantidad = itemEntity.quantity,
+                                esCombo = itemEntity.esCombo,
+                                comment = itemEntity.comment
+                        )
+                    }
 
             // 3. Volver al hilo principal para mostrar el diálogo
             withContext(Dispatchers.Main) {
@@ -2735,19 +2865,19 @@ class MainActivity : AppCompatActivity() {
     // -------------------------------------------------------------------------
 
     data class ProductData(
-        val cantidadTV: TextView,
-        val btnMenos: Button,
-        val btnMas: Button,
-        val btnComment: ImageButton,
-        val precio: Double
+            val cantidadTV: TextView,
+            val btnMenos: Button,
+            val btnMas: Button,
+            val btnComment: ImageButton,
+            val precio: Double
     )
 
     data class Producto(
-        val nombre: String,
-        val precio: Double,
-        val cantidad: Int,
-        val esCombo: Boolean,
-        val comment: String? = null
+            val nombre: String,
+            val precio: Double,
+            val cantidad: Int,
+            val esCombo: Boolean,
+            val comment: String? = null
     ) {
         val total: Double
             get() = precio * cantidad
@@ -2776,13 +2906,13 @@ class MainActivity : AppCompatActivity() {
                     repeat(qty) { i -> effective.add(if (i < comments.size) comments[i] else "") }
                     effective.groupingBy { it }.eachCount().forEach { (comment, count) ->
                         lista.add(
-                            Producto(
-                                nombre = nombre,
-                                precio = data.precio,
-                                cantidad = count,
-                                esCombo = false,
-                                comment = if (comment.isBlank()) null else comment
-                            )
+                                Producto(
+                                        nombre = nombre,
+                                        precio = data.precio,
+                                        cantidad = count,
+                                        esCombo = false,
+                                        comment = if (comment.isBlank()) null else comment
+                                )
                         )
                     }
                 }
@@ -2795,14 +2925,14 @@ class MainActivity : AppCompatActivity() {
         // NOTA: Para productos como "Taco (c/u)", si estuvieran aquí, el split funcionaría mal,
         // pero esos entran en el bloque 1 porque no están en selectedVariations normalmente.
         val variantsGrouped =
-            selectedVariations.groupBy {
-                // Buscamos el parentesis de apertura que denota variante
-                // Ojo con nombres que ya traigan parentesis de origen, pero nuestros bases son
-                // "Quesadillas", etc.
-                // Si el nombre no tiene ' (', tomamos el nombre completo (fallback)
-                val idx = it.nombre.indexOf(" (")
-                if (idx != -1) it.nombre.substring(0, idx) else it.nombre
-            }
+                selectedVariations.groupBy {
+                    // Buscamos el parentesis de apertura que denota variante
+                    // Ojo con nombres que ya traigan parentesis de origen, pero nuestros bases son
+                    // "Quesadillas", etc.
+                    // Si el nombre no tiene ' (', tomamos el nombre completo (fallback)
+                    val idx = it.nombre.indexOf(" (")
+                    if (idx != -1) it.nombre.substring(0, idx) else it.nombre
+                }
 
         variantsGrouped.forEach { (baseName, variants) ->
             val comments = productComments[baseName] ?: emptyList()
@@ -2810,10 +2940,10 @@ class MainActivity : AppCompatActivity() {
             // Asignar comentarios por orden posicional (índice en la lista de variantes = índice
             // comentario)
             val detailedVariants =
-                variants.mapIndexed { index, item ->
-                    val c = if (index < comments.size) comments[index] else ""
-                    item.copy(comment = if (c.isBlank()) null else c)
-                }
+                    variants.mapIndexed { index, item ->
+                        val c = if (index < comments.size) comments[index] else ""
+                        item.copy(comment = if (c.isBlank()) null else c)
+                    }
 
             // Agrupar por (Nombre completo con variante + Comentario) para consolidar en el ticket
             // Ej: 2 "Quesadillas (Chorizo)" con mismo comentario -> 1 item qty=2
@@ -2833,17 +2963,17 @@ class MainActivity : AppCompatActivity() {
 
                 // Normales toman los primeros 'cantidad' slots
                 val normalComments =
-                    (0 until cantidad).map { i -> if (i < comments.size) comments[i] else "" }
+                        (0 until cantidad).map { i -> if (i < comments.size) comments[i] else "" }
 
                 normalComments.groupingBy { it }.eachCount().forEach { (c, count) ->
                     lista.add(
-                        Producto(
-                            nombre = nombre,
-                            precio = precio,
-                            cantidad = count,
-                            esCombo = false,
-                            comment = if (c.isBlank()) null else c
-                        )
+                            Producto(
+                                    nombre = nombre,
+                                    precio = precio,
+                                    cantidad = count,
+                                    esCombo = false,
+                                    comment = if (c.isBlank()) null else c
+                            )
                     )
                 }
             }
@@ -2861,19 +2991,19 @@ class MainActivity : AppCompatActivity() {
 
                 // Combos toman los slots después de las normales
                 val comboComments =
-                    (offset until (offset + cantidad)).map { i ->
-                        if (i < comments.size) comments[i] else ""
-                    }
+                        (offset until (offset + cantidad)).map { i ->
+                            if (i < comments.size) comments[i] else ""
+                        }
 
                 comboComments.groupingBy { it }.eachCount().forEach { (c, count) ->
                     lista.add(
-                        Producto(
-                            nombre = "$nombre + Combo",
-                            precio = precioCombo,
-                            cantidad = count,
-                            esCombo = true,
-                            comment = if (c.isBlank()) null else c
-                        )
+                            Producto(
+                                    nombre = "$nombre + Combo",
+                                    precio = precioCombo,
+                                    cantidad = count,
+                                    esCombo = true,
+                                    comment = if (c.isBlank()) null else c
+                            )
                     )
                 }
             }
@@ -2891,37 +3021,37 @@ class MainActivity : AppCompatActivity() {
             if (combos.isEmpty()) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
-                        this@MainActivity,
-                        "No hay combos para guardar",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                                    this@MainActivity,
+                                    "No hay combos para guardar",
+                                    Toast.LENGTH_SHORT
+                            )
+                            .show()
                 }
                 return@launch
             }
 
             // 🔹 Convertir productos a entidades para guardar en BD
             val comboItems =
-                combos.map {
-                    OrderItemEntity(
-                        orderId = 0L, // se asignará automáticamente al insertar
-                        name = it.nombre,
-                        unitPrice = it.precio,
-                        quantity = it.cantidad,
-                        esCombo = true,
-                        comment = it.comment
-                    )
-                }
+                    combos.map {
+                        OrderItemEntity(
+                                orderId = 0L, // se asignará automáticamente al insertar
+                                name = it.nombre,
+                                unitPrice = it.precio,
+                                quantity = it.cantidad,
+                                esCombo = true,
+                                comment = it.comment
+                        )
+                    }
 
             // 🔹 Crear la orden (solo combos)
             val order =
-                OrderEntity(
-                    mesa = "Combos Especiales",
-                    createdAt = System.currentTimeMillis(),
-                    businessDate = System.currentTimeMillis(),
-                    grandTotal = comboItems.sumOf { it.unitPrice * it.quantity },
-                    esCombo = true
-                )
+                    OrderEntity(
+                            mesa = "Combos Especiales",
+                            createdAt = System.currentTimeMillis(),
+                            businessDate = System.currentTimeMillis(),
+                            grandTotal = comboItems.sumOf { it.unitPrice * it.quantity },
+                            esCombo = true
+                    )
 
             // 🔹 Insertar en BD usando tu DAO transaccional
             val db = AppDatabase.getDatabase(applicationContext, this)
@@ -2929,11 +3059,11 @@ class MainActivity : AppCompatActivity() {
 
             withContext(Dispatchers.Main) {
                 Toast.makeText(
-                    this@MainActivity,
-                    "Combos guardados correctamente (${combos.size})",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+                                this@MainActivity,
+                                "Combos guardados correctamente (${combos.size})",
+                                Toast.LENGTH_SHORT
+                        )
+                        .show()
             }
         }
     }
@@ -2954,115 +3084,115 @@ class MainActivity : AppCompatActivity() {
         }
 
         prefs.edit()
-            .putString("last_business_date", currentBusinessDate)
-            .putInt("daily_order_number", newNumber)
-            .apply()
+                .putString("last_business_date", currentBusinessDate)
+                .putInt("daily_order_number", newNumber)
+                .apply()
 
         return newNumber
     }
 
     private suspend fun generarTextoTicket(
-        productosSeleccionados: List<Producto>,
-        dailyNumber: Int? = null
+            productosSeleccionados: List<Producto>,
+            dailyNumber: Int? = null
     ): String =
-        withContext(Dispatchers.IO) {
-            val fechaHora =
-                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
-            val sb = StringBuilder()
-            val anchoTotalLinea = 32
-            val lineaSeparadora = "-".repeat(anchoTotalLinea)
+            withContext(Dispatchers.IO) {
+                val fechaHora =
+                        SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+                val sb = StringBuilder()
+                val anchoTotalLinea = 32
+                val lineaSeparadora = "-".repeat(anchoTotalLinea)
 
-            // Encabezado Simple
-            sb.appendLine("ANTOJITOS MEXICANOS MARGARITA")
-            sb.appendLine("TICKET DE COMPRA")
-            if (dailyNumber != null) {
-                sb.appendLine("ORDEN DIARIA: #$dailyNumber")
-            }
-            sb.appendLine("Fecha: $fechaHora")
-
-            // Datos de cuenta si aplica
-            if (noCuenta.isChecked) {
-                sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)} ")
-                sb.appendLine("Nombre: Margarita Daniel Pérez")
-                sb.appendLine("Banco: BBVA")
-            }
-
-            // Mesa/cliente
-            val mesaInfo = editTextMesa.text.toString().trim()
-            if (mesaInfo.isNotEmpty()) {
-                sb.appendLine("Mesa: ${mesaInfo.uppercase()}")
-            }
-            sb.appendLine(lineaSeparadora)
-
-            // Obtener productos seleccionados desde tus inputs (debe devolver
-            // List<Producto>)
-
-            // Guardar orden en BD y mostrar resumen en el layou
-
-            // Separación normales vs combos
-            val combos = mutableListOf<Producto>()
-            val normales = mutableListOf<Producto>()
-            for (p in productosSeleccionados) if (p.esCombo) combos.add(p) else normales.add(p)
-
-            // SIN CABECERAS DE COLUMNA
-
-            var totalGeneral = 0.0
-
-            // Listado de productos normales
-            if (normales.isNotEmpty()) {
-                for (p in normales) {
-                    val totalProducto = p.precio * p.cantidad
-                    totalGeneral += totalProducto
-
-                    // Formato Minimalista: "Cant x Producto"
-                    // Ej: "2 x Quesadilla (Chorizo)"
-                    sb.appendLine("${p.cantidad} x ${p.nombre}")
-
-                    // Imprimir comentario justo debajo del producto
-                    if (!p.comment.isNullOrEmpty()) {
-                        sb.appendLine("  [${p.comment}]")
-                    }
+                // Encabezado Simple
+                sb.appendLine("ANTOJITOS MEXICANOS MARGARITA")
+                sb.appendLine("TICKET DE COMPRA")
+                if (dailyNumber != null) {
+                    sb.appendLine("ORDEN DIARIA: #$dailyNumber")
                 }
-            }
+                sb.appendLine("Fecha: $fechaHora")
 
-            // Listado de combos
-            if (combos.isNotEmpty()) {
-                if (normales.isNotEmpty())
-                    sb.appendLine(lineaSeparadora) // Separador si hay ambos
-                for (c in combos) {
-                    val totalCombo = c.precio * c.cantidad
-                    totalGeneral += totalCombo
-
-                    sb.appendLine("${c.cantidad} x ${c.nombre}")
-
-                    // Imprimir comentario justo debajo del producto
-                    if (!c.comment.isNullOrEmpty()) {
-                        sb.appendLine("  [${c.comment}]")
-                    }
+                // Datos de cuenta si aplica
+                if (noCuenta.isChecked) {
+                    sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)} ")
+                    sb.appendLine("Nombre: Margarita Daniel Pérez")
+                    sb.appendLine("Banco: BBVA")
                 }
-            }
 
-            // (Sección de COMENTARIOS ESPECIALES eliminada ya que se muestran en línea)
-
-            // Notas/Extras/Postres
-            val editNotas = findViewById<EditText>(R.id.editNotasExtras)
-            val notasText = editNotas.text.toString().trim()
-            if (notasText.isNotEmpty()) {
+                // Mesa/cliente
+                val mesaInfo = editTextMesa.text.toString().trim()
+                if (mesaInfo.isNotEmpty()) {
+                    sb.appendLine("Mesa: ${mesaInfo.uppercase()}")
+                }
                 sb.appendLine(lineaSeparadora)
-                sb.appendLine("NOTAS:")
-                sb.appendLine(notasText)
+
+                // Obtener productos seleccionados desde tus inputs (debe devolver
+                // List<Producto>)
+
+                // Guardar orden en BD y mostrar resumen en el layou
+
+                // Separación normales vs combos
+                val combos = mutableListOf<Producto>()
+                val normales = mutableListOf<Producto>()
+                for (p in productosSeleccionados) if (p.esCombo) combos.add(p) else normales.add(p)
+
+                // SIN CABECERAS DE COLUMNA
+
+                var totalGeneral = 0.0
+
+                // Listado de productos normales
+                if (normales.isNotEmpty()) {
+                    for (p in normales) {
+                        val totalProducto = p.precio * p.cantidad
+                        totalGeneral += totalProducto
+
+                        // Formato Minimalista: "Cant x Producto"
+                        // Ej: "2 x Quesadilla (Chorizo)"
+                        sb.appendLine("${p.cantidad} x ${p.nombre}")
+
+                        // Imprimir comentario justo debajo del producto
+                        if (!p.comment.isNullOrEmpty()) {
+                            sb.appendLine("  [${p.comment}]")
+                        }
+                    }
+                }
+
+                // Listado de combos
+                if (combos.isNotEmpty()) {
+                    if (normales.isNotEmpty())
+                            sb.appendLine(lineaSeparadora) // Separador si hay ambos
+                    for (c in combos) {
+                        val totalCombo = c.precio * c.cantidad
+                        totalGeneral += totalCombo
+
+                        sb.appendLine("${c.cantidad} x ${c.nombre}")
+
+                        // Imprimir comentario justo debajo del producto
+                        if (!c.comment.isNullOrEmpty()) {
+                            sb.appendLine("  [${c.comment}]")
+                        }
+                    }
+                }
+
+                // (Sección de COMENTARIOS ESPECIALES eliminada ya que se muestran en línea)
+
+                // Notas/Extras/Postres
+                val editNotas = findViewById<EditText>(R.id.editNotasExtras)
+                val notasText = editNotas.text.toString().trim()
+                if (notasText.isNotEmpty()) {
+                    sb.appendLine(lineaSeparadora)
+                    sb.appendLine("NOTAS:")
+                    sb.appendLine(notasText)
+                }
+
+                // Solo Total Final
+                sb.appendLine(lineaSeparadora)
+                sb.appendLine("TOTAL: $${String.format("%.2f", totalGeneral)}")
+                sb.appendLine(lineaSeparadora)
+                sb.appendLine("")
+                sb.appendLine("Gracias por su compra")
+                sb.appendLine("\n\n\n") // feed para corte manual
+
+                return@withContext sb.toString()
             }
-
-            // Solo Total Final
-            sb.appendLine(lineaSeparadora)
-            sb.appendLine("TOTAL: $${String.format("%.2f", totalGeneral)}")
-            sb.appendLine(lineaSeparadora)
-            sb.appendLine("")
-            sb.appendLine("Gracias por su compra")
-            sb.appendLine("\n\n\n") // feed para corte manual
-
-            return@withContext sb.toString()
-        }
 
     // -------------------------------------------------------------------------
     // Persistencia en base de datos y panel admin
@@ -3088,9 +3218,9 @@ class MainActivity : AppCompatActivity() {
     /** Guarda la orden en Room y refresca el panel */
     /** Guarda la orden en Room y refresca el panel */
     private fun guardarOrden(
-        productos: List<Producto>,
-        mesaInfo: String,
-        dailyNumber: Int? = null
+            productos: List<Producto>,
+            mesaInfo: String,
+            dailyNumber: Int? = null
     ) {
         if (productos.isEmpty()) {
             Toast.makeText(this, "No hay productos para guardar", Toast.LENGTH_SHORT).show()
@@ -3103,16 +3233,16 @@ class MainActivity : AppCompatActivity() {
             if (currentOrderId != -1L) {
                 // MODO: AGREGAR A ORDEN EXISTENTE
                 val items =
-                    productos.map {
-                        OrderItemEntity(
-                            orderId = currentOrderId,
-                            name = it.nombre,
-                            unitPrice = it.precio,
-                            quantity = it.cantidad,
-                            esCombo = it.esCombo,
-                            comment = it.comment
-                        )
-                    }
+                        productos.map {
+                            OrderItemEntity(
+                                    orderId = currentOrderId,
+                                    name = it.nombre,
+                                    unitPrice = it.precio,
+                                    quantity = it.cantidad,
+                                    esCombo = it.esCombo,
+                                    comment = it.comment
+                            )
+                        }
 
                 // 1. Insertar items
                 appDatabase.orderDao().insertOrderItems(items)
@@ -3124,11 +3254,11 @@ class MainActivity : AppCompatActivity() {
 
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
-                        this@MainActivity,
-                        "Agregado a pedido existente",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                                    this@MainActivity,
+                                    "Agregado a pedido existente",
+                                    Toast.LENGTH_SHORT
+                            )
+                            .show()
                     limpiarCantidades()
                     loadExistingOrderDetails(currentOrderId)
                 }
@@ -3137,26 +3267,26 @@ class MainActivity : AppCompatActivity() {
                 val createdAt = System.currentTimeMillis()
 
                 val orderEntity =
-                    OrderEntity(
-                        mesa = mesaInfo.ifBlank { null },
-                        createdAt = createdAt,
-                        businessDate = createdAt,
-                        grandTotal = newTotal,
-                        status = "OPEN",
-                        dailyOrderNumber = dailyNumber
-                    )
+                        OrderEntity(
+                                mesa = mesaInfo.ifBlank { null },
+                                createdAt = createdAt,
+                                businessDate = createdAt,
+                                grandTotal = newTotal,
+                                status = "OPEN",
+                                dailyOrderNumber = dailyNumber
+                        )
 
                 val items =
-                    productos.map {
-                        OrderItemEntity(
-                            orderId = 0,
-                            name = it.nombre,
-                            unitPrice = it.precio,
-                            quantity = it.cantidad,
-                            esCombo = it.esCombo,
-                            comment = it.comment
-                        )
-                    }
+                        productos.map {
+                            OrderItemEntity(
+                                    orderId = 0,
+                                    name = it.nombre,
+                                    unitPrice = it.precio,
+                                    quantity = it.cantidad,
+                                    esCombo = it.esCombo,
+                                    comment = it.comment
+                            )
+                        }
 
                 // Inserta
                 val newId = appDatabase.orderDao().insertOrderWithItems(orderEntity, items)
@@ -3192,20 +3322,20 @@ class MainActivity : AppCompatActivity() {
 
     /** utilidad para armar texto resumen de ventas */
     private inline fun <T> buildResumen(
-        resultados: List<T>,
-        crossinline line: (T) -> String
+            resultados: List<T>,
+            crossinline line: (T) -> String
     ): String {
         val sb = StringBuilder()
         var totalGeneral = 0.0
         resultados.forEach { r ->
             sb.appendLine(line(r))
             val total =
-                when (r) {
-                    is DailySummary -> r.totalSales
-                    is WeeklySummary -> r.totalSales
-                    is MonthlySummary -> r.totalSales
-                    else -> 0.0
-                }
+                    when (r) {
+                        is DailySummary -> r.totalSales
+                        is WeeklySummary -> r.totalSales
+                        is MonthlySummary -> r.totalSales
+                        else -> 0.0
+                    }
             totalGeneral += total
         }
         sb.appendLine("------------------------------")
@@ -3219,9 +3349,9 @@ class MainActivity : AppCompatActivity() {
             val resultados = appDatabase.orderDao().getDailySales()
             val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val texto =
-                buildResumen(resultados) { r ->
-                    "${sdf.format(Date(r.businessDate))}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
-                }
+                    buildResumen(resultados) { r ->
+                        "${sdf.format(Date(r.businessDate))}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
+                    }
             withContext(Dispatchers.Main) { adminSummaryTextView.text = texto }
         }
     }
@@ -3231,9 +3361,9 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val resultados = appDatabase.orderDao().getWeeklySales()
             val texto =
-                buildResumen(resultados) { r ->
-                    "Semana ${r.week}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
-                }
+                    buildResumen(resultados) { r ->
+                        "Semana ${r.week}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
+                    }
             withContext(Dispatchers.Main) { adminSummaryTextView.text = texto }
         }
     }
@@ -3243,9 +3373,9 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val resultados = appDatabase.orderDao().getMonthlySales()
             val texto =
-                buildResumen(resultados) { r ->
-                    "Mes ${r.month}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
-                }
+                    buildResumen(resultados) { r ->
+                        "Mes ${r.month}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
+                    }
             withContext(Dispatchers.Main) { adminSummaryTextView.text = texto }
         }
     }
@@ -3265,7 +3395,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@MainActivity, "Error al cargar pedidos", Toast.LENGTH_SHORT)
-                        .show()
+                            .show()
                     Log.e("MainActivity", "Error cargando pedidos", e)
                 }
             }
@@ -3306,14 +3436,14 @@ class MainActivity : AppCompatActivity() {
 
             // Construye una lista de Producto a partir de los items guardados
             val productos =
-                items.map {
-                    Producto(
-                        nombre = it.name,
-                        precio = it.unitPrice,
-                        cantidad = it.quantity,
-                        esCombo = it.esCombo
-                    )
-                }
+                    items.map {
+                        Producto(
+                                nombre = it.name,
+                                precio = it.unitPrice,
+                                cantidad = it.quantity,
+                                esCombo = it.esCombo
+                        )
+                    }
 
             // Genera el texto del ticket con los productos recuperados
             val ticket = generarTextoTicket(productos)
@@ -3336,10 +3466,10 @@ class MainActivity : AppCompatActivity() {
 
                 // Construye el AlertDialog con la vista personalizada
                 val alertDialog =
-                    AlertDialog.Builder(this@MainActivity)
-                        .setView(dialogView)
-                        .setCancelable(true)
-                        .create()
+                        AlertDialog.Builder(this@MainActivity)
+                                .setView(dialogView)
+                                .setCancelable(true)
+                                .create()
 
                 // Al imprimir, ejecuta la impresión en un hilo de fondo y cierra el
                 // diálogo
@@ -3375,7 +3505,7 @@ class MainActivity : AppCompatActivity() {
                     val sb = StringBuilder()
                     items.forEach { item ->
                         sb.append(
-                            "${item.quantity} x ${item.name} ... $${"%.2f".format(item.unitPrice * item.quantity)}\n"
+                                "${item.quantity} x ${item.name} ... $${"%.2f".format(item.unitPrice * item.quantity)}\n"
                         )
                     }
                     sb.append("\nTotal Acumulado: $${"%.2f".format(total)}")
@@ -3390,5 +3520,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 }

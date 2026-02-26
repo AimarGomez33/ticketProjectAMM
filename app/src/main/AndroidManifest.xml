@@ -38,7 +38,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".InventoryRefrescoActivity" />
+        <activity android:name=".InventoryAguaActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="false">
@@ -60,8 +61,7 @@
                 android:resource="@xml/device_filter" />
         </activity>
 
-        <activity android:name=".InventoryAguaActivity" />
-        <activity android:name=".InventoryRefrescoActivity" />
+
 
 
     </application>

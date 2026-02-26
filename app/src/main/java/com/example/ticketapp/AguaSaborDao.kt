@@ -1,5 +1,6 @@
 package com.example.ticketapp
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.Flow
 interface AguaSaborDao {
     @Query("SELECT * FROM aguas_sabor ORDER BY flavor_name ASC")
     fun getAllFlow(): Flow<List<AguaSaborEntity>>
-
 
     @Query("SELECT * FROM aguas_sabor ORDER BY flavor_name ASC")
     suspend fun getAll(): List<AguaSaborEntity>
@@ -27,4 +27,10 @@ interface AguaSaborDao {
 
     @Query("DELETE FROM aguas_sabor")
     suspend fun deleteAll()
+    @Query("SELECT * FROM aguas_sabor ORDER BY flavor_name ASC")
+    suspend fun getAllSync(): List<AguaSaborEntity>
+
+    // OPCIÓN B: Por si quieres filtrar (opcional)
+    @Query("SELECT * FROM aguas_sabor WHERE quantity_available > 0 ORDER BY flavor_name ASC")
+    fun getAvailableFlavors(): Flow<List<AguaSaborEntity>>
 }

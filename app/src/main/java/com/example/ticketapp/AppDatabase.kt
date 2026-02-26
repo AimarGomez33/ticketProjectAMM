@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
                         OrderItemEntity::class,
                         AguaSaborEntity::class,
                         RefrescoEntity::class],
-        version = 20,
+        version = 21,
         exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -29,23 +29,6 @@ abstract class AppDatabase : RoomDatabase() {
 
         companion object {
                 @Volatile private var INSTANCE: AppDatabase? = null
-
-                val MIGRATION_12_13 =
-                        object : Migration(1, 2) {
-                                override fun migrate(db: SupportSQLiteDatabase) {
-                                        // Define aquí los cambios.
-                                        // En este caso, añadimos la columna 'esCombo' a la tabla
-                                        // 'orders'.
-                                        // La columna es de tipo INTEGER (0 para false, 1 para
-                                        // true).
-                                        // Le damos un valor por defecto de 0 (false) para todos los
-                                        // registros
-                                        // existentes.
-                                        db.execSQL(
-                                                "ALTER TABLE orders ADD COLUMN esCombo INTEGER NOT NULL DEFAULT 0"
-                                        )
-                                }
-                        }
 
                 val MIGRATION_16_17 =
                         object : Migration(16, 17) {
@@ -73,14 +56,30 @@ abstract class AppDatabase : RoomDatabase() {
                                         )
                                 }
                         }
+
+                // Antes esta migración creaba refrescos de nuevo (bug),
+                // ahora crea aguas_sabor de forma independiente.
                 val MIGRATION_19_20 =
-                        object : Migration(19,20){
-                        override fun migrate(db: SupportSQLiteDatabase) {
-                        db.execSQL(
-                                "CREATE TABLE IF NOT EXISTS `refrescos` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `flavor_name` TEXT NOT NULL, `quantity_available` INTEGER NOT NULL)"
-                        )
+                        object : Migration(19, 20) {
+                                override fun migrate(db: SupportSQLiteDatabase) {
+                                        db.execSQL(
+                                                "CREATE TABLE IF NOT EXISTS `aguas_sabor` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `flavor_name` TEXT NOT NULL, `quantity_available` INTEGER NOT NULL)"
+                                        )
+                                }
                         }
-                }
+
+                // Migración de seguridad: garantiza que ambas tablas existen
+                val MIGRATION_20_21 =
+                        object : Migration(20, 21) {
+                                override fun migrate(db: SupportSQLiteDatabase) {
+                                        db.execSQL(
+                                                "CREATE TABLE IF NOT EXISTS `aguas_sabor` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `flavor_name` TEXT NOT NULL, `quantity_available` INTEGER NOT NULL)"
+                                        )
+                                        db.execSQL(
+                                                "CREATE TABLE IF NOT EXISTS `refrescos` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `flavor_name` TEXT NOT NULL, `quantity_available` INTEGER NOT NULL)"
+                                        )
+                                }
+                        }
 
                 fun getDatabase(context: Context, scope: CoroutineScope): AppDatabase {
                         return INSTANCE
@@ -89,28 +88,19 @@ abstract class AppDatabase : RoomDatabase() {
                                                 Room.databaseBuilder(
                                                                 context.applicationContext,
                                                                 AppDatabase::class.java,
-                                                                "ticket_app_database" // El nombre
-                                                                // de tu base
-                                                                // de
-                                                                // datos
-                                                                )
-                                                        // ✅ PASO 3: Añade la migración al
-                                                        // constructor
-                                                        // .addMigrations(MIGRATION_12_13) //
-                                                        // Commented out old one
+                                                                "ticket_app_database"
+                                                        )
                                                         .addMigrations(
                                                                 MIGRATION_16_17,
                                                                 MIGRATION_17_18,
                                                                 MIGRATION_18_19,
-                                                                MIGRATION_19_20
+                                                                MIGRATION_19_20,
+                                                                MIGRATION_20_21
                                                         )
-                                                        Room.databaseBuilder(context, AppDatabase::class.java, "aguas-sabor")
-                                                                .fallbackToDestructiveMigration()
-                                                                .build()
-
-                                                        Room.databaseBuilder(context, AppDatabase::class.java, "refrescos")
                                                         .fallbackToDestructiveMigration()
                                                         .build()
+                                        INSTANCE = instance
+                                        instance
                                 }
                 }
 
@@ -167,12 +157,10 @@ abstract class AppDatabase : RoomDatabase() {
                         val defaultAguas =
                                 listOf(
                                         AguaSaborEntity(
-                                                id = 1,
                                                 flavorName = "Horchata",
                                                 quantityAvailable = 100
                                         ),
                                         AguaSaborEntity(
-                                                id = 2,
                                                 flavorName = "Jamaica",
                                                 quantityAvailable = 100
                                         ),
