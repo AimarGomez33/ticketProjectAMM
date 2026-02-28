@@ -61,4 +61,38 @@
     <!--  Error Colors  -->
     <color name="app_error_night">#CF6679</color>
     <color name="app_on_error_night">@color/white</color>
+
+    <!-- ===== Glassmorphism Colors (Transparent & Translucent) ===== -->
+    <!-- Surfaces & Backgrounds -->
+    <color name="glass_white_10">#1AFFFFFF</color>
+    <color name="glass_white_20">#33FFFFFF</color>
+    <color name="glass_white_30">#4DFFFFFF</color>
+    <color name="glass_white_40">#66FFFFFF</color>
+    <color name="glass_white_50">#80FFFFFF</color>
+    <color name="glass_white_60">#99FFFFFF</color>
+    <color name="glass_white_80">#CCFFFFFF</color>
+    
+    <!-- Dark Surfaces -->
+    <color name="glass_dark_10">#1A000000</color>
+    <color name="glass_dark_20">#33000000</color>
+    <color name="glass_dark_40">#66000000</color>
+    <color name="glass_dark_60">#99000000</color>
+    
+    <!-- Borders -->
+    <color name="glass_border">#B3FFFFFF</color>
+    <color name="glass_border_light">#4DFFFFFF</color>
+    <color name="glass_border_dark">#33000000</color>
+    
+    <!-- Text -->
+    <color name="glass_text_primary">#F2FFFFFF</color>
+    <color name="glass_text_secondary">#B3FFFFFF</color>
+    
+    <!-- Specific Semantic Glass Colors Based on Main Palette -->
+    <color name="glass_surface_dark">#99819A91</color> <!-- Grey with 60% alpha -->
+    <color name="glass_card_bg">#4DEEEFE0</color> <!-- Light_grayish with 30% alpha -->
+    <color name="glass_tint_green">#33A7C1A8</color> <!-- Grayish_lime with 20% alpha -->
+    
+    <!-- Helper colors -->
+    <color name="glass_highlight">#33FFFFFF</color>
+    <color name="glass_shadow">#1A000000</color>
 </resources>
