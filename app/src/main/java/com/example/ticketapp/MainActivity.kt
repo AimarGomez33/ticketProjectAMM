@@ -48,13 +48,13 @@ import java.util.*
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.collections.map
+import kotlin.collections.toTypedArray
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.collections.map
-import kotlin.collections.toTypedArray
 
 class MainActivity : AppCompatActivity() {
 
@@ -116,7 +116,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Quesadilla/Queso" to
                             listOf(
@@ -131,7 +133,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Volcanes" to
                             listOf(
@@ -146,7 +150,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Volcan Queso" to
                             listOf(
@@ -161,7 +167,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Guisado Extra" to
                             listOf(
@@ -176,7 +184,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Tostadas" to
                             listOf(
@@ -192,7 +202,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Pozole Grande" to listOf("pollo", "puerco", "combinado"),
                     "Pozole Chico" to listOf("pollo", "puerco", "combinado"),
@@ -209,7 +221,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Guajoloyets Adobados Extra" to
                             listOf(
@@ -224,7 +238,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Pambazos Naturales" to
                             listOf(
@@ -239,7 +255,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Pambazos Naturales Combinados" to
                             listOf(
@@ -254,7 +272,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Pambazos Naturales Extra" to
                             listOf(
@@ -268,7 +288,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Pambazos Naturales Combinados con Queso" to
                             listOf(
@@ -283,7 +305,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Pambazos Adobados" to
                             listOf(
@@ -298,7 +322,9 @@ class MainActivity : AppCompatActivity() {
                                     "Huitlacoche",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Pambazos Adobados Combinados" to
                             listOf(
@@ -313,7 +339,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Pambazos Adobados Combinados con Queso" to
                             listOf(
@@ -328,7 +356,9 @@ class MainActivity : AppCompatActivity() {
                                     "Picadillo",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Pambazos Adobados Extra" to
                             listOf(
@@ -343,14 +373,19 @@ class MainActivity : AppCompatActivity() {
                                     "Huitlacoche",
                                     "Papa con chorizo",
                                     "Chicharrón Prensado",
-                                    "Queso"
+                                    "Queso",
+                                    "Molleja",
+                                    "panza"
                             ),
                     "Taco (c/u)" to
                             listOf(
                                     "Costilla",
                                     "Arrachera",
                                     "Cecina",
-                                    "Chorizo Argentino, chistora"
+                                    "Chorizo Argentino",
+                                    "chistora",
+                                    "pollo",
+                                     "bisteck"
                             ),
                     "Taco con Queso (c/u)" to
                             listOf(
@@ -844,7 +879,12 @@ class MainActivity : AppCompatActivity() {
 
             withContext(Dispatchers.Main) {
                 if (sabores.isEmpty()) {
-                    Toast.makeText(this@MainActivity, "No hay sabores registrados", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                                    this@MainActivity,
+                                    "No hay sabores registrados",
+                                    Toast.LENGTH_SHORT
+                            )
+                            .show()
                     return@withContext
                 }
 
@@ -853,18 +893,23 @@ class MainActivity : AppCompatActivity() {
 
                 // 3. Mostrar el Diálogo
                 AlertDialog.Builder(this@MainActivity)
-                    .setTitle("Seleccione sabor de $productName")
-                    .setItems(nombres) { _, which ->
-                        val saborElegido = nombres[which]
+                        .setTitle("Seleccione sabor de $productName")
+                        .setItems(nombres) { _, which ->
+                            val saborElegido = nombres[which]
 
-                        // 4. Lógica para añadir al ticket
-                        val itemFinal = "$productName ($saborElegido)"
-                        updateQuantity(itemFinal, 1) // O tu función de agregar
+                            // 4. Lógica para añadir al ticket
+                            val itemFinal = "$productName ($saborElegido)"
+                            updateQuantity(itemFinal, 1) // O tu función de agregar
 
-                        Toast.makeText(this@MainActivity, "Agregado: $saborElegido", Toast.LENGTH_SHORT).show()
-                    }
-                    .setNegativeButton("Cancelar", null)
-                    .show()
+                            Toast.makeText(
+                                            this@MainActivity,
+                                            "Agregado: $saborElegido",
+                                            Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                        }
+                        .setNegativeButton("Cancelar", null)
+                        .show()
             }
         }
     }
@@ -878,56 +923,102 @@ class MainActivity : AppCompatActivity() {
         val productosSeleccionados = obtenerProductosDesdeInputs()
         mostrarResumen(productosSeleccionados)
 
-        android.widget.Toast.makeText(this, "Agregado: $nombreCompleto", android.widget.Toast.LENGTH_SHORT).show()
+        android.widget.Toast.makeText(
+                        this,
+                        "Agregado: $nombreCompleto",
+                        android.widget.Toast.LENGTH_SHORT
+                )
+                .show()
     }
     private fun showDynamicDropdown(categoryName: String, price: Double) {
         lifecycleScope.launch(Dispatchers.IO) {
-            // 1. Obtener los datos de la BD según la categoría
-            val nombres: Array<String> = when {
-                categoryName.contains("Agua", ignoreCase = true) -> {
-                    appDatabase.aguassaborDao().getAllSync().map { it.flavorName }.toTypedArray()
-                }
-                categoryName.contains("Refresco", ignoreCase = true) -> {
-                   appDatabase.refrescoDao().getAll().map { it.flavorName }.toTypedArray()
-                }
-                else -> emptyArray()
-            }
+            val esAgua = categoryName.contains("Agua", ignoreCase = true)
+
+            // Estructura auxiliar para mantener id + nombre juntos
+            data class FlavorItem(val id: Long, val name: String, val qty: Int)
+
+            val flavors: List<FlavorItem> =
+                    if (esAgua) {
+                        appDatabase.aguassaborDao().getAll().map {
+                            FlavorItem(it.id, it.flavorName, it.quantityAvailable)
+                        }
+                    } else {
+                        appDatabase.refrescoDao().getAll().map {
+                            FlavorItem(it.id, it.flavorName, it.quantityAvailable)
+                        }
+                    }
 
             withContext(Dispatchers.Main) {
-                if (nombres.isEmpty()) {
-                    Toast.makeText(this@MainActivity, "No hay variedades registradas para $categoryName", Toast.LENGTH_SHORT).show()
+                if (flavors.isEmpty()) {
+                    Toast.makeText(
+                                    this@MainActivity,
+                                    "No hay variedades registradas. Agrega desde el inventario.",
+                                    Toast.LENGTH_SHORT
+                            )
+                            .show()
                     return@withContext
                 }
 
-                // 2. Crear el AlertDialog con los nombres obtenidos
+                // Mostrar leyenda de stock junto al nombre
+                val nombres =
+                        flavors
+                                .map { f ->
+                                    if (f.qty > 0) "${f.name}  (${f.qty} disp.)"
+                                    else "${f.name}  (agotado)"
+                                }
+                                .toTypedArray()
+
                 AlertDialog.Builder(this@MainActivity, R.style.CustomAlertDialogTheme)
-                    .setTitle("Seleccione $categoryName")
-                    .setItems(nombres) { _, which ->
-                        val selectedVariant = nombres[which]
-                        val nombreCompleto = "$categoryName ($selectedVariant)"
+                        .setTitle("\uD83C\uDF79 Selecciona sabor")
+                        .setItems(nombres) { _, which ->
+                            val selected = flavors[which]
 
-                        // 3. Crear el objeto Producto
-                        val newItem = Producto(
-                            nombre = nombreCompleto,
-                            precio = price,
-                            cantidad = 1,
-                            esCombo = false
-                        )
+                            if (selected.qty <= 0) {
+                                Toast.makeText(
+                                                this@MainActivity,
+                                                "${selected.name} est\u00e1 agotado",
+                                                Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+                                return@setItems
+                            }
 
-                        // 4. Actualizar listas y UI (Usando tus funciones existentes)
-                        selectedVariations.add(newItem)
-                        updateQuantity(categoryName, 1)
-                        adjustCommentList(categoryName, (quantities[categoryName] ?: 0))
+                            val nombreCompleto = "$categoryName (${selected.name})"
 
-                        Toast.makeText(this@MainActivity, "Agregado: $selectedVariant", Toast.LENGTH_SHORT).show()
-                    }
-                    .setNegativeButton("Cancelar", null)
-                    .show()
+                            // Agregar al ticket
+                            selectedVariations.add(
+                                    Producto(
+                                            nombre = nombreCompleto,
+                                            precio = price,
+                                            cantidad = 1,
+                                            esCombo = false
+                                    )
+                            )
+                            updateQuantity(categoryName, 1)
+                            adjustCommentList(categoryName, quantities[categoryName] ?: 0)
+
+                            // Decrementar inventario en BD
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                val newQty = selected.qty - 1
+                                if (esAgua) {
+                                    appDatabase.aguassaborDao().updateQuantity(selected.id, newQty)
+                                } else {
+                                    appDatabase.refrescoDao().updateQuantity(selected.id, newQty)
+                                }
+                            }
+
+                            Toast.makeText(
+                                            this@MainActivity,
+                                            "\u2714 Agregado: ${selected.name}",
+                                            Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                        }
+                        .setNegativeButton("Cancelar", null)
+                        .show()
             }
         }
-
     }
-
     private fun showVariationSelectionDialog(productName: String) {
         val variations = productVariations[productName] ?: return
         val builder = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
@@ -1038,46 +1129,79 @@ class MainActivity : AppCompatActivity() {
         builder.show()
     }
 
+    /**
+     * Diálogo secuencial para seleccionar múltiples guisados. [minGuisados] = mínimo de selecciones
+     * requeridas antes de poder pulsar "Listo".
+     */
     private fun showSequentialGuisadoDialog(
             productName: String,
             productData: ProductData,
-            guisadosSeleccionados: MutableList<String> = mutableListOf()
+            guisadosSeleccionados: MutableList<String> = mutableListOf(),
+            minGuisados: Int = 1
     ) {
         val variations = productVariations[productName] ?: emptyList()
 
-        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
-        builder.setTitle("Selecciona guisado ${guisadosSeleccionados.size + 1}")
+        // Título dinámico que muestra lo que ya se eligió
+        val titleText =
+                if (guisadosSeleccionados.isEmpty()) {
+                    "Guisado 1 de $productName"
+                } else {
+                    "Ya elegidos: ${guisadosSeleccionados.joinToString(" + ")}\n\u2795 Agrega más o pulsa Listo"
+                }
 
-        val items = variations.toTypedArray()
-        builder.setItems(items) { _, which ->
+        val listoLabel =
+                if (guisadosSeleccionados.size < minGuisados) {
+                    "Listo (mín. $minGuisados)"
+                } else {
+                    "\u2705 Listo"
+                }
+
+        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
+        builder.setTitle(titleText)
+
+        builder.setItems(variations.toTypedArray()) { _, which ->
             val selectedVariant = variations[which]
             guisadosSeleccionados.add(selectedVariant)
-
-            // Mostrar siguiente diálogo
-            showSequentialGuisadoDialog(productName, productData, guisadosSeleccionados)
+            // Mostrar siguiente diálogo reutilizando la misma lista
+            showSequentialGuisadoDialog(
+                    productName,
+                    productData,
+                    guisadosSeleccionados,
+                    minGuisados
+            )
         }
 
-        // Agregar botón "Listo" para terminar
-        builder.setPositiveButton("Listo") { _, _ ->
-            if (guisadosSeleccionados.isNotEmpty()) {
-                // Crear nombre con todos los guisados seleccionados
+        builder.setPositiveButton(listoLabel) { _, _ ->
+            if (guisadosSeleccionados.size < minGuisados) {
+                // No cumple el mínimo: mostrar aviso y reabrir
+                Toast.makeText(
+                                this,
+                                "Selecciona al menos $minGuisados guisados",
+                                Toast.LENGTH_SHORT
+                        )
+                        .show()
+                showSequentialGuisadoDialog(
+                        productName,
+                        productData,
+                        guisadosSeleccionados,
+                        minGuisados
+                )
+            } else if (guisadosSeleccionados.isNotEmpty()) {
                 val nombreCompleto = "$productName (${guisadosSeleccionados.joinToString(" + ")})"
-
-                val newItem =
+                selectedVariations.add(
                         Producto(
                                 nombre = nombreCompleto,
                                 precio = productData.precio,
                                 cantidad = 1,
                                 esCombo = false
                         )
-                selectedVariations.add(newItem)
-
-                // Actualizar contador UI
+                )
                 updateQuantity(productName, 1)
-                adjustCommentList(productName, (quantities[productName] ?: 0))
+                adjustCommentList(productName, quantities[productName] ?: 0)
             }
         }
 
+        builder.setNegativeButton("Cancelar", null)
         builder.show()
     }
 
@@ -1494,62 +1618,60 @@ class MainActivity : AppCompatActivity() {
 
             productData.btnComment.setOnClickListener { showCommentDialog(productName) }
 
-
-            // ACCESO A INVENTARIO DE REFRESCOS (Long Click en botón + de bebidas)
-
-            val bebidas =
-            listOf("Refrescos")
-            if (productName in bebidas) {
-                productData.btnMas.setOnLongClickListener {
-                    try {
-                        val intent =
-                            android.content.Intent(
-                                this@MainActivity,
-                                InventoryRefrescoActivity::class.java
-                            )
-                        startActivity(intent)
-                    } catch (e: Exception) {
-                        android.widget.Toast.makeText(
-                            this@MainActivity,
-                            "Error: ${e.message}",
-                            android.widget.Toast.LENGTH_SHORT
-                        )
-                            .show()
-                        e.printStackTrace()
-                    }
-                    true
-                }
-            }
-
+            // LONG CLICK: Abre inventario correspondiente (Refrescos o Aguas)
             productData.btnMas.setOnLongClickListener {
-                val intent = when {
-                    productName.contains("Refresco", true) -> Intent(this, InventoryRefrescoActivity::class.java)
-                    productName.contains("Agua", true) -> Intent(this, InventoryAguaActivity::class.java)
-                    else -> null
+                val intent =
+                        when {
+                            productName.contains("Refresco", ignoreCase = true) ->
+                                    Intent(this@MainActivity, InventoryRefrescoActivity::class.java)
+                            productName.contains("Agua", ignoreCase = true) ->
+                                    Intent(this@MainActivity, InventoryAguaActivity::class.java)
+                            else -> null
+                        }
+                if (intent != null) {
+                    startActivity(intent)
+                    true
+                } else {
+                    false
                 }
-                intent?.let { startActivity(it); true } ?: false
             }
 
-            // CLICK CORTO: Abre el menú desplegable dinámico
+            // CLICK CORTO: muestra diálogo de sabor/guisado según el tipo de producto
             productData.btnMas.setOnClickListener {
-                if (productName.contains("Refresco", true) || productName.contains("Agua", true)) {
-                    showDynamicDropdown(productName, productData.precio)
-                } else {
-                    updateQuantity(productName, 1) // Comportamiento normal para otros productos
+                when {
+                    productName.contains("Refresco", ignoreCase = true) ||
+                            productName.contains("Agua", ignoreCase = true) -> {
+                        // Bebidas: lista dinámica desde base de datos
+                        showDynamicDropdown(productName, productData.precio)
+                    }
+                    // Pambazos Combinados: selección iterativa de 2+ guisados
+                    productName.contains("Combinado", ignoreCase = true) &&
+                            productVariations.containsKey(productName) -> {
+                        val pd = products[productName]!!
+                        showSequentialGuisadoDialog(productName, pd, minGuisados = 2)
+                    }
+                    productVariations.containsKey(productName) -> {
+                        // Platillos con guisado simple (Quesadillas, Volcanes, etc.)
+                        showVariationSelectionDialog(productName)
+                    }
+                    else -> {
+                        // Productos sin variante (Chalupas, Alones, Cafe, etc.)
+                        updateQuantity(productName, 1)
+                        adjustCommentList(productName, quantities[productName] ?: 0)
+                    }
                 }
             }
 
             productData.btnMenos.setOnClickListener {
                 when {
-                    textInputProducts.contains(productName) && (quantities[productName] ?: 0) > 0 ->
-                            showVariationRemovalDialog(productName)
-                    productVariations.containsKey(productName) &&
+                    (productName.contains("Refresco", ignoreCase = true) ||
+                            productName.contains("Agua", ignoreCase = true) ||
+                            productVariations.containsKey(productName)) &&
                             (quantities[productName] ?: 0) > 0 ->
                             showVariationRemovalDialog(productName)
                     else -> updateQuantity(productName, -1)
                 }
             }
-
 
             // chalupas es EditText libre
             if (productName == "Chalupas" && productData.cantidadTV is EditText) {
