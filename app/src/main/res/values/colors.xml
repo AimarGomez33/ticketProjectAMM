@@ -69,4 +69,26 @@
     <!--  Error Colors  -->
     <color name="app_error_night">#CF6679</color>
     <color name="app_on_error_night">@color/white</color>
+
+    <!--  Glassmorphism Colors  -->
+    <!--  Blancos translúcidos para superficies glass  -->
+    <color name="glass_white_60">#99FFFFFF</color>
+    <color name="glass_white_40">#66FFFFFF</color>
+    <color name="glass_white_20">#33FFFFFF</color>
+    <!--  Borde sutil glass  -->
+    <color name="glass_border">#88FFFFFF</color>
+    <color name="glass_border_light">#55FFFFFF</color>
+    <!--  Fondos de superficie glass claros  -->
+    <color name="glass_card_bg">#55F4F7F5</color>
+    <color name="glass_card_bg_light">#44F4F7F5</color>
+    <!--  Superficies glass oscuras (para cards con fondo oscuro)  -->
+    <color name="glass_surface_dark">#BB222823</color>
+    <color name="glass_surface_dark_light">#88222823</color>
+    <!--  Tinte glass con color de la paleta  -->
+    <color name="glass_tint_green">#44819A91</color>
+    <color name="glass_tint_lilac">#44A7A2A9</color>
+    <!--  Texto sobre vidrio  -->
+    <color name="glass_text_primary">#EEF4F7F5</color>
+    <color name="glass_text_secondary">#BBDCE0DA</color>
+
 </resources>

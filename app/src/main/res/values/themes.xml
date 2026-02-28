@@ -25,6 +25,48 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <!-- ===== Estilos Glassmorphism ===== -->
+
+    <!-- Card glass para productos (fondo claro) -->
+    <style name="Widget.TicketApp.GlassCard" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/glass_card_bg</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">6dp</item>
+        <item name="strokeColor">@color/glass_border</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <!-- Card glass oscura (para cards tipo CarbonBlack) -->
+    <style name="Widget.TicketApp.GlassCardDark" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/glass_surface_dark</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">6dp</item>
+        <item name="strokeColor">@color/glass_border_light</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <!-- Encabezado de sección glass -->
+    <style name="Widget.TicketApp.GlassHeader" parent="">
+        <item name="android:background">@drawable/bg_glass_header</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
+    <!-- Botón glass principal -->
+    <style name="Widget.TicketApp.GlassButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:background">@drawable/bg_glass_button_primary</item>
+        <item name="android:textColor">@color/glass_text_primary</item>
+        <item name="backgroundTint">@null</item>
+        <item name="rippleColor">@color/glass_white_20</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
 
 
 </resources>
+
