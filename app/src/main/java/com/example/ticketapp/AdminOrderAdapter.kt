@@ -18,7 +18,9 @@ import java.util.*
 class AdminOrderAdapter(
         private val onDelete: (Long) -> Unit,
         private val onOrderClick: (OrderEntity) -> Unit,
-        private val onPrint: (OrderEntity) -> Unit
+        private val onPrint: (OrderEntity) -> Unit,
+        private val onPayClick: (OrderEntity) -> Unit,
+        private val onAddItems: (OrderEntity) -> Unit
 ) : ListAdapter<OrderEntity, AdminOrderAdapter.AdminOrderViewHolder>(OrderDiffCallback()) {
 
     /** Crea el ViewHolder. El listener se pasa aquí para mayor eficiencia. */
@@ -26,7 +28,7 @@ class AdminOrderAdapter(
         val view =
                 LayoutInflater.from(parent.context)
                         .inflate(R.layout.item_admin_order, parent, false)
-        return AdminOrderViewHolder(view, onDelete, onOrderClick, onPrint)
+        return AdminOrderViewHolder(view, onDelete, onOrderClick, onPrint, onPayClick, onAddItems)
     }
 
     /** Vincula los datos de una orden al ViewHolder. */
@@ -54,11 +56,15 @@ class AdminOrderAdapter(
             // Pasamos las funciones lambda al ViewHolder
             private val onDelete: (Long) -> Unit,
             private val onOrderClick: (OrderEntity) -> Unit,
-            private val onPrint: (OrderEntity) -> Unit
+            private val onPrint: (OrderEntity) -> Unit,
+            private val onPayClick: (OrderEntity) -> Unit,
+            private val onAddItems: (OrderEntity) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         private val tvOrderInfo: TextView = itemView.findViewById(R.id.tvOrderInfo)
         private val tvOrderTotal: TextView = itemView.findViewById(R.id.tvOrderTotal)
+        private val btnPayOrder: MaterialButton = itemView.findViewById(R.id.btnPayOrder)
+        private val btnAddItem: MaterialButton = itemView.findViewById(R.id.btnAddItem)
         private val btnDelete: MaterialButton = itemView.findViewById(R.id.btnDeleteOrder)
         private val btnPrint: MaterialButton = itemView.findViewById(R.id.btnprintOrder)
 
@@ -72,6 +78,10 @@ class AdminOrderAdapter(
             btnDelete.setOnClickListener { currentOrder?.let { order -> onDelete(order.orderId) } }
             // 🔹 Botón para imprimir orden
             btnPrint.setOnClickListener { currentOrder?.let { order -> onPrint(order) } }
+            // 🔹 Botón Pagar
+            btnPayOrder.setOnClickListener { currentOrder?.let { order -> onPayClick(order) } }
+            // 🔹 Botón agregar ítems
+            btnAddItem.setOnClickListener { currentOrder?.let { order -> onAddItems(order) } }
         }
 
         /** Asigna los datos de la orden a la UI. */
@@ -88,6 +98,13 @@ class AdminOrderAdapter(
 
             tvOrderInfo.text = "$mesaText - ${sdf.format(date)}$comboLabel"
             tvOrderTotal.text = "Total: $${"%.2f".format(order.grandTotal)}"
+
+            // Ocultar botón si ya está pagada (o cambiar estilo)
+            if (order.isCompleted) {
+                btnPayOrder.visibility = View.GONE
+            } else {
+                btnPayOrder.visibility = View.VISIBLE
+            }
         }
     }
 }

@@ -1,80 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  This layout defines a horizontal bar of three circular buttons for the hamburguesa items.
-  It is more spacious than the inline definition and uses equal weights so that each
-  button occupies the same amount of horizontal space. The buttons have a fixed
-  height of 48dp and a corner radius of 24dp to make them circular like other
-  controls in the app. You can include this layout wherever you need a minus
-  button, a plus Normal button and a plus Combo button for a given product.
--->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="4dp">
+    android:orientation="horizontal"
+    android:paddingVertical="4dp">
 
-    <!-- Minus button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnMinus"
+    <!-- CONTROLES PARA "NORMAL" -->
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="-"
-        android:textSize="18sp"
-        android:textColor="@color/Grayish_lime"
-        app:cornerRadius="24dp"
-        android:padding="0dp"
-        app:backgroundTint="@color/Grey"
-        app:iconPadding="0dp"
-        app:icon="@null" />
+        android:gravity="center"
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/labelNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Normal"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="4dp"/>
 
-    <ImageButton
-        android:id="@+id/btnComment"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMenosNormal"
+                style="@style/BotonMasMenos"
+                android:text="-"
+                app:backgroundTint="@color/Grey"
+                app:cornerRadius="24dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMasNormal"
+                style="@style/BotonMasMenos"
+                android:text="+"
+                app:backgroundTint="@color/Grayish_green"
+                app:cornerRadius="24dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Línea divisora vertical para separar los grupos -->
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="8dp"
+        android:background="@color/Grayish_lime" />
+
+    <!-- CONTROLES PARA "COMBO" -->
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:src="@drawable/ic_comment"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="8dp"
-        android:contentDescription="Agregar comentario"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/productName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:tint="@color/text_secondary" />
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <!-- Plus Normal button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnPlusNormal"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_weight="1"
-        android:text="+ Normal"
-        android:textSize="14sp"
-        android:textColor="@color/Grayish_lime"
-        app:cornerRadius="24dp"
-        android:padding="0dp"
-        app:backgroundTint="@color/Grayish_green"
-        app:iconPadding="0dp"
-        app:icon="@null" />
+        <TextView
+            android:id="@+id/labelCombo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Combo"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="4dp"/>
 
-    <!-- Plus Combo button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnPlusCombo"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_weight="1"
-        android:text="+ Combo"
-        android:textSize="14sp"
-        android:textColor="@color/Grayish_lime"
-        app:cornerRadius="24dp"
-        android:padding="0dp"
-        app:backgroundTint="@color/Grayish_green"
-        app:iconPadding="0dp"
-        app:icon="@null" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMenosCombo"
+                style="@style/BotonMasMenos"
+                android:text="-"
+                app:backgroundTint="@color/Grey"
+                app:cornerRadius="24dp"/>
+
+            <!-- <TextView android:id="@+id/cantidadCombo" style="@style/TextoCantidad" android:text="0"/> -->
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMasCombo"
+                style="@style/BotonMasMenos"
+                android:text="+"
+                app:backgroundTint="@color/Grayish_green"
+                app:cornerRadius="24dp"/>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

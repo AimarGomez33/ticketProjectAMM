@@ -2,35 +2,51 @@
 <resources>
     <!--  Paleta Principal  -->
     <color name="Grey">#819A91</color>
-    <color name="Grayish_lime">#A7C1A8</color>
+    <color name="SN">#A7C1A8</color>
     <!--  Repurpose Grayish_green to grey to use for button backgrounds  -->
-    <color name="Grayish_green">#819A91</color>
+    <color name="Grayish_green">#222823</color>
+    <color name="Grayish_lime">#303030</color>
+
+    <color name = "Black">#08090A</color>
+    <color name = "LilacAsh">#A7A2A9</color>
+    <color name = "BrigthSnow">#F4F7F5</color>
+    <color name = "CharcoalCool">#F4F7F5</color>
+    <color name = "CarbonBlack">#222823</color>
+
+
+
+    <!-- New Pastel Palette for Random Colors -->
+    <color name="Pale_Olive">#B8C9B9</color>
+    <color name="Sage_Green">#94A89A</color>
+    <color name="Dusty_Seafoam">#A0B0A8</color>
+    <color name="Creamy_Beige">#F2F2E8</color>
+    <color name="Muted_Fern">#8CA696</color>
     <!--  Preserve the original light greenish tint as old_grayish_green for cards  -->
     <color name="old_grayish_green">#D1D8BE</color>
     <color name="Light_grayish">#EEEFE0</color>
     <!--  Colores base para el tema (pueden ser los mismos de arriba o derivaciones)  -->
-    <color name="app_primary">@color/Grey</color>
-    <color name="app_primary_variant">@color/Grey</color>
+    <color name="app_primary">@color/CarbonBlack</color>
+    <color name="app_primary_variant">@color/CarbonBlack</color>
     <!--  O un tono ligeramente más oscuro si se desea  -->
-    <color name="app_on_primary">@color/Grey</color>
+    <color name="app_on_primary">@color/CarbonBlack</color>
     <color name="text_on_light_surface">#DE000000</color>
     <!--  87% Negro, estándar para texto principal  -->
-    <color name="app_secondary">@color/Grayish_lime</color>
-    <color name="app_secondary_variant">@color/Grayish_lime</color>
-    <color name="app_on_secondary">@color/Grayish_lime</color>
-    <color name="app_background">@color/Light_grayish</color>
-    <color name="app_surface">@color/Light_grayish</color>
+    <color name="app_secondary">@color/BrigthSnow</color>
+    <color name="app_secondary_variant">@color/BrigthSnow</color>
+    <color name="app_on_secondary">@color/BrigthSnow</color>
+    <color name="app_background">@color/BrigthSnow</color>
+    <color name="app_surface">@color/BrigthSnow</color>
     <!--  Mismo que el fondo inicialmente  -->
-    <color name="app_on_background">@color/Grayish_lime</color>
-    <color name="app_on_surface">@color/Grey</color>
+    <color name="app_on_background">@color/BrigthSnow</color>
+    <color name="app_on_surface">@color/LilacAsh</color>
     <color name="app_error">#B00020</color>
     <color name="app_on_error">#FFFFFF</color>
     <!--  Colores específicos que ya tenías y que podrías querer remapear o mantener  -->
-    <color name="card_background">@color/old_grayish_green</color>
+    <color name="card_background">@color/florar_white</color>
     <!--  Las tarjetas usarán el color de superficie del tema  -->
-    <color name="text_primary">@color/Grayish_lime</color>
+    <color name="text_primary">@color/CarbonBlack</color>
     <!--  Texto primario general, ahora verde oscuro sobre blanco hueso  -->
-    <color name="text_secondary">@color/Grey</color>
+    <color name="text_secondary">@color/Black</color>
     <!--  Texto secundario, un tono más suave  -->
     <!--  Paleta de colores Dark mode  -->
     <color name="night_grey">#819A91</color>
@@ -44,6 +60,26 @@
     <!--  Slightly dimmer light text  -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+
+
+    <color name="florar_white">#FBFBF2</color>
+    <color name="Alabaster_Grey">#E5E6E4</color>
+    <color name="Dust_Grey">#CFD2CD</color>
+    <color name="Silver">#A6A2A2</color>
+    <color name="Rosy_Granite">#847577</color>
+
+    <color name="Onix">#FBFBF2</color>
+    <color name="Jet_Black">#E5E6E4</color>
+    <color name="Charcoat">#CFD2CD</color>
+    <color name="Mint_Cream">#A6A2A2</color>
+    <color name="Cool_Steel">#847577</color>
+
+    <color name = "Primary">#c5c5c5 </color>
+    <color name = "Secondary">#4C5B61</color>
+    <color name = "Text">#829191</color>
+    <color name = "Background">#949B96</color>
+    <color name = "Surface">#2C423F</color>
+     
     <!--  Semantic Colors for Night Theme  -->
     <!--  Primary Colors  -->
     <color name="app_primary_night">@color/night_grayish_lime</color>
@@ -61,38 +97,4 @@
     <!--  Error Colors  -->
     <color name="app_error_night">#CF6679</color>
     <color name="app_on_error_night">@color/white</color>
-
-    <!-- ===== Glassmorphism Colors (Transparent & Translucent) ===== -->
-    <!-- Surfaces & Backgrounds -->
-    <color name="glass_white_10">#1AFFFFFF</color>
-    <color name="glass_white_20">#33FFFFFF</color>
-    <color name="glass_white_30">#4DFFFFFF</color>
-    <color name="glass_white_40">#66FFFFFF</color>
-    <color name="glass_white_50">#80FFFFFF</color>
-    <color name="glass_white_60">#99FFFFFF</color>
-    <color name="glass_white_80">#CCFFFFFF</color>
-    
-    <!-- Dark Surfaces -->
-    <color name="glass_dark_10">#1A000000</color>
-    <color name="glass_dark_20">#33000000</color>
-    <color name="glass_dark_40">#66000000</color>
-    <color name="glass_dark_60">#99000000</color>
-    
-    <!-- Borders -->
-    <color name="glass_border">#B3FFFFFF</color>
-    <color name="glass_border_light">#4DFFFFFF</color>
-    <color name="glass_border_dark">#33000000</color>
-    
-    <!-- Text -->
-    <color name="glass_text_primary">#F2FFFFFF</color>
-    <color name="glass_text_secondary">#B3FFFFFF</color>
-    
-    <!-- Specific Semantic Glass Colors Based on Main Palette -->
-    <color name="glass_surface_dark">#99819A91</color> <!-- Grey with 60% alpha -->
-    <color name="glass_card_bg">#4DEEEFE0</color> <!-- Light_grayish with 30% alpha -->
-    <color name="glass_tint_green">#33A7C1A8</color> <!-- Grayish_lime with 20% alpha -->
-    
-    <!-- Helper colors -->
-    <color name="glass_highlight">#33FFFFFF</color>
-    <color name="glass_shadow">#1A000000</color>
 </resources>

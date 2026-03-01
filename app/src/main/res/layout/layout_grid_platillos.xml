@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/gridPlatillos"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="3"
+    android:useDefaultMargins="true">
+
+    <!-- Quesadillas -->
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelQuesadillas" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Quesadillas" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosQuesadillas" android:layout_width="48dp" android:layout_height="48dp" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadQuesadillas" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasQuesadillas" android:layout_width="48dp" android:layout_height="48dp" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Tostadas -->
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelTostadas" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Tostadas" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosTostadas" android:layout_width="48dp" android:layout_height="48dp" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadTostadas" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasTostadas" android:layout_width="48dp" android:layout_height="48dp" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Chalupas -->
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelChalupas" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Chalupas" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosChalupas" android:layout_width="48dp" android:layout_height="48dp" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadChalupas" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasChalupas" android:layout_width="48dp" android:layout_height="48dp" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Volcanes -->
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelVolcanes" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Volcanes" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosVolcanes" android:layout_width="48dp" android:layout_height="48dp" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadVolcanes" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasVolcanes" android:layout_width="48dp" android:layout_height="48dp" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Volcan Extra (Guajolota Extra in IDs) -->
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelGuajolotaExtra" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Volcan Queso/Guisado Extra" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosGuajolotaExtra" android:layout_width="48dp" android:layout_height="48dp" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadGuajolotaExtra" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasGuajolotaExtra" android:layout_width="48dp" android:layout_height="48dp" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelPozoleGrande" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Pozole Grande" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPozoleGrande" android:layout_width="48dp" android:layout_height="48dp" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadPozoleGrande" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPozoleGrande" android:layout_width="48dp" android:layout_height="48dp" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelPozoleChico" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Pozole Chico" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPozoleChico" android:layout_width="48dp" android:layout_height="48dp" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadPozoleChico" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPozoleChico" android:layout_width="48dp" android:layout_height="48dp" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</GridLayout>

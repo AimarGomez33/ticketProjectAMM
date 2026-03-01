@@ -1,64 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Layout representing a single entry in the administration list of orders.
-    Each row displays basic information about an order (table name or type, timestamp,
-    total) along with buttons to reprint and delete the order.
+    Refactored to vertical layouts for better visibility.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:background="@color/Light_grayish"
-    android:padding="8dp"
-    android:gravity="center_vertical">
+    android:padding="8dp">
 
-    <!-- Información del pedido -->
-    <LinearLayout
+    <!-- Información del pedido (Mesa / Fecha) -->
+    <!-- Full width at the top -->
+    <TextView
+        android:id="@+id/tvOrderInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:text="Mesa 1 - 2025-08-23 13:00"
+        android:textSize="16sp"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/tvOrderInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Mesa 1 - 2025-08-23 13:00"
-            android:textSize="16sp"
-            android:textColor="@color/text_primary"
-            android:textStyle="bold" />
+    <!-- Total -->
+    <!-- Below Info, Full width -->
+    <TextView
+        android:id="@+id/tvOrderTotal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Total: $99.00"
+        android:textSize="14sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvOrderInfo"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/tvOrderTotal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Total: $99.00"
-            android:textSize="14sp"
-            android:textColor="@color/text_secondary" />
-    </LinearLayout>
+    <!-- 
+         Horizontal Chain for Buttons: Pay -> Add -> Print -> Delete
+         Style: Spread or Packed? User asked for "symmetric" and "no collisions".
+         Spread makes them use available width evenly. Packed centers them.
+         Let's use Spread to fill the width symmetrically if there's space, or Packed if we want them tight. 
+         Given the context of "distribution", spread or spread_inside is likely better for touch targets.
+         Let's actally use packed with bias 0.5 (center) but with margins to ensure they are tidy.
+    -->
 
-    <!-- Botón de reimprimir -->
+    <!-- Botón Pagar -->
+
+    <!-- Botón Agregar Items -->
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPayOrder"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:backgroundTint="@color/Grayish_green"
+        app:icon="@drawable/ic_payment"
+        app:iconTint="@color/white"
+        app:cornerRadius="24dp"
+        app:iconGravity="textTop"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnAddItem"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvOrderTotal"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAddItem"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="Agregar productos"
+        app:icon="@android:drawable/ic_input_add"
+        app:iconTint="@color/florar_white"
+        app:backgroundTint="@color/Grayish_green"
+        app:cornerRadius="24dp"
+        app:iconGravity="textTop"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintStart_toEndOf="@+id/btnPayOrder"
+        app:layout_constraintEnd_toStartOf="@+id/btnprintOrder"
+        app:layout_constraintTop_toBottomOf="@+id/tvOrderTotal"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Botón Reimprimir -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnprintOrder"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:contentDescription="Reimprimir orden"
         app:icon="@drawable/print"
-        app:iconTint="@color/Grayish_lime"
+        app:iconTint="@color/florar_white"
         app:backgroundTint="@color/Grayish_green"
         app:cornerRadius="24dp"
-        app:iconGravity="textTop" />
-    <!-- Botón eliminar -->
+        app:iconGravity="textTop"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintStart_toEndOf="@+id/btnAddItem"
+        app:layout_constraintEnd_toStartOf="@+id/btnDeleteOrder"
+        app:layout_constraintTop_toBottomOf="@+id/tvOrderTotal"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Botón Eliminar -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnDeleteOrder"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:contentDescription="Eliminar pedido"
         app:icon="@android:drawable/ic_menu_delete"
-        app:iconTint="@color/Grayish_lime"
+        app:iconTint="@color/florar_white"
         app:backgroundTint="@color/Grayish_green"
         app:cornerRadius="24dp"
-        app:iconGravity="textTop" />
+        app:iconGravity="textTop"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toEndOf="@+id/btnprintOrder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvOrderTotal"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

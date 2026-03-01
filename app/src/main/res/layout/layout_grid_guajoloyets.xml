@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/gridGuajoloyets"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="3"
+    android:useDefaultMargins="true">
+
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelGuajoloyetNatural" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Guajoloyets Naturales" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosGuajoloyetNatural" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_guajoloyet_natural" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadGuajoloyetNatural" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasGuajoloyetNatural" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_guajoloyet_natural" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelGujoloyetNaturalExtra" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Guajoloyets Naturales Queso/Guisado Extra" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosGujoloyetNaturalExtra" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_guajoloyet_natural_extra" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadGujoloyetNaturalExtra" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasGujoloyetNaturalExtra" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_guajoloyet_natural_extra" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelGuajoloyetAdobado" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Guajoloyets Adobados" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosGuajoloyetAdobado" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_guajoloyet_adobado" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadGuajoloyetAdobado" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasGuajoloyetAdobado" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_guajoloyet_adobado" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelGujoloyetAdobadoExtra" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Guajoloyets Adobados Queso/Guisado Extra" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosGujoloyetAdobadoExtra" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_guajoloyet_adobado_extra" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadGujoloyetAdobadoExtra" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasGujoloyetAdobadoExtra" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_guajoloyet_adobado_extra" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</GridLayout>

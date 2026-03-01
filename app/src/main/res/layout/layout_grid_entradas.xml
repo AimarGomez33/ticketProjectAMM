@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/gridEntradas"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="3"
+    android:useDefaultMargins="true">
+
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelAlones" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Alones" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosAlones" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_alones" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadAlones" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasAlones" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_alones" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelMollejas" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Mollejas" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosMollejas" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_mollejas" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadMollejas" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasMollejas" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_mollejas" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelHigados" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Hígados" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHigados" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_higados" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadHigados" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHigados" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_higados" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelPatitas" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Patitas" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPatitas" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_patitas" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadPatitas" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPatitas" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_patitas" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelHuevos" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Huevos" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosHuevos" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_huevos" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadHuevos" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasHuevos" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_huevos" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</GridLayout>

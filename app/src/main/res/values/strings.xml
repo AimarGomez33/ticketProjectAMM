@@ -2,13 +2,10 @@
     <string name="app_name">TicketApp</string>
 
     <string name="decrement_quesadillas">Disminuir cantidad de quesadillas</string>
-    <string name="decrement_quesadilla_queso">Disminuir cantidad de quesadilla/queso</string>
     <string name="decrement_pozole_grande">Disminuir cantidad de pozole grande</string>
     <string name="decrement_pozole_chico">Disminuir cantidad de pozole chico</string>
     <string name="decrement_tostadas">Disminuir cantidad de tostadas</string>
     <string name="decrement_volcanes">Disminuir cantidad de volcanes</string>
-    <string name="decrement_volcan_queso">Disminuir cantidad de volcan queso</string>
-    <string name="decrement_guisado_extra">Disminuir cantidad de guisado extra</string>
     <string name="decrement_guajolota_extra">Disminuir cantidad de volcan queso/guisado extra</string>
     <string name="decrement_guajoloyet_natural">Disminuir cantidad de guajoloyets naturales</string>
     <string name="decrement_guajoloyet_natural_extra">Disminuir cantidad de guajoloyets naturales extra</string>
@@ -43,13 +40,10 @@
     <string name="decrement_postres35">Disminuir cantidad de Postres 35</string>
 
     <string name="increment_quesadillas">Aumentar cantidad de quesadillas</string>
-    <string name="increment_quesadilla_queso">Aumentar cantidad de quesadilla/queso</string>
     <string name="increment_pozole_grande">Aumentar cantidad de pozole grande</string>
     <string name="increment_pozole_chico">Aumentar cantidad de pozole chico</string>
     <string name="increment_tostadas">Aumentar cantidad de tostadas</string>
     <string name="increment_volcanes">Aumentar cantidad de volcanes</string>
-    <string name="increment_volcan_queso">Aumentar cantidad de volcan queso</string>
-    <string name="increment_guisado_extra">Aumentar cantidad de guisado extra</string>
     <string name="increment_guajolota_extra">Aumentar cantidad de volcan queso/guisado extra</string>
     <string name="increment_guajoloyet_natural">Aumentar cantidad de guajoloyets naturales</string>
     <string name="increment_guajoloyet_natural_extra">Aumentar cantidad de guajoloyets naturales extra</string>
@@ -86,15 +80,16 @@
      <string name="incluir_n_mero_de_cuenta">Incluir Número de cuenta</string>
      <string name="cuenta"><font><big>4152-3145-3997-7978 </big></font></string>
 
-     <!-- ===================== HAMBURGUESAS ===================== -->
+     <!-- ===================== HAMBURGUESAS CLASICAS ===================== -->
      <string name="decrement_hamburguesa_clasica">Disminuir cantidad de hamburguesa clásica</string>
      <string name="decrement_hamburguesa_hawaiana">Disminuir cantidad de hamburguesa hawaiana</string>
      <string name="decrement_hamburguesa_pollo">Disminuir cantidad de hamburguesa de pollo</string>
      <string name="decrement_hamburguesa_champinones">Disminuir cantidad de hamburguesa de champiñones</string>
      <string name="decrement_hamburguesa_arrachera">Disminuir cantidad de hamburguesa de arrachera</string>
      <string name="decrement_hamburguesa_maggy">Disminuir cantidad de hamburguesa maggy</string>
+     <string name="decrement_hamburguesa_normal">Disminuir cantidad de hamburguesa normal</string>
      <string name="decrement_hamburguesa_doble">Disminuir cantidad de hamburguesa doble</string>
-     <string name="decrement_combos">Disminuir cantidad de combos</string>
+
 
      <string name="increment_hamburguesa_clasica">Aumentar cantidad de hamburguesa clásica</string>
      <string name="increment_hamburguesa_hawaiana">Aumentar cantidad de hamburguesa hawaiana</string>
@@ -102,8 +97,28 @@
      <string name="increment_hamburguesa_champinones">Aumentar cantidad de hamburguesa de champiñones</string>
      <string name="increment_hamburguesa_arrachera">Aumentar cantidad de hamburguesa de arrachera</string>
      <string name="increment_hamburguesa_maggy">Aumentar cantidad de hamburguesa maggy</string>
+     <string name="increment_hamburguesa_normal">Aumentar cantidad de hamburguesa normal</string>
      <string name="increment_hamburguesa_doble">Aumentar cantidad de hamburguesa doble</string>
-     <string name="increment_combo">Aumentar cantidad de combos</string>
+     <!-- ===================== HAMBURGUESAS COMBO ===================== -->
+
+     <string name="decrement_hamburguesa_clasica_combo">Disminuir cantidad de hamburguesa clásica Combo</string>
+     <string name="decrement_hamburguesa_hawaiana_combo">Disminuir cantidad de hamburguesa hawaiana Combo</string>
+     <string name="decrement_hamburguesa_pollo_combo">Disminuir cantidad de hamburguesa de pollo Combo</string>
+     <string name="decrement_hamburguesa_champinones_combo">Disminuir cantidad de hamburguesa de champiñones Combo</string>
+     <string name="decrement_hamburguesa_arrachera_combo">Disminuir cantidad de hamburguesa de arrachera Combo</string>
+     <string name="decrement_hamburguesa_maggy_combo">Disminuir cantidad de hamburguesa maggy Combo</string>
+     <string name="decrement_hamburguesa_normal_combo">Disminuir cantidad de hamburguesa normal Combo</string>
+     <string name="decrement_hamburguesa_doble_combo">Disminuir cantidad de hamburguesa doble Combo</string>
+
+
+     <string name="increment_hamburguesa_clasica_combo">Aumentar cantidad de hamburguesa clásica Combo</string>
+     <string name="increment_hamburguesa_hawaiana_combo">Aumentar cantidad de hamburguesa hawaiana Combo</string>
+     <string name="increment_hamburguesa_pollo_combo">Aumentar cantidad de hamburguesa de pollo Combo</string>
+     <string name="increment_hamburguesa_champinones_combo">Aumentar cantidad de hamburguesa de champiñones Combo</string>
+     <string name="increment_hamburguesa_arrachera_combo">Aumentar cantidad de hamburguesa de arrachera Combo</string>
+     <string name="increment_hamburguesa_maggy_combo">Aumentar cantidad de hamburguesa maggy Combo</string>
+     <string name="increment_hamburguesa_normal_combo">Aumentar cantidad de hamburguesa normal Combo</string>
+     <string name="increment_hamburguesa_doble_combo">Aumentar cantidad de hamburguesa doble Combo</string>
 
      <!-- ===================== TACOS ===================== -->
      <string name="decrement_taco_unitario">Disminuir cantidad de taco (c/u)</string>

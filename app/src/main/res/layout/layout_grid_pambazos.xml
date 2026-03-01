@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/gridPambazos"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="3"
+    android:useDefaultMargins="true">
+
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelPambazosNaturales" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Pambazos Naturales" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPambazosNaturales" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_pambazos_naturales" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadPambazosNaturales" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPambazosNaturales" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_pambazos_naturales" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelPambazosNaturalesQueso" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Pambazos Naturales Queso Extra" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPambazosNaturalesQueso" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_pambazos_naturales_queso" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadPambazosNaturalesQueso" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPambazosNaturalesQueso" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_pambazos_naturales_queso" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelPambazosNaturalesCombinados" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Pambazos Naturales Combinados" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPambazosNaturalesCombinados" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_pambazos_naturales_combinados" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadPambazosNaturalesCombinados" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPambazosNaturalesCombinados" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_pambazos_naturales_combinados" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelPambazosNaturalesCombinadosQueso" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Pambazos Naturales Combinados con Queso" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPambazosNaturalesCombinadosQueso" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_pambazos_naturales_combinados_queso" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadPambazosNaturalesCombinadosQueso" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPambazosNaturalesCombinadosQueso" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_pambazos_naturales_combinados_queso" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelPambazosAdobados" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Pambazos Adobados" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPambazosAdobados" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_pambazos_adobados" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadPambazosAdobados" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPambazosAdobados" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_pambazos_adobados" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelPambazosAdobadosExtra" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Pambazos Adobados Queso" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPambazosAdobadosExtra" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_pambazos_adobados_extra" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadPambazosAdobadosExtra" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPambazosAdobadosExtra" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_pambazos_adobados_extra" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelPambazosAdobadosCombinados" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Pambazos Adobados Combinados" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPambazosAdobadosCombinados" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_pambazos_adobados_combinados" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadPambazosAdobadosCombinados" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPambazosAdobadosCombinados" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_pambazos_adobados_combinados" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelPambazosAdobadosCombinadosQueso" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Pambazos Adobados Combinados con Queso" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPambazosAdobadosCombinadosQueso" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/decrement_pambazos_adobados_combinados_queso" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadPambazosAdobadosCombinadosQueso" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPambazosAdobadosCombinadosQueso" android:layout_width="48dp" android:layout_height="48dp" android:contentDescription="@string/increment_pambazos_adobados_combinados_queso" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelPozoleGrande" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Pozole Grande" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPozoleGrande" android:layout_width="48dp" android:layout_height="48dp" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadPozoleGrande" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPozoleGrande" android:layout_width="48dp" android:layout_height="48dp" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" app:cardBackgroundColor="@color/card_background" app:cardCornerRadius="12dp" app:cardElevation="2dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="4dp">
+            <TextView android:id="@+id/labelPozoleChico" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:gravity="center" android:minLines="2" android:text="Pozole Chico" android:textColor="@color/text_secondary" android:textSize="16sp"/>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMenosPozoleChico" android:layout_width="48dp" android:layout_height="48dp" android:text="-" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+                <TextView android:id="@+id/cantidadPozoleChico" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:minWidth="40dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:text="0" android:textColor="@color/text_secondary" android:textSize="18sp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnMasPozoleChico" android:layout_width="48dp" android:layout_height="48dp" android:text="+" android:textColor="@color/florar_white" android:textSize="18sp" app:backgroundTint="@color/Grayish_green" app:cornerRadius="24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</GridLayout>

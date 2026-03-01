@@ -90,7 +90,7 @@
             android:layout_gravity="center"
             android:text="Cerrar"
             android:textSize="14sp"
-            android:textColor="@color/Grayish_lime"
+            android:textColor="@color/florar_white"
             app:iconPadding="0dp"
             app:backgroundTint="@color/Grayish_green"
             app:cornerRadius="24dp" />

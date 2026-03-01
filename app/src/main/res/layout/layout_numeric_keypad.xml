@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Header: Product Name and Current Value -->
+    <TextView
+        android:id="@+id/tvKeypadTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:text="Nombre Producto"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/tvKeypadValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_rounded_edittext"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="0"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
+
+    <!-- Keypad Grid -->
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:alignmentMode="alignMargins"
+        android:columnCount="3"
+        android:rowCount="4"
+        android:layout_marginTop="16dp">
+
+        <!-- Row 1: 1, 2, 3 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKey1"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="1"
+            android:textSize="24sp"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKey2"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="2"
+            android:textSize="24sp"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKey3"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="3"
+            android:textSize="24sp"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"/>
+
+        <!-- Row 2: 4, 5, 6 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKey4"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="4"
+            android:textSize="24sp"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKey5"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="5"
+            android:textSize="24sp"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKey6"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="6"
+            android:textSize="24sp"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"/>
+
+        <!-- Row 3: 7, 8, 9 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKey7"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="7"
+            android:textSize="24sp"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKey8"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="8"
+            android:textSize="24sp"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKey9"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="9"
+            android:textSize="24sp"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"/>
+
+        <!-- Row 4: CLEAR, 0, BACKSPACE -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKeyClear"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="C"
+            android:textColor="@color/design_default_color_error"
+            android:textSize="24sp"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKey0"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="0"
+            android:textSize="24sp"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKeyBackspace"
+            app:icon="@drawable/ic_backspace_black_24dp"
+            app:iconGravity="textStart"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="4dp"/>
+
+    </GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKeyCancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="Cancelar"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKeyConfirm"
+            android:text="ACEPTAR"
+            android:textSize="18sp"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+</LinearLayout>

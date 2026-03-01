@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace "com.example.ticketapp"
-    compileSdkVersion 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.example.ticketapp"
@@ -40,7 +40,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    buildToolsVersion '35.0.0'
 
     // ✅ CORRECCIÓN: Se han eliminado los bloques 'composeOptions' duplicados e incorrectos.
     // El nuevo plugin del compilador de Compose lo gestiona automáticamente con Kotlin 2.0.
@@ -48,31 +47,33 @@ android {
 
 dependencies {
     // Core dependencies
-    implementation 'androidx.core:core-ktx:1.13.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core-ktx:1.17.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.activity:activity-ktx:1.9.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.activity:activity-ktx:1.11.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation "androidx.recyclerview:recyclerview:1.3.2"
 
-    // ✅ CORRECCIÓN: Room - Limpio y sin duplicados
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.cardview:cardview:1.0.0' // opcional
+
     // Usar el alias del catálogo de versiones para mantener la consistencia
     implementation libs.androidx.room.runtime
     implementation libs.androidx.room.ktx
     ksp libs.androidx.room.compiler // Usar KSP para el compilador
 
     // Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
 
     // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.7.0"
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.4'
 
     // Jetpack Compose
-    implementation "androidx.compose.ui:ui:1.6.0"
-    implementation "androidx.compose.material:material:1.6.0"
-    implementation "androidx.compose.ui:ui-tooling-preview:1.6.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0"
-    implementation "androidx.activity:activity-compose:1.8.0"
+    implementation 'androidx.compose.ui:ui:1.9.4'
+    implementation 'androidx.compose.material:material:1.9.4'
+    implementation 'androidx.compose.ui:ui-tooling-preview:1.9.4'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4'
+    implementation 'androidx.activity:activity-compose:1.11.0'
 
     // ✅ CORRECCIÓN: Se eliminaron las dependencias de Room duplicadas
 
@@ -80,4 +81,10 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    implementation 'androidx.compose.ui:ui:1.6.8'
+    implementation 'androidx.compose.material:material:1.6.8'
+    implementation 'androidx.compose.ui:ui-tooling-preview:1.6.8'
+    implementation libs.androidx.activity.compose // Use the alias if available, like this example
+
 }
