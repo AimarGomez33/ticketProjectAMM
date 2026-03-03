@@ -2,7 +2,9 @@
 # KEEP a single source of truth for the Kotlin version.
 kotlin = "2.0.0"
 agp = "8.10.1"
-ksp = "2.0.0-1.0.22"  # This is correct for Kotlin 2.0.0
+ksp = "2.0.0-1.0.22"     # This is correct for Kotlin 2.0.0
+firebaseBom = "33.7.0"
+googleServices = "4.4.2"
 
 # Other versions...
 coreKtx = "1.10.1"
@@ -16,6 +18,9 @@ constraintlayout = "2.1.4"
 room = "2.6.1"
 
 [libraries]
+# Firebase dependencies
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database" }
 # Room dependencies
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
@@ -35,3 +40,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }

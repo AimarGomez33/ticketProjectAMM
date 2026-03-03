@@ -37,6 +37,18 @@
         tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         tools:spanCount="3" />
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabKitchenMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="16dp"
+        android:text="🍳 Modo Cocina"
+        android:textColor="@color/white"
+        android:contentDescription="Modo Cocina KDS"
+        app:backgroundTint="#FF5722"
+        app:icon="@android:drawable/ic_menu_compass" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddTable"
         android:layout_width="wrap_content"

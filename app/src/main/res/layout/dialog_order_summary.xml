@@ -71,7 +71,7 @@
             android:layout_marginBottom="8dp"
             android:background="@color/Grey" />
 
-    <!-- Total general del pedido -->
+    <!-- Total general del pedido (oculto — lógica interna activa) -->
     <TextView
             android:id="@+id/tvDialogTotal"
             android:layout_width="match_parent"
@@ -79,7 +79,9 @@
             android:text="Total: $0.00"
             android:textSize="18sp"
             android:textColor="@color/text_primary"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
+
 
     <!-- Botón para cerrar el diálogo -->
     <com.google.android.material.button.MaterialButton

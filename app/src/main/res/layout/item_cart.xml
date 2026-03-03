@@ -30,7 +30,9 @@
             android:text="$0.00"
             android:textColor="@color/text_secondary"
             android:textSize="14sp"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"/>
+
 
         <ImageButton
             android:id="@+id/btnCartDelete"

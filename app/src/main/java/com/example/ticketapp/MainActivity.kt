@@ -38,6 +38,9 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.ticketapp.data.kds.KdsOrder
+import com.example.ticketapp.data.kds.KdsOrderItem
+import com.example.ticketapp.repository.KdsRepository
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import java.io.IOException
@@ -57,6 +60,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
+
+    private val kdsRepository = KdsRepository()
 
     // --- Constantes ---
     private companion object {
@@ -385,7 +390,7 @@ class MainActivity : AppCompatActivity() {
                                     "Chorizo Argentino",
                                     "chistora",
                                     "pollo",
-                                     "bisteck"
+                                    "bisteck"
                             ),
                     "Taco con Queso (c/u)" to
                             listOf(
@@ -2912,9 +2917,9 @@ class MainActivity : AppCompatActivity() {
         if (normales.isNotEmpty()) {
             sb.appendLine(" PRODUCTOS")
             for (p in normales) {
-                val total = p.cantidad * p.precio
+                val total = p.cantidad * p.precio // lógica interna
                 totalGeneral += total
-                sb.appendLine("${p.cantidad} x ${p.nombre} ... $${"%.2f".format(total)}")
+                sb.appendLine("${p.cantidad} x ${p.nombre}")
                 if (!p.comment.isNullOrEmpty()) {
                     sb.appendLine("   (Nota: ${p.comment})")
                 }
@@ -2925,9 +2930,9 @@ class MainActivity : AppCompatActivity() {
         if (combos.isNotEmpty()) {
             sb.appendLine(" COMBOS")
             for (c in combos) {
-                val total = c.cantidad * c.precio
+                val total = c.cantidad * c.precio // lógica interna
                 totalGeneral += total
-                sb.appendLine("${c.cantidad} x ${c.nombre} ... $${"%.2f".format(total)}")
+                sb.appendLine("${c.cantidad} x ${c.nombre}")
                 if (!c.comment.isNullOrEmpty()) {
                     sb.appendLine("   (Nota: ${c.comment})")
                 }
@@ -2942,7 +2947,7 @@ class MainActivity : AppCompatActivity() {
 
         // Pintar
         summaryTextView.text = sb.toString()
-        summaryTotalTextView.text = "TOTAL: $${"%.2f".format(totalGeneral)}"
+        summaryTotalTextView.visibility = View.GONE // precio oculto en pantalla
         summaryContainer.visibility = View.VISIBLE
 
         // Botón cerrar
@@ -3305,9 +3310,7 @@ class MainActivity : AppCompatActivity() {
                     sb.appendLine(notasText)
                 }
 
-                // Solo Total Final
-                sb.appendLine(lineaSeparadora)
-                sb.appendLine("TOTAL: $${String.format("%.2f", totalGeneral)}")
+                // Total omitido del ticket (lógica interna activa)
                 sb.appendLine(lineaSeparadora)
                 sb.appendLine("")
                 sb.appendLine("Gracias por su compra")
@@ -3374,6 +3377,41 @@ class MainActivity : AppCompatActivity() {
                 val totalCalculated = allItems.sumOf { it.unitPrice * it.quantity }
                 appDatabase.orderDao().updateOrderTotal(currentOrderId, totalCalculated)
 
+                // 3. Emitir a KDS (Firebase) — solo los ítems NUEVOS, no el historial completo
+                val reOrderKey = "${currentOrderId}_${System.currentTimeMillis()}"
+                Log.d(
+                        TAG,
+                        "KDS: Re-orden para mesa ${mesaInfo} — clave $reOrderKey, ${items.size} ítems nuevos"
+                )
+                val kdsItems =
+                        items.map {
+                            KdsOrderItem(
+                                    id = it.itemId.toString(),
+                                    productName = it.name,
+                                    quantity = it.quantity,
+                                    notes = it.comment ?: ""
+                            )
+                        }
+                val kdsOrder =
+                        KdsOrder(
+                                id = reOrderKey,
+                                tableNumber = mesaInfo.ifBlank { "Para Llevar" },
+                                waiterName = "Mesero",
+                                items = kdsItems,
+                                isReOrder = true
+                        )
+                try {
+                    Log.d(TAG, "KDS: Llamando a kdsRepository.emitOrder() (re-orden)...")
+                    kdsRepository.emitOrder(kdsOrder)
+                    Log.d(TAG, "KDS: re-orden emitida exitosamente como $reOrderKey")
+                } catch (e: Exception) {
+                    Log.e(
+                            TAG,
+                            "KDS: Error emitiendo re-orden - ${e.javaClass.simpleName}: ${e.message}",
+                            e
+                    )
+                }
+
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                                     this@MainActivity,
@@ -3414,6 +3452,43 @@ class MainActivity : AppCompatActivity() {
                 val newId = appDatabase.orderDao().insertOrderWithItems(orderEntity, items)
 
                 currentOrderId = newId
+
+                // Emitir a KDS (Firebase)
+                val allItemsNew = appDatabase.orderDao().getItemsForOrder(currentOrderId)
+                Log.d(
+                        TAG,<
+                        "KDS: Preparando emisión para nueva orden $currentOrderId con ${allItemsNew.size}> items"
+                )
+                val kdsItemsNew =
+                        allItemsNew.map {
+                            KdsOrderItem(
+                                    id = it.itemId.toString(),
+                                    productName = it.name,
+                                    quantity = it.quantity,
+                                    notes = it.comment ?: ""
+                            )
+                        }
+                val kdsOrderNew =
+                        KdsOrder(
+                                id = currentOrderId.toString(),
+                                tableNumber = mesaInfo.ifBlank { "Para Llevar" },
+                                waiterName = "Mesero",
+                                items = kdsItemsNew
+                        )
+                try {
+                    Log.d(TAG, "KDS: Llamando a kdsRepository.emitOrder() para nueva orden...")
+                    kdsRepository.emitOrder(kdsOrderNew)
+                    Log.d(
+                            TAG,
+                            "KDS: emitOrder() completado exitosamente para nueva orden $currentOrderId"
+                    )
+                } catch (e: Exception) {
+                    Log.e(
+                            TAG,
+                            "KDS: Error emitiendo a KDS - ${e.javaClass.simpleName}: ${e.message}",
+                            e
+                    )
+                }
 
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@MainActivity, "Orden creada", Toast.LENGTH_SHORT).show()

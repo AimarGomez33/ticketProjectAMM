@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "893551102732",
+    "project_id": "ticketa-349dc",
+    "storage_bucket": "ticketa-349dc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893551102732:android:9cac0371e87b9d71669729",
+        "android_client_info": {
+          "package_name": "com.example.ticketapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZS3Tm0-UhJAheB-f0WAOFhyW0h-Lnq4k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

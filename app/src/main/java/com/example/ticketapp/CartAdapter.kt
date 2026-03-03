@@ -37,7 +37,7 @@ class CartAdapter(
         val item = items[position]
 
         holder.tvName.text = item.nombre
-        holder.tvPrice.text = "$${String.format("%.2f", item.precio * item.cantidad)}"
+        holder.tvPrice.visibility = View.GONE // precio oculto — lógica interna sigue activa
         holder.tvQuantity.text = item.cantidad.toString()
 
         if (!item.comment.isNullOrEmpty()) {

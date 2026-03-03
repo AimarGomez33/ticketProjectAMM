@@ -23,6 +23,8 @@ class TableSelectionActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var fabAddTable: FloatingActionButton
+    private lateinit var fabKitchenMode:
+            com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var adapter: TablesAdapter
 
@@ -49,9 +51,11 @@ class TableSelectionActivity : AppCompatActivity() {
         // Setup Views
         recyclerView = findViewById(R.id.recyclerViewTables)
         fabAddTable = findViewById(R.id.fabAddTable)
+        fabKitchenMode = findViewById(R.id.fabKitchenMode)
 
         setupRecyclerView()
         setupFab()
+        setupKitchenMode()
     }
 
     private fun setupRecyclerView() {
@@ -79,6 +83,13 @@ class TableSelectionActivity : AppCompatActivity() {
             recyclerView.smoothScrollToPosition(tableCount - 1)
 
             Toast.makeText(this, "Mesa $tableCount agregada", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setupKitchenMode() {
+        fabKitchenMode.setOnClickListener {
+            val intent = Intent(this, KitchenActivity::class.java)
+            startActivity(intent)
         }
     }
 

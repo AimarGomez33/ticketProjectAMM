@@ -15,10 +15,10 @@
       </SelectionState>
       <SelectionState runConfigName="TicketApp">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-02-27T02:10:30.864689400Z">
+        <DropdownSelection timestamp="2026-03-02T07:50:00.209426900Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\jair_\.android\avd\Medium_Phone.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=R8YX40L1YFT" />
             </handle>
           </Target>
         </DropdownSelection>

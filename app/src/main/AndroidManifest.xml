@@ -61,6 +61,12 @@
                 android:resource="@xml/device_filter" />
         </activity>
 
+        <activity
+            android:name=".KitchenActivity"
+            android:exported="false"
+            android:label="Cocina KDS"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.TicketApp" />
 
 
 

@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp) // KSP is the correct plugin to use
+    alias(libs.plugins.google.services) // Firebase Services
 }
 
 android {
@@ -47,6 +48,10 @@ android {
 }
 
 dependencies {
+    // Firebase
+    implementation platform(libs.firebase.bom)
+    implementation libs.firebase.database
+
     // Core dependencies
     implementation 'androidx.core:core-ktx:1.13.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
