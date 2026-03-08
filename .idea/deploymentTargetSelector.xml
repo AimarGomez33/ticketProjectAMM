@@ -15,11 +15,14 @@
       </SelectionState>
       <SelectionState runConfigName="TicketApp">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-03-02T07:50:00.209426900Z">
+        <DropdownSelection timestamp="2026-03-08T07:02:28.723378500Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=R8YX40L1YFT" />
+              <DeviceId pluginId="FirebaseDirectAccess" identifier="reservation=projects/ticketapp-1d084e94/deviceSessions/session-3rc0qloelb6au" />
             </handle>
+            <template>
+              <DeviceId pluginId="FirebaseDirectAccess" type="TEMPLATE" identifier="model_id=gts8uwifi/33" />
+            </template>
           </Target>
         </DropdownSelection>
         <DialogSelection />

@@ -18,8 +18,6 @@ import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -30,8 +28,11 @@ import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.geometry.isEmpty
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -40,7 +41,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ticketapp.data.kds.KdsOrder
 import com.example.ticketapp.data.kds.KdsOrderItem
+import com.example.ticketapp.data.menu.MenuDataProvider
+import com.example.ticketapp.data.menu.VariationType
 import com.example.ticketapp.repository.KdsRepository
+import com.example.ticketapp.ui.menu.MenuViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import java.io.IOException
@@ -62,6 +66,7 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity() {
 
     private val kdsRepository = KdsRepository()
+    private val menuViewModel: MenuViewModel by viewModels()
 
     // --- Constantes ---
     private companion object {
@@ -547,237 +552,17 @@ class MainActivity : AppCompatActivity() {
         appDatabase = AppDatabase.getDatabase(applicationContext, lifecycleScope)
         txtTotal = findViewById(R.id.textViewTotal)
 
-        txtNormales =
-                mapOf(
-                        "Hamburguesa Clasica" to
-                                findViewById(R.id.cantidadHamburguesaClasicaNormal),
-                        "Hamburguesa Hawaiana" to
-                                findViewById(R.id.cantidadHamburguesaHawaianaNormal),
-                        "Hamburguesa Pollo" to findViewById(R.id.cantidadHamburguesaPolloNormal),
-                        "Hamburguesa Champinones" to
-                                findViewById(R.id.cantidadHamburguesaChampinonesNormal),
-                        "Hamburguesa Arrachera" to
-                                findViewById(R.id.cantidadHamburguesaArracheraNormal),
-                        "Hamburguesa Maggy" to findViewById(R.id.cantidadHamburguesaMaggyNormal),
-                        "Hamburguesa Doble" to findViewById(R.id.cantidadHamburguesaDobleNormal)
-                )
+        // txtNormales, txtCombos, botonesNormal, botonesCombo, etc.
+        // all replaced by Compose MenuViewModel — see MenuScreen.kt
 
-        txtCombos =
-                mapOf(
-                        "Hamburguesa Clasica" to findViewById(R.id.cantidadHamburguesaClasicaCombo),
-                        "Hamburguesa Hawaiana" to
-                                findViewById(R.id.cantidadHamburguesaHawaianaCombo),
-                        "Hamburguesa Pollo" to findViewById(R.id.cantidadHamburguesaPolloCombo),
-                        "Hamburguesa Champinones" to
-                                findViewById(R.id.cantidadHamburguesaChampinonesCombo),
-                        "Hamburguesa Arrachera" to
-                                findViewById(R.id.cantidadHamburguesaArracheraCombo),
-                        "Hamburguesa Maggy" to findViewById(R.id.cantidadHamburguesaMaggyCombo),
-                        "Hamburguesa Doble" to findViewById(R.id.cantidadHamburguesaDobleCombo)
-                )
-
-        // Inicializa cantidades
+        // Inicializa cantidades (still needed for obtenerProductosDesdeInputs)
         for (nombre in preciosHamburguesas.keys) {
             cantidadesNormales[nombre] = 0
             cantidadesCombo[nombre] = 0
         }
 
-        fun recalcularTotal() {
-            var total = 0.0
-            for ((nombre, precioBase) in preciosHamburguesas) {
-                val normales = cantidadesNormales[nombre] ?: 0
-                val combos = cantidadesCombo[nombre] ?: 0
-                total += (precioBase * normales) + ((precioBase + extraCombo) * combos)
-            }
-            txtTotal.text = "Total: $%.2f".format(total)
-        }
-
-        val botonesNormal =
-                mapOf(
-                        "Hamburguesa Clasica" to
-                                findViewById<Button>(R.id.btnMasHamburguesaClasicaNormal),
-                        "Hamburguesa Hawaiana" to
-                                findViewById<Button>(R.id.btnMasHamburguesaHawaianaNormal),
-                        "Hamburguesa Pollo" to
-                                findViewById<Button>(R.id.btnMasHamburguesaPolloNormal),
-                        "Hamburguesa Champinones" to
-                                findViewById<Button>(R.id.btnMasHamburguesaChampinonesNormal),
-                        "Hamburguesa Arrachera" to
-                                findViewById<Button>(R.id.btnMasHamburguesaArracheraNormal),
-                        "Hamburguesa Maggy" to
-                                findViewById<Button>(R.id.btnMasHamburguesaMaggyNormal),
-                        "Hamburguesa Doble" to
-                                findViewById<Button>(R.id.btnMasHamburguesaDobleNormal)
-                )
-
-        val botonesCombo =
-                mapOf(
-                        "Hamburguesa Clasica" to
-                                findViewById<Button>(R.id.btnMasHamburguesaClasicaCombo),
-                        "Hamburguesa Hawaiana" to
-                                findViewById<Button>(R.id.btnMasHamburguesaHawaianaCombo),
-                        "Hamburguesa Pollo" to
-                                findViewById<Button>(R.id.btnMasHamburguesaPolloCombo),
-                        "Hamburguesa Champinones" to
-                                findViewById<Button>(R.id.btnMasHamburguesaChampinonesCombo),
-                        "Hamburguesa Arrachera" to
-                                findViewById<Button>(R.id.btnMasHamburguesaArracheraCombo),
-                        "Hamburguesa Maggy" to
-                                findViewById<Button>(R.id.btnMasHamburguesaMaggyCombo),
-                        "Hamburguesa Doble" to
-                                findViewById<Button>(R.id.btnMasHamburguesaDobleCombo)
-                )
-
-        for ((nombre, boton) in botonesNormal) {
-            boton.setOnClickListener {
-                val actual = (cantidadesNormales[nombre] ?: 0) + 1
-                cantidadesNormales[nombre] = actual
-                txtNormales[nombre]?.text = "$actual"
-
-                // Adjust comments: Total = Normal + Combo
-                val total = actual + (cantidadesCombo[nombre] ?: 0)
-                adjustCommentList(nombre, total)
-
-                recalcularTotal()
-                val productosSeleccionados = obtenerProductosDesdeInputs()
-                mostrarResumen(productosSeleccionados)
-            }
-        }
-
-        for ((nombre, boton) in botonesCombo) {
-            boton.setOnClickListener {
-                val actual = (cantidadesCombo[nombre] ?: 0) + 1
-                cantidadesCombo[nombre] = actual
-                txtCombos[nombre]?.text = "$actual"
-
-                val total = (cantidadesNormales[nombre] ?: 0) + actual
-                adjustCommentList(nombre, total)
-
-                recalcularTotal()
-                val productosSeleccionados = obtenerProductosDesdeInputs()
-                mostrarResumen(productosSeleccionados)
-            }
-        }
-
-        // --- HAMBURGUESAS COMMENT BUTTONS SETUP ---
-        val botonesCommentNormal =
-                mapOf(
-                        "Hamburguesa Clasica" to
-                                findViewById<ImageButton>(R.id.btnCommentHamburguesaClasicaNormal),
-                        "Hamburguesa Hawaiana" to
-                                findViewById<ImageButton>(R.id.btnCommentHamburguesaHawaianaNormal),
-                        "Hamburguesa Pollo" to
-                                findViewById<ImageButton>(R.id.btnCommentHamburguesaPolloNormal),
-                        "Hamburguesa Champinones" to
-                                findViewById<ImageButton>(
-                                        R.id.btnCommentHamburguesaChampinonesNormal
-                                ),
-                        "Hamburguesa Arrachera" to
-                                findViewById<ImageButton>(
-                                        R.id.btnCommentHamburguesaArracheraNormal
-                                ),
-                        "Hamburguesa Maggy" to
-                                findViewById<ImageButton>(R.id.btnCommentHamburguesaMaggyNormal),
-                        "Hamburguesa Doble" to
-                                findViewById<ImageButton>(R.id.btnCommentHamburguesaDobleNormal)
-                )
-
-        val botonesCommentCombo =
-                mapOf(
-                        "Hamburguesa Clasica" to
-                                findViewById<ImageButton>(R.id.btnCommentHamburguesaClasicaCombo),
-                        "Hamburguesa Hawaiana" to
-                                findViewById<ImageButton>(R.id.btnCommentHamburguesaHawaianaCombo),
-                        "Hamburguesa Pollo" to
-                                findViewById<ImageButton>(R.id.btnCommentHamburguesaPolloCombo),
-                        "Hamburguesa Champinones" to
-                                findViewById<ImageButton>(
-                                        R.id.btnCommentHamburguesaChampinonesCombo
-                                ),
-                        "Hamburguesa Arrachera" to
-                                findViewById<ImageButton>(R.id.btnCommentHamburguesaArracheraCombo),
-                        "Hamburguesa Maggy" to
-                                findViewById<ImageButton>(R.id.btnCommentHamburguesaMaggyCombo),
-                        "Hamburguesa Doble" to
-                                findViewById<ImageButton>(R.id.btnCommentHamburguesaDobleCombo)
-                )
-
-        for ((nombre, boton) in botonesCommentNormal) {
-            boton.setOnClickListener { showCommentDialog(nombre) }
-        }
-
-        for ((nombre, boton) in botonesCommentCombo) {
-            boton.setOnClickListener { showCommentDialog(nombre) }
-        }
-
-        // Botones de RESTAR
-        val botonesMenosNormal =
-                mapOf(
-                        "Hamburguesa Clasica" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaClasicaNormal),
-                        "Hamburguesa Hawaiana" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaHawaianaNormal),
-                        "Hamburguesa Pollo" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaPolloNormal),
-                        "Hamburguesa Champinones" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaChampinonesNormal),
-                        "Hamburguesa Arrachera" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaArracheraNormal),
-                        "Hamburguesa Maggy" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaMaggyNormal),
-                        "Hamburguesa Doble" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaDobleNormal)
-                )
-
-        val botonesMenosCombo =
-                mapOf(
-                        "Hamburguesa Clasica" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaClasicaCombo),
-                        "Hamburguesa Hawaiana" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaHawaianaCombo),
-                        "Hamburguesa Pollo" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaPolloCombo),
-                        "Hamburguesa Champinones" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaChampinonesCombo),
-                        "Hamburguesa Arrachera" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaArracheraCombo),
-                        "Hamburguesa Maggy" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaMaggyCombo),
-                        "Hamburguesa Doble" to
-                                findViewById<Button>(R.id.btnMenosHamburguesaDobleCombo)
-                )
-
-        for ((nombre, boton) in botonesMenosNormal) {
-            boton.setOnClickListener {
-                val actual = maxOf((cantidadesNormales[nombre] ?: 0) - 1, 0)
-                cantidadesNormales[nombre] = actual
-                txtNormales[nombre]?.text = "$actual"
-
-                val total = actual + (cantidadesCombo[nombre] ?: 0)
-                adjustCommentList(nombre, total)
-
-                recalcularTotal()
-                val productosSeleccionados = obtenerProductosDesdeInputs()
-                mostrarResumen(productosSeleccionados)
-            }
-        }
-
-        for ((nombre, boton) in botonesMenosCombo) {
-            boton.setOnClickListener {
-                val actual = maxOf((cantidadesCombo[nombre] ?: 0) - 1, 0)
-                cantidadesCombo[nombre] = actual
-                txtCombos[nombre]?.text = "$actual"
-
-                val total = (cantidadesNormales[nombre] ?: 0) + actual
-                adjustCommentList(nombre, total)
-
-                recalcularTotal()
-                val productosSeleccionados = obtenerProductosDesdeInputs()
-                mostrarResumen(productosSeleccionados)
-            }
-        }
-
         // DB y panel admin
+
         // La base de datos ya fue inicializada al inicio de onCreate, no es necesario
         // volver a
         // asignarla aquí
@@ -820,6 +605,140 @@ class MainActivity : AppCompatActivity() {
         setupProductViews()
         setupButtons()
         setupCollapsibleCategories()
+
+        // ─────────────────────────────────────────────────────────────────────
+        // JETPACK COMPOSE — Menu Screen Integration
+        // ─────────────────────────────────────────────────────────────────────
+        val menuCategories = MenuDataProvider.getMenuCategories()
+        menuViewModel.loadMenu(menuCategories)
+
+        val composeMenuView =
+                findViewById<androidx.compose.ui.platform.ComposeView>(R.id.composeMenuView)
+        composeMenuView.setContent {
+            val menuState by menuViewModel.uiState.collectAsState()
+
+            androidx.compose.material3.MaterialTheme {
+                com.example.ticketapp.ui.menu.MenuScreen(
+                        categories = menuState.categories,
+                        quantities = menuState.quantities,
+                        onAddProduct = { item ->
+                            when {
+                                item.isBurger -> {
+                                    /* handled by onAddBurgerNormal */
+                                }
+                                item.variationType ==
+                                        com.example.ticketapp.data.menu.VariationType
+                                                .MULTIPLE_SELECTION -> {
+                                    // Sequential guisado dialog (Pambazos Combinados)
+                                    showSequentialGuisadoDialog(
+                                            item.name,
+                                            item.price,
+                                            minGuisados = 2
+                                    )
+                                }
+                                item.variationType ==
+                                        com.example.ticketapp.data.menu.VariationType
+                                                .SINGLE_SELECTION -> {
+                                    // Standard variation dialog (Quesadillas, Tacos, etc.)
+                                    showVariationSelectionDialog(item.name, item.price)
+                                }
+                                item.variationType ==
+                                        com.example.ticketapp.data.menu.VariationType
+                                                .TEXT_INPUT -> {
+                                    // Dropdown/text dialog for Bebidas
+                                    showDynamicDropdown(item.name, item.price)
+                                }
+                                else -> {
+                                    // Simple product — update quantities directly
+                                    val current = quantities[item.name] ?: 0
+                                    quantities[item.name] = current + 1
+                                    menuViewModel.addProduct(item)
+                                    adjustCommentList(item.name, quantities[item.name] ?: 0)
+                                    mostrarResumen(obtenerProductosDesdeInputs())
+                                }
+                            }
+                        },
+                        onRemoveProduct = { item ->
+                            val current = quantities[item.name] ?: 0
+                            if (current > 0) {
+                                quantities[item.name] = current - 1
+                                menuViewModel.removeProduct(item)
+                                adjustCommentList(item.name, quantities[item.name] ?: 0)
+                                mostrarResumen(obtenerProductosDesdeInputs())
+                            }
+                        },
+                        onAddBurgerNormal = { item ->
+                            val current = cantidadesNormales[item.name] ?: 0
+                            cantidadesNormales[item.name] = current + 1
+                            menuViewModel.addBurgerNormal(item)
+                            adjustCommentList(
+                                    item.name,
+                                    (cantidadesNormales[item.name]
+                                            ?: 0) + (cantidadesCombo[item.name] ?: 0)
+                            )
+                            mostrarResumen(obtenerProductosDesdeInputs())
+                        },
+                        onRemoveBurgerNormal = { item ->
+                            val current = cantidadesNormales[item.name] ?: 0
+                            if (current > 0) {
+                                cantidadesNormales[item.name] = current - 1
+                                menuViewModel.removeBurgerNormal(item)
+                                adjustCommentList(
+                                        item.name,
+                                        (cantidadesNormales[item.name]
+                                                ?: 0) + (cantidadesCombo[item.name] ?: 0)
+                                )
+                                mostrarResumen(obtenerProductosDesdeInputs())
+                            }
+                        },
+                        onAddBurgerCombo = { item ->
+                            val current = cantidadesCombo[item.name] ?: 0
+                            cantidadesCombo[item.name] = current + 1
+                            menuViewModel.addBurgerCombo(item)
+                            adjustCommentList(
+                                    item.name,
+                                    (cantidadesNormales[item.name]
+                                            ?: 0) + (cantidadesCombo[item.name] ?: 0)
+                            )
+                            mostrarResumen(obtenerProductosDesdeInputs())
+                        },
+                        onRemoveBurgerCombo = { item ->
+                            val current = cantidadesCombo[item.name] ?: 0
+                            if (current > 0) {
+                                cantidadesCombo[item.name] = current - 1
+                                menuViewModel.removeBurgerCombo(item)
+                                adjustCommentList(
+                                        item.name,
+                                        (cantidadesNormales[item.name]
+                                                ?: 0) + (cantidadesCombo[item.name] ?: 0)
+                                )
+                                mostrarResumen(obtenerProductosDesdeInputs())
+                            }
+                        },
+                        onOpenComment = { productName -> showCommentDialog(productName) },
+                        notasExtras = menuState.notasExtras,
+                        onNotasChanged = { menuViewModel.updateNotas(it) },
+                        existingOrderDetails = menuState.existingOrderDetails,
+                        onTerminarPedido =
+                                if (currentOrderId != -1L) {
+                                    {
+                                        lifecycleScope.launch(Dispatchers.IO) {
+                                            appDatabase.orderDao().closeOrder(currentOrderId)
+                                            withContext(Dispatchers.Main) {
+                                                Toast.makeText(
+                                                                this@MainActivity,
+                                                                "Pedido terminado y mesa liberada",
+                                                                Toast.LENGTH_SHORT
+                                                        )
+                                                        .show()
+                                                finish()
+                                            }
+                                        }
+                                    }
+                                } else null
+                )
+            }
+        }
 
         // RECIBIR MESA Y PEDIDO PENDIENTE
         val tableNumber = intent.getIntExtra("TABLE_NUMBER", -1)
@@ -1024,17 +943,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    private fun showVariationSelectionDialog(productName: String) {
+    private fun showVariationSelectionDialog(productName: String, productPrice: Double) {
         val variations = productVariations[productName] ?: return
         val builder = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
         builder.setTitle("Elige variante para $productName")
         builder.setItems(variations.toTypedArray()) { _, which ->
             val selectedVariant = variations[which]
-            val productData = products[productName] ?: return@setItems
             val newItem =
                     Producto(
                             nombre = "$productName ($selectedVariant)",
-                            precio = productData.precio,
+                            precio = productPrice,
                             cantidad = 1,
                             esCombo = false
                     )
@@ -1140,7 +1058,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun showSequentialGuisadoDialog(
             productName: String,
-            productData: ProductData,
+            productPrice: Double,
             guisadosSeleccionados: MutableList<String> = mutableListOf(),
             minGuisados: Int = 1
     ) {
@@ -1170,7 +1088,7 @@ class MainActivity : AppCompatActivity() {
             // Mostrar siguiente diálogo reutilizando la misma lista
             showSequentialGuisadoDialog(
                     productName,
-                    productData,
+                    productPrice,
                     guisadosSeleccionados,
                     minGuisados
             )
@@ -1187,7 +1105,7 @@ class MainActivity : AppCompatActivity() {
                         .show()
                 showSequentialGuisadoDialog(
                         productName,
-                        productData,
+                        productPrice,
                         guisadosSeleccionados,
                         minGuisados
                 )
@@ -1196,7 +1114,7 @@ class MainActivity : AppCompatActivity() {
                 selectedVariations.add(
                         Producto(
                                 nombre = nombreCompleto,
-                                precio = productData.precio,
+                                precio = productPrice,
                                 cantidad = 1,
                                 esCombo = false
                         )
@@ -1294,489 +1212,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupProductViews() {
-        // Mapeo de productos (nombre lógico -> views + precio)
-        products["Quesadillas"] =
-                ProductData(
-                        findViewById(R.id.cantidadQuesadillas),
-                        findViewById(R.id.btnMenosQuesadillas),
-                        findViewById(R.id.btnMasQuesadillas),
-                        findViewById(R.id.btnCommentQuesadillas),
-                        30.0
-                )
-        products["Quesadilla/Queso"] =
-                ProductData(
-                        findViewById(R.id.cantidadQuesadillaQueso),
-                        findViewById(R.id.btnMenosQuesadillaQueso),
-                        findViewById(R.id.btnMasQuesadillaQueso),
-                        findViewById(R.id.btnCommentQuesadillaQueso),
-                        30.0
-                )
-        products["Pozole Grande"] =
-                ProductData(
-                        findViewById(R.id.cantidadPozoleGrande),
-                        findViewById(R.id.btnMenosPozoleGrande),
-                        findViewById(R.id.btnMasPozoleGrande),
-                        findViewById(R.id.btnCommentPozoleGrande),
-                        110.0
-                )
-        products["Pozole Chico"] =
-                ProductData(
-                        findViewById(R.id.cantidadPozoleChico),
-                        findViewById(R.id.btnMenosPozoleChico),
-                        findViewById(R.id.btnMasPozoleChico),
-                        findViewById(R.id.btnCommentPozoleChico),
-                        90.0
-                )
-        products["Tostadas"] =
-                ProductData(
-                        findViewById(R.id.cantidadTostadas),
-                        findViewById(R.id.btnMenosTostadas),
-                        findViewById(R.id.btnMasTostadas),
-                        findViewById(R.id.btnCommentTostadas),
-                        35.0
-                )
-        products["Volcanes"] =
-                ProductData(
-                        findViewById(R.id.cantidadVolcanes),
-                        findViewById(R.id.btnMenosVolcanes),
-                        findViewById(R.id.btnMasVolcanes),
-                        findViewById(R.id.btnCommentVolcanes),
-                        60.0
-                )
-        products["Volcan Queso"] =
-                ProductData(
-                        findViewById(R.id.cantidadVolcanQueso),
-                        findViewById(R.id.btnMenosVolcanQueso),
-                        findViewById(R.id.btnMasVolcanQueso),
-                        findViewById(R.id.btnCommentVolcanQueso),
-                        72.0
-                )
-        products["Guisado Extra"] =
-                ProductData(
-                        findViewById(R.id.cantidadGuisadoExtra),
-                        findViewById(R.id.btnMenosGuisadoExtra),
-                        findViewById(R.id.btnMasGuisadoExtra),
-                        findViewById(R.id.btnCommentGuisadoExtra),
-                        72.0
-                )
-        products["Guajoloyets Naturales"] =
-                ProductData(
-                        findViewById(R.id.cantidadGuajoloyetNatural),
-                        findViewById(R.id.btnMenosGuajoloyetNatural),
-                        findViewById(R.id.btnMasGuajoloyetNatural),
-                        findViewById(R.id.btnCommentGuajoloyetNatural),
-                        60.0
-                )
-        products["Guajoloyets Naturales Extra"] =
-                ProductData(
-                        findViewById(R.id.cantidadGujoloyetNaturalExtra),
-                        findViewById(R.id.btnMenosGujoloyetNaturalExtra),
-                        findViewById(R.id.btnMasGujoloyetNaturalExtra),
-                        findViewById(R.id.btnCommentGujoloyetNaturalExtra),
-                        72.0
-                )
-        products["Guajoloyets Adobados"] =
-                ProductData(
-                        findViewById(R.id.cantidadGuajoloyetAdobado),
-                        findViewById(R.id.btnMenosGuajoloyetAdobado),
-                        findViewById(R.id.btnMasGuajoloyetAdobado),
-                        findViewById(R.id.btnCommentGuajoloyetAdobado),
-                        65.0
-                )
-        products["Guajoloyets Adobados Extra"] =
-                ProductData(
-                        findViewById(R.id.cantidadGujoloyetAdobadoExtra),
-                        findViewById(R.id.btnMenosGujoloyetAdobadoExtra),
-                        findViewById(R.id.btnMasGujoloyetAdobadoExtra),
-                        findViewById(R.id.btnCommentGujoloyetAdobadoExtra),
-                        77.0
-                )
-        products["Pambazos Naturales"] =
-                ProductData(
-                        findViewById(R.id.cantidadPambazosNaturales),
-                        findViewById(R.id.btnMenosPambazosNaturales),
-                        findViewById(R.id.btnMasPambazosNaturales),
-                        findViewById(R.id.btnCommentPambazosNaturales),
-                        35.0
-                )
-        products["Pambazos Naturales Combinados"] =
-                ProductData(
-                        findViewById(R.id.cantidadPambazosNaturalesCombinados),
-                        findViewById(R.id.btnMenosPambazosNaturalesCombinados),
-                        findViewById(R.id.btnMasPambazosNaturalesCombinados),
-                        findViewById(R.id.btnCommentPambazosNaturalesCombinados),
-                        42.0
-                )
-        products["Pambazos Naturales Combinados con Queso"] =
-                ProductData(
-                        findViewById(R.id.cantidadPambazosNaturalesCombinadosQueso),
-                        findViewById(R.id.btnMenosPambazosNaturalesCombinadosQueso),
-                        findViewById(R.id.btnMasPambazosNaturalesCombinadosQueso),
-                        findViewById(R.id.btnCommentPambazosNaturalesCombinadosQueso),
-                        54.0
-                )
-        products["Pambazos Naturales Extra"] =
-                ProductData(
-                        findViewById(R.id.cantidadPambazosNaturalesQueso),
-                        findViewById(R.id.btnMenosPambazosNaturalesQueso),
-                        findViewById(R.id.btnMasPambazosNaturalesQueso),
-                        findViewById(R.id.btnCommentPambazosNaturalesQueso),
-                        47.0
-                )
-        products["Pambazos Adobados"] =
-                ProductData(
-                        findViewById(R.id.cantidadPambazosAdobados),
-                        findViewById(R.id.btnMenosPambazosAdobados),
-                        findViewById(R.id.btnMasPambazosAdobados),
-                        findViewById(R.id.btnCommentPambazosAdobados),
-                        40.0
-                )
-        products["Pambazos Adobados Combinados"] =
-                ProductData(
-                        findViewById(R.id.cantidadPambazosAdobadosCombinados),
-                        findViewById(R.id.btnMenosPambazosAdobadosCombinados),
-                        findViewById(R.id.btnMasPambazosAdobadosCombinados),
-                        findViewById(R.id.btnCommentPambazosAdobadosCombinados),
-                        47.0
-                )
-        products["Pambazos Adobados Combinados con Queso"] =
-                ProductData(
-                        findViewById(R.id.cantidadPambazosAdobadosCombinadosQueso),
-                        findViewById(R.id.btnMenosPambazosAdobadosCombinadosQueso),
-                        findViewById(R.id.btnMasPambazosAdobadosCombinadosQueso),
-                        findViewById(R.id.btnCommentPambazosAdobadosCombinadosQueso),
-                        59.0
-                )
-        products["Pambazos Adobados Extra"] =
-                ProductData(
-                        findViewById(R.id.cantidadPambazosAdobadosExtra),
-                        findViewById(R.id.btnMenosPambazosAdobadosExtra),
-                        findViewById(R.id.btnMasPambazosAdobadosExtra),
-                        findViewById(R.id.btnCommentPambazosAdobadosExtra),
-                        52.0
-                )
-        products["Chalupas"] =
-                ProductData(
-                        findViewById(R.id.cantidadChalupas),
-                        findViewById(R.id.btnMenosChalupas),
-                        findViewById(R.id.btnMasChalupas),
-                        findViewById(R.id.btnCommentChalupas),
-                        5.0
-                )
-        products["Alones"] =
-                ProductData(
-                        findViewById(R.id.cantidadAlones),
-                        findViewById(R.id.btnMenosAlones),
-                        findViewById(R.id.btnMasAlones),
-                        findViewById(R.id.btnCommentAlones),
-                        25.0
-                )
-        products["Mollejas"] =
-                ProductData(
-                        findViewById(R.id.cantidadMollejas),
-                        findViewById(R.id.btnMenosMollejas),
-                        findViewById(R.id.btnMasMollejas),
-                        findViewById(R.id.btnCommentMollejas),
-                        25.0
-                )
-        products["Higados"] =
-                ProductData(
-                        findViewById(R.id.cantidadHigados),
-                        findViewById(R.id.btnMenosHigados),
-                        findViewById(R.id.btnMasHigados),
-                        findViewById(R.id.btnCommentHigados),
-                        22.0
-                )
-        products["Patitas"] =
-                ProductData(
-                        findViewById(R.id.cantidadPatitas),
-                        findViewById(R.id.btnMenosPatitas),
-                        findViewById(R.id.btnMasPatitas),
-                        findViewById(R.id.btnCommentPatitas),
-                        22.0
-                )
-        products["Huevos"] =
-                ProductData(
-                        findViewById(R.id.cantidadHuevos),
-                        findViewById(R.id.btnMenosHuevos),
-                        findViewById(R.id.btnMasHuevos),
-                        findViewById(R.id.btnCommentHuevos),
-                        20.0
-                )
-        products["Refrescos"] =
-                ProductData(
-                        findViewById(R.id.cantidadRefrescos),
-                        findViewById(R.id.btnMenosRefrescos),
-                        findViewById(R.id.btnMasRefrescos),
-                        findViewById(R.id.btnCommentRefrescos),
-                        26.0
-                )
-        products["Cafe"] =
-                ProductData(
-                        findViewById(R.id.cantidadCafe),
-                        findViewById(R.id.btnMenosCafe),
-                        findViewById(R.id.btnMasCafe),
-                        findViewById(R.id.btnCommentCafe),
-                        22.0
-                )
-        products["Aguas de Sabor"] =
-                ProductData(
-                        findViewById(R.id.cantidadAguasSabor),
-                        findViewById(R.id.btnMenosAguasSabor),
-                        findViewById(R.id.btnMasAguasSabor),
-                        findViewById(R.id.btnCommentAguasSabor),
-                        25.0
-                )
-        products["Agua Natural"] =
-                ProductData(
-                        findViewById(R.id.cantidadAguasNat),
-                        findViewById(R.id.btnMenosAguasNat),
-                        findViewById(R.id.btnMasAguasNat),
-                        findViewById(R.id.btnCommentAguasNat),
-                        20.0
-                )
-        products["Agua para Te"] =
-                ProductData(
-                        findViewById(R.id.cantidadAguaTe),
-                        findViewById(R.id.btnMenosAguaTe),
-                        findViewById(R.id.btnMasAguaTe),
-                        findViewById(R.id.btnCommentAguaTe),
-                        20.0
-                )
-
-        // ===== PAPAS =====
-        products["Orden de Papas Sencillas"] =
-                ProductData(
-                        findViewById(R.id.cantidadPapasSencillas),
-                        findViewById(R.id.btnMenosPapasSencillas),
-                        findViewById(R.id.btnMasPapasSencillas),
-                        findViewById(R.id.btnCommentPapasSencillas),
-                        50.0
-                )
-
-        products["Orden de Papas Queso y Tocino"] =
-                ProductData(
-                        findViewById(R.id.cantidadPapasQuesoTocino),
-                        findViewById(R.id.btnMenosPapasQuesoTocino),
-                        findViewById(R.id.btnMasPapasQuesoTocino),
-                        findViewById(R.id.btnCommentPapasQuesoTocino),
-                        65.0
-                )
-
-        // ===== TACOS (precio por pieza) =====
-        products["Taco (c/u)"] =
-                ProductData(
-                        findViewById(R.id.cantidadTacoUnitario),
-                        findViewById(R.id.btnMenosTacoUnitario),
-                        findViewById(R.id.btnMasTacoUnitario),
-                        findViewById(R.id.btnCommentTacoUnitario),
-                        25.0
-                )
-
-        products["Taco con Queso (c/u)"] =
-                ProductData(
-                        findViewById(R.id.cantidadTacoConQueso),
-                        findViewById(R.id.btnMenosTacoConQueso),
-                        findViewById(R.id.btnMasTacoConQueso),
-                        findViewById(R.id.btnCommentTacoConQueso),
-                        30.0
-                )
-
-        // ===== ALITAS =====
-        products["Alitas 6 pzas"] =
-                ProductData(
-                        findViewById(R.id.cantidadAlitas6),
-                        findViewById(R.id.btnMenosAlitas6),
-                        findViewById(R.id.btnMasAlitas6),
-                        findViewById(R.id.btnCommentAlitas6),
-                        65.0
-                )
-
-        products["Alitas 10 pzas"] =
-                ProductData(
-                        findViewById(R.id.cantidadAlitas10),
-                        findViewById(R.id.btnMenosAlitas10),
-                        findViewById(R.id.btnMasAlitas10),
-                        findViewById(R.id.btnCommentAlitas10),
-                        100.0
-                )
-
-        products["Alitas 15 pzas"] =
-                ProductData(
-                        findViewById(R.id.cantidadAlitas15),
-                        findViewById(R.id.btnMenosAlitas15),
-                        findViewById(R.id.btnMasAlitas15),
-                        findViewById(R.id.btnCommentAlitas15),
-                        140.0
-                )
-        products["Combo"] =
-                ProductData(
-                        findViewById(R.id.cantidadCombo),
-                        findViewById(R.id.btnMenosCombo),
-                        findViewById(R.id.btnMasCombo),
-                        findViewById(R.id.btnCommentCombo),
-                        30.0
-                )
-
-        products.forEach { (productName, productData) ->
-            quantities[productName] = 0
-
-            productData.btnComment.setOnClickListener { showCommentDialog(productName) }
-
-            // LONG CLICK: Abre inventario correspondiente (Refrescos o Aguas)
-            productData.btnMas.setOnLongClickListener {
-                val intent =
-                        when {
-                            productName.contains("Refresco", ignoreCase = true) ->
-                                    Intent(this@MainActivity, InventoryRefrescoActivity::class.java)
-                            productName.contains("Agua", ignoreCase = true) ->
-                                    Intent(this@MainActivity, InventoryAguaActivity::class.java)
-                            else -> null
-                        }
-                if (intent != null) {
-                    startActivity(intent)
-                    true
-                } else {
-                    false
-                }
-            }
-
-            // CLICK CORTO: muestra diálogo de sabor/guisado según el tipo de producto
-            productData.btnMas.setOnClickListener {
-                when {
-                    productName.contains("Refresco", ignoreCase = true) ||
-                            productName.contains("Agua", ignoreCase = true) -> {
-                        // Bebidas: lista dinámica desde base de datos
-                        showDynamicDropdown(productName, productData.precio)
-                    }
-                    // Pambazos Combinados: selección iterativa de 2+ guisados
-                    productName.contains("Combinado", ignoreCase = true) &&
-                            productVariations.containsKey(productName) -> {
-                        val pd = products[productName]!!
-                        showSequentialGuisadoDialog(productName, pd, minGuisados = 2)
-                    }
-                    productVariations.containsKey(productName) -> {
-                        // Platillos con guisado simple (Quesadillas, Volcanes, etc.)
-                        showVariationSelectionDialog(productName)
-                    }
-                    else -> {
-                        // Productos sin variante (Chalupas, Alones, Cafe, etc.)
-                        updateQuantity(productName, 1)
-                        adjustCommentList(productName, quantities[productName] ?: 0)
-                    }
-                }
-            }
-
-            productData.btnMenos.setOnClickListener {
-                when {
-                    (productName.contains("Refresco", ignoreCase = true) ||
-                            productName.contains("Agua", ignoreCase = true) ||
-                            productVariations.containsKey(productName)) &&
-                            (quantities[productName] ?: 0) > 0 ->
-                            showVariationRemovalDialog(productName)
-                    else -> updateQuantity(productName, -1)
-                }
-            }
-
-            // chalupas es EditText libre
-            if (productName == "Chalupas" && productData.cantidadTV is EditText) {
-                productData.cantidadTV.addTextChangedListener(
-                        object : TextWatcher {
-                            override fun beforeTextChanged(
-                                    s: CharSequence?,
-                                    start: Int,
-                                    count: Int,
-                                    after: Int
-                            ) {}
-
-                            override fun onTextChanged(
-                                    s: CharSequence?,
-                                    start: Int,
-                                    before: Int,
-                                    count: Int
-                            ) {}
-
-                            override fun afterTextChanged(s: Editable?) {
-                                val currentQuantity = quantities[productName] ?: 0
-                                val newValue = s?.toString()?.toIntOrNull() ?: 0
-                                if (currentQuantity != newValue) {
-                                    quantities[productName] = newValue
-                                }
-                                // Actualizar resumen en tiempo real al
-                                // cambiar la cantidad de
-                                // chalupas
-                                val productosSeleccionados = obtenerProductosDesdeInputs()
-                                mostrarResumen(productosSeleccionados)
-                            }
-                        }
-                )
-            }
-        }
+        // All product views migrated to Jetpack Compose (MenuScreen)
+        // Previously: thousands of lines of manual ViewBinding
     }
 
-    // plegables por categoría
     private fun setupCollapsibleCategories() {
-        setupCollapsibleView(
-                findViewById(R.id.headerPlatillos),
-                findViewById(R.id.gridPlatillos),
-                findViewById(R.id.arrowPlatillos)
-        )
-        setupCollapsibleView(
-                findViewById(R.id.headerPambazos),
-                findViewById(R.id.gridPambazos),
-                findViewById(R.id.arrowPambazos)
-        )
-        setupCollapsibleView(
-                findViewById(R.id.headerGuajoloyets),
-                findViewById(R.id.gridGuajoloyets),
-                findViewById(R.id.arrowGuajoloyets)
-        )
-        setupCollapsibleView(
-                findViewById(R.id.headerEntradas),
-                findViewById(R.id.gridEntradas),
-                findViewById(R.id.arrowEntradas)
-        )
-        setupCollapsibleView(
-                findViewById(R.id.headerBebidas),
-                findViewById(R.id.gridBebidas),
-                findViewById(R.id.arrowBebidas)
-        )
-        // ACCESO A INVENTARIO DE REFRESCOS (Long Click)
-        findViewById<View>(R.id.headerBebidas).setOnLongClickListener {
-            try {
-                val intent = android.content.Intent(this, InventoryRefrescoActivity::class.java)
-                startActivity(intent)
-            } catch (e: Exception) {
-                android.widget.Toast.makeText(
-                                this,
-                                "Error: ${e.message}",
-                                android.widget.Toast.LENGTH_SHORT
-                        )
-                        .show()
-                e.printStackTrace()
-            }
-            true
-        }
-        setupCollapsibleView(
-                findViewById(R.id.headerHamburguesas),
-                findViewById(R.id.gridHamburguesas),
-                findViewById(R.id.arrowHamburguesas)
-        )
-        setupCollapsibleView(
-                findViewById(R.id.headerTacos),
-                findViewById(R.id.gridTacos),
-                findViewById(R.id.arrowTacos)
-        )
-        setupCollapsibleView(
-                findViewById(R.id.headerAlitas),
-                findViewById(R.id.gridAlitas),
-                findViewById(R.id.arrowAlitas)
-        )
-        setupCollapsibleView(
-                findViewById(R.id.headerPostres),
-                findViewById(R.id.containerNotasExtras),
-                findViewById(R.id.arrowPostres)
-        )
+        // All collapsible category headers migrated to Jetpack Compose (CategoryCard)
+        // Previously: setupCollapsibleView calls for each category header
     }
 
     private fun setupCollapsibleView(header: View, content: View, arrow: ImageView) {
@@ -1895,10 +1337,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
-        val btnEdit = findViewById<Button>(R.id.btnEditOrder)
-        if (btnEdit != null) {
-            btnEdit.setOnClickListener { showCartDialog() }
-        }
+        // btnEditOrder moved to Compose UI — showCartDialog() called from Compose
+        // val btnEdit = findViewById<Button>(R.id.btnEditOrder)
+        // if (btnEdit != null) { btnEdit.setOnClickListener { showCartDialog() } }
 
         btnImprimir = findViewById(R.id.btnImprimir)
         btnEmparejar = findViewById(R.id.btnEmparejar)
@@ -2004,27 +1445,12 @@ class MainActivity : AppCompatActivity() {
 
         btnCloseSummary.setOnClickListener { ocultarResumen() }
 
-        // Setup Terminar Pedido Button
-        btnTerminarPedido = findViewById(R.id.btnTerminarPedido)
-        cardExistingOrder = findViewById(R.id.cardExistingOrder)
-        tvExistingOrderDetails = findViewById(R.id.tvExistingOrderDetails)
+        // btnTerminarPedido, cardExistingOrder, tvExistingOrderDetails moved to Compose
+        // btnTerminarPedido = findViewById(R.id.btnTerminarPedido)
+        // cardExistingOrder = findViewById(R.id.cardExistingOrder)
+        // tvExistingOrderDetails = findViewById(R.id.tvExistingOrderDetails)
 
-        btnTerminarPedido.setOnClickListener {
-            if (currentOrderId != -1L) {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    appDatabase.orderDao().closeOrder(currentOrderId)
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                                        this@MainActivity,
-                                        "Pedido terminado y mesa liberada",
-                                        Toast.LENGTH_SHORT
-                                )
-                                .show()
-                        finish() // Regresar a selección de mesas
-                    }
-                }
-            }
-        }
+        // btnTerminarPedido click listener body removed (migrated to Compose)
     }
 
     // -------------------------------------------------------------------------
@@ -2402,6 +1828,9 @@ class MainActivity : AppCompatActivity() {
         val newQuantity = (currentQuantity + change).coerceAtLeast(0)
         quantities[productName] = newQuantity
 
+        // Sync with Compose
+        menuViewModel.syncQuantity(productName, newQuantity)
+
         // Solo ajustar automáticamente si NO es un producto con variantes (estos se manejan en sus
         // diálogos)
         if (!productVariations.containsKey(productName) && !textInputProducts.contains(productName)
@@ -2422,13 +1851,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun limpiarCantidades() {
+        // Reset Compose view model state (quantities, notas extras)
+        menuViewModel.clearAll()
+
         // 🔹 1) Reiniciar todos los productos del mapa general
         selectedVariations.clear()
         productComments.clear() // Limpiar todos los comentarios
 
         // Limpiar notas/extras
-        val editNotas = findViewById<EditText>(R.id.editNotasExtras)
-        editNotas.text.clear()
+        // editNotasExtras removed (migrated to Compose)
+        // val editNotas = findViewById<EditText>(R.id.editNotasExtras)
+        // editNotas.text.clear()
 
         for ((nombre, data) in products) {
             quantities[nombre] = 0
@@ -3301,14 +2734,14 @@ class MainActivity : AppCompatActivity() {
 
                 // (Sección de COMENTARIOS ESPECIALES eliminada ya que se muestran en línea)
 
-                // Notas/Extras/Postres
-                val editNotas = findViewById<EditText>(R.id.editNotasExtras)
-                val notasText = editNotas.text.toString().trim()
-                if (notasText.isNotEmpty()) {
-                    sb.appendLine(lineaSeparadora)
-                    sb.appendLine("NOTAS:")
-                    sb.appendLine(notasText)
-                }
+                // Notas/Extras/Postres (editNotasExtras removed in Compose migration)
+                // val editNotas = findViewById<EditText>(R.id.editNotasExtras)
+                // val notasText = editNotas.text.toString().trim()
+                // if (notasText.isNotEmpty()) {
+                //     sb.appendLine(lineaSeparadora)
+                //     sb.appendLine("NOTAS:")
+                //     sb.appendLine(notasText)
+                // }
 
                 // Total omitido del ticket (lógica interna activa)
                 sb.appendLine(lineaSeparadora)
@@ -3456,8 +2889,8 @@ class MainActivity : AppCompatActivity() {
                 // Emitir a KDS (Firebase)
                 val allItemsNew = appDatabase.orderDao().getItemsForOrder(currentOrderId)
                 Log.d(
-                        TAG,<
-                        "KDS: Preparando emisión para nueva orden $currentOrderId con ${allItemsNew.size}> items"
+                        TAG,
+                        "KDS: Preparando emisión para nueva orden $currentOrderId con ${allItemsNew.size} items"
                 )
                 val kdsItemsNew =
                         allItemsNew.map {
@@ -3707,12 +3140,9 @@ class MainActivity : AppCompatActivity() {
                     }
                     sb.append("\nTotal Acumulado: $${"%.2f".format(total)}")
 
-                    tvExistingOrderDetails.text = sb.toString()
-                    cardExistingOrder.visibility = View.VISIBLE
-                    btnTerminarPedido.visibility = View.VISIBLE
+                    menuViewModel.setExistingOrderDetails(sb.toString())
                 } else {
-                    cardExistingOrder.visibility = View.GONE
-                    btnTerminarPedido.visibility = View.GONE
+                    menuViewModel.setExistingOrderDetails(null)
                 }
             }
         }

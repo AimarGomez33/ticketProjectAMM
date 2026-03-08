@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp) // KSP is the correct plugin to use
-    alias(libs.plugins.google.services) // Firebase Services
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -81,8 +81,10 @@ dependencies {
     // Jetpack Compose
     implementation "androidx.compose.ui:ui:1.6.0"
     implementation "androidx.compose.material:material:1.6.0"
+    implementation "androidx.compose.material3:material3:1.2.0"
     implementation "androidx.compose.ui:ui-tooling-preview:1.6.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.7.0"
     implementation "androidx.activity:activity-compose:1.8.0"
 
     // ✅ CORRECCIÓN: Se eliminaron las dependencias de Room duplicadas
