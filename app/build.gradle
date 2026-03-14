@@ -87,7 +87,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-compose:2.7.0"
     implementation "androidx.activity:activity-compose:1.8.0"
 
-    // ✅ CORRECCIÓN: Se eliminaron las dependencias de Room duplicadas
 
     // Testing
     testImplementation 'junit:junit:4.13.2'

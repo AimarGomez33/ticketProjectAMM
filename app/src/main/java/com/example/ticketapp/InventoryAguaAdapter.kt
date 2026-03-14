@@ -3,13 +3,16 @@ package com.example.ticketapp
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 
-class InventoryAguaAdapter(private val listener: OnItemClickListener) :
+class InventoryAguaAdapter(
+    private val listener: OnItemClickListener,
+    private val longClickListener: OnAguaClickListener? = null
+) :
         ListAdapter<AguaSaborEntity, InventoryAguaAdapter.ViewHolder>(DiffCallback()) {
 
     interface OnItemClickListener {
@@ -31,8 +34,8 @@ class InventoryAguaAdapter(private val listener: OnItemClickListener) :
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvFlavor: TextView = itemView.findViewById(R.id.tvFlavorName)
         private val tvQuantity: TextView = itemView.findViewById(R.id.tvQuantity)
-        private val btnEdit: Button = itemView.findViewById(R.id.btnEdit)
-        private val btnDelete: Button = itemView.findViewById(R.id.btnDelete)
+        private val btnEdit: MaterialButton = itemView.findViewById(R.id.btnEdit)
+        private val btnDelete: MaterialButton = itemView.findViewById(R.id.btnDelete)
 
         fun bind(item: AguaSaborEntity) {
             tvFlavor.text = "Sabor: ${item.flavorName}"
@@ -40,6 +43,12 @@ class InventoryAguaAdapter(private val listener: OnItemClickListener) :
 
             btnEdit.setOnClickListener { listener.onEditClick(item) }
             btnDelete.setOnClickListener { listener.onDeleteClick(item) }
+            
+            // Long click en el card completo
+            itemView.setOnLongClickListener {
+                longClickListener?.onAguaLongClick(item)
+                true
+            }
         }
     }
 

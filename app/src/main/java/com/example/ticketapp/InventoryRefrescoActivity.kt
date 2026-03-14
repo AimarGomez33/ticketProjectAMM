@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class InventoryRefrescoActivity :
-        AppCompatActivity(), InventoryRefrescoAdapter.OnItemClickListener {
+        AppCompatActivity(), InventoryRefrescoAdapter.OnItemClickListener, OnRefrescoClickListener {
 
     private lateinit var adapter: InventoryRefrescoAdapter
     private lateinit var db: AppDatabase
@@ -32,7 +32,7 @@ class InventoryRefrescoActivity :
 
         val rv = findViewById<RecyclerView>(R.id.rvRefrescos)
         rv.layoutManager = LinearLayoutManager(this)
-        adapter = InventoryRefrescoAdapter(this)
+        adapter = InventoryRefrescoAdapter(this, this)
         rv.adapter = adapter
 
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener { finish() }
@@ -41,6 +41,15 @@ class InventoryRefrescoActivity :
         lifecycleScope.launch {
             db.refrescoDao().getAllFlow().collectLatest { list -> adapter.submitList(list) }
         }
+    }
+
+    override fun onRefrescoLongClick(refresco: RefrescoEntity) {
+        // Abre la pantalla de agregar múltiples unidades al carrito
+        val intent = android.content.Intent(this, DynamicItemCartActivity::class.java).apply {
+            putExtra("product_name", refresco.flavorName)
+            putExtra("product_type", "refresco")
+        }
+        startActivity(intent)
     }
 
     private fun showAddDialog() {

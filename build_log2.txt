@@ -1,18 +1,19 @@
-﻿> Task :app:preBuild UP-TO-DATE
+﻿Starting a Gradle Daemon, 6 stopped Daemons could not be reused, use --status for details
+> Task :app:preBuild UP-TO-DATE
 > Task :app:preDebugBuild UP-TO-DATE
 > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
 > Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :app:generateDebugResValues
-> Task :app:processDebugGoogleServices
 > Task :app:checkDebugAarMetadata
+> Task :app:processDebugGoogleServices
 > Task :app:mapDebugSourceSetPaths
 > Task :app:generateDebugResources
 > Task :app:packageDebugResources
 > Task :app:createDebugCompatibleScreenManifests
 > Task :app:extractDeepLinksDebug
+> Task :app:parseDebugLocalResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
-> Task :app:parseDebugLocalResources
 > Task :app:mergeDebugResources
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
@@ -20,69 +21,59 @@
 > Task :app:javaPreCompileDebug
 > Task :app:mergeDebugAssets
 > Task :app:compressDebugAssets
-> Task :app:desugarDebugFileDependencies
-> Task :app:mergeDebugJniLibFolders
-> Task :app:mergeDebugNativeLibs
-> Task :app:checkDebugDuplicateClasses
-> Task :app:validateSigningDebug
-> Task :app:mergeLibDexDebug
-> Task :app:writeDebugAppMetadata
-
-> Task :app:stripDebugDebugSymbols
-Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so. Run with --info option to learn more.
-
-> Task :app:writeDebugSigningConfigVersions
 > Task :app:processDebugManifestForPackage
+> Task :app:checkDebugDuplicateClasses
 > Task :app:processDebugResources FAILED
-> Task :app:mergeExtDexDebug
 
 [Incubating] Problems report is available at: file:///C:/Users/jair_/Desktop/ticketProjectAMM/build/reports/problems/problems-report.html
 .\gradlew : 
-En línea: 1 Carácter: 72
-+ ... " -ErrorAction 
-SilentlyContinue; 
-.\gradlew assembleDebug 
-2>&1 | Out-F ...
-+                        
-              ~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~
-    + CategoryInfo       
-       : NotSpecifi    
-ed: (:String) [],     
-RemoteException
-    + FullyQualifiedEr   
- rorId : NativeComm    
-andError
+En línea: 1 Carácter: 
+79
++ ... .exe /c "rmdir 
+/S /Q app\build"; 
+.\gradlew 
+assembleDebug 2>&1 | 
+Out-F ...
++                      
+                ~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (:String) [],    
+ RemoteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
  
 FAILURE: Build failed 
 with an exception.
 
 * What went wrong:
 Execution failed for 
-task ':app:processDebugRe
-sources'.
+task ':app:processDebug
+Resources'.
 > java.io.IOException: 
-Couldn't delete C:\Users\
-jair_\Desktop\ticketProje
-ctAMM\app\build\intermedi
-ates\compile_and_runtime_
-not_namespaced_r_class_ja
-r\debug\processDebugResou
-rces\R.jar
+Couldn't delete C:\User
+s\jair_\Desktop\ticketP
+rojectAMM\app\build\int
+ermediates\compile_and_
+runtime_not_namespaced_
+r_class_jar\debug\proce
+ssDebugResources\R.jar
 
 * Try:
-> Run with --stacktrace 
-option to get the stack 
-trace.
+> Run with 
+--stacktrace option to 
+get the stack trace.
 > Run with --info or 
 --debug option to get 
 more log output.
-> Run with --scan to get 
-full insights from a 
-Build Scan (powered by 
-Develocity).
-> Get more help at 
-https://help.gradle.org.
+> Run with --scan to 
+get full insights from 
+a Build Scan (powered 
+by Develocity).
+> Get more help at http
+s://help.gradle.org.
 
 Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
 
@@ -90,5 +81,5 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.5.0-milestone-3/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD FAILED in 11s
-28 actionable tasks: 28 executed
+BUILD FAILED in 17s
+19 actionable tasks: 19 executed

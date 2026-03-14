@@ -1,4 +1,4 @@
-﻿package com.example.ticketapp
+package com.example.ticketapp
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -33,6 +33,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.isEmpty
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -88,7 +91,9 @@ class MainActivity : AppCompatActivity() {
         private const val EXTRA_COMBO = 30.0
     }
 
-    private lateinit var txtTotal: TextView
+
+
+
     private lateinit var txtNormales: Map<String, TextView>
     private lateinit var txtCombos: Map<String, TextView>
 
@@ -413,6 +418,7 @@ class MainActivity : AppCompatActivity() {
                             listOf("BBQ", "BBQ Hot", "Búfalo", "Mango-Habanero", "Macha")
             )
 
+
     // 🔹 PRODUCTOS QUE USAN INPUT DE TEXTO PARA VARIANTES
     private val textInputProducts = setOf("Refrescos")
 
@@ -469,6 +475,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnCalcularVentas: MaterialButton
     private lateinit var layoutCustomRange: View
     private lateinit var tvProductSalesResult: TextView
+
+    private lateinit var binding: AppCompatActivity
+
 
     // --- Hardware & Permissions ---
     private lateinit var usbManager: UsbManager
@@ -540,17 +549,28 @@ class MainActivity : AppCompatActivity() {
                 .start()
     }
 
+    override fun setContentView(view: View?) {
+        super.setContentView(view)
+    }
+
     var isExpanded = false
 
+
+
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
+
+
+
+
 
         // Inicializa la base de datos una vez al inicio. La observación se configurará
         // después de que el adaptador de órdenes haya sido configurado para evitar
         // condiciones de carrera.
         appDatabase = AppDatabase.getDatabase(applicationContext, lifecycleScope)
-        txtTotal = findViewById(R.id.textViewTotal)
 
         // txtNormales, txtCombos, botonesNormal, botonesCombo, etc.
         // all replaced by Compose MenuViewModel — see MenuScreen.kt
@@ -560,6 +580,8 @@ class MainActivity : AppCompatActivity() {
             cantidadesNormales[nombre] = 0
             cantidadesCombo[nombre] = 0
         }
+
+
 
         // DB y panel admin
 
@@ -588,8 +610,7 @@ class MainActivity : AppCompatActivity() {
                 AdminOrderAdapter(
                         onDelete = { orderId -> eliminarPedido(orderId) },
 
-                        // CORREGIDO: Llama a la nueva función que maneja la lógica
-                        onOrderClick = { order -> mostrarResumenDeOrdenGuardada(order) },
+                       onOrderClick = { order -> mostrarResumenDeOrdenGuardada(order) },
                         onPrint = { order -> reimprimirTicket(order) }
                 )
 
@@ -611,11 +632,17 @@ class MainActivity : AppCompatActivity() {
         // ─────────────────────────────────────────────────────────────────────
         val menuCategories = MenuDataProvider.getMenuCategories()
         menuViewModel.loadMenu(menuCategories)
+        
 
         val composeMenuView =
                 findViewById<androidx.compose.ui.platform.ComposeView>(R.id.composeMenuView)
         composeMenuView.setContent {
             val menuState by menuViewModel.uiState.collectAsState()
+
+            // ── Variation dialog state ────────────────────────────────────────
+            var pendingVariation by remember {
+                mutableStateOf<com.example.ticketapp.ui.menu.VariationRequest?>(null)
+            }
 
             androidx.compose.material3.MaterialTheme {
                 com.example.ticketapp.ui.menu.MenuScreen(
@@ -629,32 +656,35 @@ class MainActivity : AppCompatActivity() {
                                 item.variationType ==
                                         com.example.ticketapp.data.menu.VariationType
                                                 .MULTIPLE_SELECTION -> {
-                                    // Sequential guisado dialog (Pambazos Combinados)
-                                    showSequentialGuisadoDialog(
-                                            item.name,
-                                            item.price,
-                                            minGuisados = 2
-                                    )
+                                    // Multi-select guisado dialog (Pambazos Combinados)
+                                    pendingVariation =
+                                            com.example.ticketapp.ui.menu.VariationRequest(
+                                                    item = item,
+                                                    isMultiSelect = true,
+                                                    minSelections = 2
+                                            )
                                 }
                                 item.variationType ==
                                         com.example.ticketapp.data.menu.VariationType
                                                 .SINGLE_SELECTION -> {
-                                    // Standard variation dialog (Quesadillas, Tacos, etc.)
-                                    showVariationSelectionDialog(item.name, item.price)
+                                    // Single-select variation dialog
+                                    pendingVariation =
+                                            com.example.ticketapp.ui.menu.VariationRequest(
+                                                    item = item,
+                                                    isMultiSelect = false
+                                            )
                                 }
                                 item.variationType ==
                                         com.example.ticketapp.data.menu.VariationType
                                                 .TEXT_INPUT -> {
-                                    // Dropdown/text dialog for Bebidas
+                                    // Dropdown dialog for Bebidas (stays as legacy dialog)
                                     showDynamicDropdown(item.name, item.price)
                                 }
                                 else -> {
-                                    // Simple product — update quantities directly
                                     val current = quantities[item.name] ?: 0
                                     quantities[item.name] = current + 1
                                     menuViewModel.addProduct(item)
                                     adjustCommentList(item.name, quantities[item.name] ?: 0)
-                                    mostrarResumen(obtenerProductosDesdeInputs())
                                 }
                             }
                         },
@@ -664,7 +694,6 @@ class MainActivity : AppCompatActivity() {
                                 quantities[item.name] = current - 1
                                 menuViewModel.removeProduct(item)
                                 adjustCommentList(item.name, quantities[item.name] ?: 0)
-                                mostrarResumen(obtenerProductosDesdeInputs())
                             }
                         },
                         onAddBurgerNormal = { item ->
@@ -676,7 +705,6 @@ class MainActivity : AppCompatActivity() {
                                     (cantidadesNormales[item.name]
                                             ?: 0) + (cantidadesCombo[item.name] ?: 0)
                             )
-                            mostrarResumen(obtenerProductosDesdeInputs())
                         },
                         onRemoveBurgerNormal = { item ->
                             val current = cantidadesNormales[item.name] ?: 0
@@ -688,7 +716,6 @@ class MainActivity : AppCompatActivity() {
                                         (cantidadesNormales[item.name]
                                                 ?: 0) + (cantidadesCombo[item.name] ?: 0)
                                 )
-                                mostrarResumen(obtenerProductosDesdeInputs())
                             }
                         },
                         onAddBurgerCombo = { item ->
@@ -700,7 +727,6 @@ class MainActivity : AppCompatActivity() {
                                     (cantidadesNormales[item.name]
                                             ?: 0) + (cantidadesCombo[item.name] ?: 0)
                             )
-                            mostrarResumen(obtenerProductosDesdeInputs())
                         },
                         onRemoveBurgerCombo = { item ->
                             val current = cantidadesCombo[item.name] ?: 0
@@ -712,13 +738,43 @@ class MainActivity : AppCompatActivity() {
                                         (cantidadesNormales[item.name]
                                                 ?: 0) + (cantidadesCombo[item.name] ?: 0)
                                 )
-                                mostrarResumen(obtenerProductosDesdeInputs())
                             }
                         },
                         onOpenComment = { productName -> showCommentDialog(productName) },
+                        onSaveQuickComment = { productName, comment ->
+                            saveQuickComment(productName, comment)
+                        },
+                        onRemoveCartItem = { producto ->
+                            removeItemFromComposeCart(producto)
+                        },
                         notasExtras = menuState.notasExtras,
                         onNotasChanged = { menuViewModel.updateNotas(it) },
                         existingOrderDetails = menuState.existingOrderDetails,
+                        // ── Variation dialog wiring ───────────────────────────
+                        pendingVariation = pendingVariation,
+                        onVariationSelected = { item, selections ->
+                            pendingVariation = null
+                            val variantName =
+                                    if (selections.size == 1) "${item.name} (${selections[0]})"
+                                    else "${item.name} (${selections.joinToString(" + ")})"
+                            selectedVariations.add(
+                                    Producto(
+                                            nombre = variantName,
+                                            precio = item.price,
+                                            cantidad = 1,
+                                            esCombo = false
+                                    )
+                            )
+                            updateQuantity(item.name, 1)
+                            adjustCommentList(item.name, quantities[item.name] ?: 0)
+                        },
+                        onVariationDismissed = { pendingVariation = null },
+                        // ── Shopping cart integration ─────────────────────────────────────
+                        cartItems = obtenerProductosDesdeInputs(),
+                        onCheckout = {
+                            // Trigger print/checkout flow
+                            btnImprimir.performClick()
+                        },
                         onTerminarPedido =
                                 if (currentOrderId != -1L) {
                                     {
@@ -735,10 +791,23 @@ class MainActivity : AppCompatActivity() {
                                             }
                                         }
                                     }
-                                } else null
+                                } else null,
+                        // ── Long-press en + de bebidas abre inventario ───────────────────
+                        onLongClickAddProduct = { item ->
+                            if (item.variationType ==
+                                    com.example.ticketapp.data.menu.VariationType.TEXT_INPUT) {
+                                val intent = android.content.Intent(
+                                    this@MainActivity,
+                                    InventoryRefrescoActivity::class.java
+                                )
+                                startActivity(intent)
+                            }
+                        }
                 )
             }
         }
+
+
 
         // RECIBIR MESA Y PEDIDO PENDIENTE
         val tableNumber = intent.getIntExtra("TABLE_NUMBER", -1)
@@ -1209,6 +1278,82 @@ class MainActivity : AppCompatActivity() {
                 }
                 .setNegativeButton("Cancelar", null)
                 .show()
+    }
+
+    private fun saveQuickComment(productName: String, comment: String): Boolean {
+        val normalized = comment.trim()
+        if (normalized.isEmpty()) return false
+
+        val commentsList = productComments[productName] ?: return false
+        if (commentsList.isEmpty()) return false
+
+        // If there is an empty slot, use it first; otherwise overwrite the first unit note.
+        val targetIndex = commentsList.indexOfFirst { it.isBlank() }.let { if (it == -1) 0 else it }
+        commentsList[targetIndex] = normalized
+        return true
+    }
+
+    private fun removeItemFromComposeCart(producto: Producto) {
+        val itemName = producto.nombre
+
+        when {
+            // Burger combo line item from ticket view
+            itemName.endsWith(" + Combo") -> {
+                val baseName = itemName.removeSuffix(" + Combo").trim()
+                val current = cantidadesCombo[baseName] ?: 0
+                if (current > 0) {
+                    val newQty = current - 1
+                    cantidadesCombo[baseName] = newQty
+                    menuViewModel.syncQuantity("${baseName}_Combo", newQty)
+
+                    val totalForBase = (cantidadesNormales[baseName] ?: 0) + newQty
+                    adjustCommentList(baseName, totalForBase)
+                }
+            }
+            // Burger individual line item
+            preciosHamburguesas.containsKey(itemName) -> {
+                val current = cantidadesNormales[itemName] ?: 0
+                if (current > 0) {
+                    val newQty = current - 1
+                    cantidadesNormales[itemName] = newQty
+                    menuViewModel.syncQuantity(itemName, newQty)
+
+                    val totalForBase = newQty + (cantidadesCombo[itemName] ?: 0)
+                    adjustCommentList(itemName, totalForBase)
+                }
+            }
+            // Variation item, e.g. "Quesadillas (Chorizo)"
+            selectedVariations.any { it.nombre == itemName } -> {
+                val baseName = itemName.substringBefore(" (").trim()
+                val prefix = "$baseName ("
+                val allVariantsOfBase = selectedVariations.filter { it.nombre.startsWith(prefix) }
+                val itemToRemove = allVariantsOfBase.firstOrNull { it.nombre == itemName }
+
+                if (itemToRemove != null) {
+                    val indexInGroup = allVariantsOfBase.indexOf(itemToRemove)
+                    selectedVariations.remove(itemToRemove)
+
+                    val comments = productComments[baseName]
+                    if (comments != null && indexInGroup >= 0 && indexInGroup < comments.size) {
+                        comments.removeAt(indexInGroup)
+                    }
+
+                    updateQuantity(baseName, -1)
+                }
+            }
+            // Regular mapped product
+            else -> {
+                val current = quantities[itemName] ?: 0
+                if (current > 0) {
+                    val newQty = current - 1
+                    quantities[itemName] = newQty
+                    menuViewModel.syncQuantity(itemName, newQty)
+                    adjustCommentList(itemName, newQty)
+                }
+            }
+        }
+
+        ocultarResumen()
     }
 
     private fun setupProductViews() {
@@ -1844,10 +1989,8 @@ class MainActivity : AppCompatActivity() {
             view.setSelection(view.text.length)
         }
 
-        // 🔸 Actualizar resumen en tiempo real con los productos seleccionados
-        // Se obtiene la lista actual de productos (incluye hamburguesas y combos)
-        val productosSeleccionados = obtenerProductosDesdeInputs()
-        mostrarResumen(productosSeleccionados)
+        // Resumen legacy deshabilitado en flujo Compose.
+        ocultarResumen()
     }
 
     private fun limpiarCantidades() {
@@ -1910,8 +2053,7 @@ class MainActivity : AppCompatActivity() {
 
         summaryTextView.text = ""
         summaryTotalTextView.text = "TOTAL: $0.00"
-        // No ocultamos el summaryContainer para que el resumen actual no desaparezca
-        summaryContainer.visibility = View.VISIBLE
+        summaryContainer.visibility = View.GONE
 
         // 🔹 7) Confirmación visual
         Toast.makeText(this, "Cantidades reiniciadas", Toast.LENGTH_SHORT).show()
@@ -2333,58 +2475,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun mostrarResumen(productos: List<Producto>) {
-        // Referencias al layout
-        val summaryContainer = findViewById<View>(R.id.summaryContainer)
-        val summaryTextView = findViewById<TextView>(R.id.summaryTextView)
-        val summaryTotalTextView = findViewById<TextView>(R.id.summaryTotalTextView)
-        val btnCloseSummary = findViewById<Button>(R.id.btnCloseSummary)
-
-        val sb = StringBuilder()
-        var totalGeneral = 0.0
-
-        // Separar normales vs combos (requiere Producto.esCombo)
-        val combos = mutableListOf<Producto>()
-        val normales = mutableListOf<Producto>()
-        for (p in productos) if (p.esCombo) combos.add(p) else normales.add(p)
-
-        if (normales.isNotEmpty()) {
-            sb.appendLine(" PRODUCTOS")
-            for (p in normales) {
-                val total = p.cantidad * p.precio // lógica interna
-                totalGeneral += total
-                sb.appendLine("${p.cantidad} x ${p.nombre}")
-                if (!p.comment.isNullOrEmpty()) {
-                    sb.appendLine("   (Nota: ${p.comment})")
-                }
-            }
-            sb.appendLine("-----------------------------------")
-        }
-
-        if (combos.isNotEmpty()) {
-            sb.appendLine(" COMBOS")
-            for (c in combos) {
-                val total = c.cantidad * c.precio // lógica interna
-                totalGeneral += total
-                sb.appendLine("${c.cantidad} x ${c.nombre}")
-                if (!c.comment.isNullOrEmpty()) {
-                    sb.appendLine("   (Nota: ${c.comment})")
-                }
-            }
-            sb.appendLine("-----------------------------------")
-        }
-
-        // Mostrar número de cuenta si aplica (ANTES de pintar el TextView)
-        if (noCuenta.isChecked) {
-            sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)}")
-        }
-
-        // Pintar
-        summaryTextView.text = sb.toString()
-        summaryTotalTextView.visibility = View.GONE // precio oculto en pantalla
-        summaryContainer.visibility = View.VISIBLE
-
-        // Botón cerrar
-        btnCloseSummary.setOnClickListener { summaryContainer.visibility = View.GONE }
+        // Legacy summary intentionally disabled to avoid interrupting Compose flow.
+        ocultarResumen()
     }
 
     private fun mostrarResumenDeOrdenGuardada(order: OrderEntity) {
@@ -2406,10 +2498,8 @@ class MainActivity : AppCompatActivity() {
 
             // 3. Volver al hilo principal para mostrar el diálogo
             withContext(Dispatchers.Main) {
-                // 4. Llamar a la función que ya sabe cómo mostrar un resumen, pero
-                // con la lista
-                // convertida
-                mostrarResumen(productosParaResumen) // <--- Se usa la nueva lista
+                // 4. Llamar a la función que ya sabe cómo mostrar un resumen
+                mostrarResumen(productosParaResumen)
             }
         }
     }
@@ -2950,7 +3040,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /** utilidad para armar texto resumen de ventas */
+
+        /** utilidad para armar texto resumen de ventas */
     private inline fun <T> buildResumen(
             resultados: List<T>,
             crossinline line: (T) -> String

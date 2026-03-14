@@ -35,7 +35,7 @@ class InventoryAguaActivity :
         val rv = findViewById<RecyclerView>(R.id.rvSabores)
         rv.layoutManager = LinearLayoutManager(this)
 
-        adapter = InventoryAguaAdapter(this)
+        adapter = InventoryAguaAdapter(this, this)
         rv.adapter = adapter
 
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener { finish() }
@@ -53,7 +53,12 @@ class InventoryAguaActivity :
     }
 
     override fun onAguaLongClick(agua: AguaSaborEntity) {
-        // Implementación pendiente
+        // Abre la pantalla de agregar múltiples unidades al carrito
+        val intent = android.content.Intent(this, DynamicItemCartActivity::class.java).apply {
+            putExtra("product_name", agua.flavorName)
+            putExtra("product_type", "agua")
+        }
+        startActivity(intent)
     }
 
     override fun onEditClick(agua: AguaSaborEntity) {

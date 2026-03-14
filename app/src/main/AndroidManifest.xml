@@ -40,6 +40,7 @@
         </activity>
         <activity android:name=".InventoryRefrescoActivity" />
         <activity android:name=".InventoryAguaActivity" />
+        <activity android:name=".DynamicItemCartActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="false">

@@ -2,9 +2,10 @@
 # KEEP a single source of truth for the Kotlin version.
 kotlin = "2.0.0"
 agp = "8.10.1"
-ksp = "2.0.0-1.0.22"     # This is correct for Kotlin 2.0.0
+ksp = "2.0.0-1.0.21"    # This is correct for Kotlin 2.0.0
 firebaseBom = "33.7.0"
 googleServices = "4.4.2"
+lumo = "1.2.1"
 
 # Other versions...
 coreKtx = "1.10.1"
@@ -17,7 +18,10 @@ activity = "1.8.0"
 constraintlayout = "2.1.4"
 room = "2.6.1"
 
+composables-core = "1.18.1"
+
 [libraries]
+#composable
 # Firebase dependencies
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database" }
@@ -34,8 +38,9 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
-
+composables-core = { group = "com.composables", name = "core", version.ref = "composables-core" }
 [plugins]
+lumo = { id = "com.nomanr.plugin.lumo", version.ref = "lumo" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
