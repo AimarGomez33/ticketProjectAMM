@@ -1638,7 +1638,7 @@
                             android:layout_height="51dp"
                             android:drawableEnd="@drawable/payment"
                             android:drawableTint="@color/Grayish_green"
-                            android:gravity="center"
+                            android:gravity="start|center_vertical"
                             android:paddingTop="8dp"
                             android:textAlignment="textStart"
                             android:textColor="@color/text_primary"

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="@color/card_background"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tvSourceName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etProductName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:hint="Nombre"
+            android:inputType="textCapWords"
+            android:textColor="@color/text_secondary"
+            android:textColorHint="@color/text_secondary" />
+
+        <EditText
+            android:id="@+id/etProductPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:hint="Precio"
+            android:inputType="numberDecimal"
+            android:textColor="@color/text_secondary"
+            android:textColorHint="@color/text_secondary" />
+
+        <Spinner
+            android:id="@+id/spinnerProductCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDeleteProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Eliminar"
+            android:textColor="@color/florar_white"
+            android:visibility="gone"
+            app:backgroundTint="@color/old_grayish_green"
+            app:cornerRadius="10dp" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

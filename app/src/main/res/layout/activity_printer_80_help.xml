@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/app_background"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="12dp">
+
+        <ImageButton
+            android:id="@+id/btnBackPrinterHelp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Regresar"
+            android:padding="8dp"
+            android:src="@drawable/arrow_back_ios_new_24dp_e3e3e3_fill0_wght400_grad0_opsz24"
+            app:tint="@color/text_primary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Ayuda impresora 80mm"
+            android:textColor="@color/text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🖨️ Configuración física de impresora POS LAN (80mm)\n\n🎯 Objetivo\n\nTener todo conectado así:\n\n📱 Teléfono (WiFi Totalplay-51A2)\n\t\t│\n📡 Módem Totalplay\n\t\t│\n🖨️ Impresora (LAN)\n\n---\n\n🔥 PASOS FÍSICOS\n\n1. Conectar la impresora al módem\n\n- Usa un cable ethernet (RJ45)\n- Conecta:\n\nImpresora ─────── LAN ─────── Módem Totalplay\n\n✅ Correcto: directo al módem\n❌ Incorrecto: a la PC o al teléfono\n\n---\n\n2. Conectar el teléfono al WiFi\n\n- Red: Totalplay-51A2\n\n⚠️ Importante:\nTu app Kotlin correrá aquí, debe estar en la misma red\n\n---\n\n3. Encender la impresora\n\n- Conéctala a corriente\n- Espera 5-10 segundos\n- Verifica luces (verde normalmente)\n\n---\n\n4. Imprimir Self-Test\n\n- Mantén presionado el botón de la impresora\n- Enciéndela sin soltar\n- Imprime configuración\n\n🔍 Busca:\n\nIP: 192.168.10.xxx\n\n---\n\n5. Validar IP\n\n✅ Correcto:\n192.168.10.xxx\n\n❌ Incorrecto:\n192.168.1.xxx\n192.168.100.xxx\n\nSi está mal → hay que reconfigurar\n\n---\n\n6. Probar acceso desde navegador\n\nEn tu celular o PC abre:\n\nhttp://192.168.10.xxx\n\nResultado:\n- ✅ Abre → OK\n- ❌ No abre → problema de red\n\n---\n\n7. Probar conexión (ping)\n\nDesde PC:\n\nping 192.168.10.xxx"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp"
+            android:lineSpacingExtra="4dp" />
+    </ScrollView>
+
+</LinearLayout>

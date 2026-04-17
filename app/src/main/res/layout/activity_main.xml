@@ -514,7 +514,7 @@
                     android:layout_height="51dp"
                     android:drawableEnd="@drawable/payment"
                     android:drawableTint="@color/Grayish_green"
-                    android:gravity="center"
+                    android:gravity="start|center_vertical"
                     android:paddingTop="8dp"
                     android:textAlignment="textStart"
                     android:textColor="@color/text_primary"
@@ -550,6 +550,71 @@
                 android:textSize="20dp"
                 app:backgroundTint="@color/CarbonBlack"
                 />
+
+            <RadioGroup
+                android:id="@+id/printerTypeGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/radioPrinter58"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Impresora 58mm (Bluetooth)"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/radioPrinter80Network"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Impresora 80mm (Vía red)"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/radioPrinter58Network"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Impresora 58mm (Vía red)"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutPrinter80Help"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <ImageButton
+                        android:id="@+id/btnPrinter80Help"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="Ayuda para impresora 80mm"
+                        android:padding="4dp"
+                        android:src="@drawable/help_24dp_e3e3e3_fill0_wght400_grad0_opsz24"
+                        app:tint="@color/text_primary" />
+
+                    <TextView
+                        android:id="@+id/tvPrinter80Help"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:text="Ayuda"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </RadioGroup>
 
             <com.google.android.material.button.MaterialButton android:id="@+id/btnEmparejar" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:padding="16dp" android:text="Emparejar Impresora Bluetooth" android:textColor="@color/text_primary" android:textSize="20sp" app:strokeColor="@color/florar_white"/>
 
@@ -602,6 +667,16 @@
                 android:textColor="@color/text_primary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditarCatalogo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Editar precios y productos"
+                android:textColor="@color/florar_white"
+                app:backgroundTint="@color/old_grayish_green"
+                app:cornerRadius="12dp" />
 
             <!-- Botones de ganancias -->
             <com.google.android.material.button.MaterialButton
@@ -869,8 +944,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewOrders"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
+                android:layout_height="320dp"
+                android:nestedScrollingEnabled="true"
                 android:layout_marginTop="8dp" />
 
             <TextView

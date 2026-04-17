@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Elige un color para la app"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurface"
+        android:layout_marginBottom="16dp" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingClass">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/themeDefault"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="28dp"
+            app:cardBackgroundColor="#000000"
+            app:strokeWidth="0dp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/themePink"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="28dp"
+            app:cardBackgroundColor="#E91E63"
+            app:strokeWidth="0dp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/themeGreen"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="28dp"
+            app:cardBackgroundColor="#4CAF50"
+            app:strokeWidth="0dp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/themeBlue"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="28dp"
+            app:cardBackgroundColor="#2196F3"
+            app:strokeWidth="0dp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/themeOrange"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="28dp"
+            app:cardBackgroundColor="#FF9800"
+            app:strokeWidth="0dp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+    </com.google.android.material.chip.ChipGroup>
+</LinearLayout>

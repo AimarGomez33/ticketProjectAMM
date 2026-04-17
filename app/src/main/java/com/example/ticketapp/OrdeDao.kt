@@ -13,42 +13,42 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface OrderDao {
 
-    /**
-     * Inserts an order and its items transactionally. First inserts the OrderEntity to generate its
-     * ID, then assigns that ID to each OrderItemEntity and inserts them all. If anything fails, the
-     * transaction rolls back.
-     */
-    @Transaction
-    suspend fun insertOrderWithItems(order: OrderEntity, items: List<OrderItemEntity>) {
-        val orderId = insertOrder(order)
-        val itemsWithOrderId = items.map { it.copy(orderId = orderId) }
-        insertOrderItems(itemsWithOrderId)
-    }
+        /**
+         * Inserts an order and its items transactionally. First inserts the OrderEntity to generate
+         * its ID, then assigns that ID to each OrderItemEntity and inserts them all. If anything
+         * fails, the transaction rolls back.
+         */
+        @Transaction
+        suspend fun insertOrderWithItems(order: OrderEntity, items: List<OrderItemEntity>) {
+                val orderId = insertOrder(order)
+                val itemsWithOrderId = items.map { it.copy(orderId = orderId) }
+                insertOrderItems(itemsWithOrderId)
+        }
 
-    @androidx.room.Update suspend fun updateOrder(order: OrderEntity)
+        @androidx.room.Update suspend fun updateOrder(order: OrderEntity)
 
-    @Query("UPDATE orders SET grand_total = :newTotal WHERE orderId = :orderId")
-    suspend fun updateOrderTotal(orderId: Long, newTotal: Double)
+        @Query("UPDATE orders SET grand_total = :newTotal WHERE orderId = :orderId")
+        suspend fun updateOrderTotal(orderId: Long, newTotal: Double)
 
-    @Query("UPDATE orders SET is_completed = :isCompleted WHERE orderId = :orderId")
-    suspend fun updateOrderStatus(orderId: Long, isCompleted: Boolean)
+        @Query("UPDATE orders SET is_completed = :isCompleted WHERE orderId = :orderId")
+        suspend fun updateOrderStatus(orderId: Long, isCompleted: Boolean)
 
-    /** Inserts a single order entity (used internally by the transaction). */
-    @Insert suspend fun insertOrder(order: OrderEntity): Long
+        /** Inserts a single order entity (used internally by the transaction). */
+        @Insert suspend fun insertOrder(order: OrderEntity): Long
 
-    /** Inserts a list of order items (used internally by the transaction). */
-    @Insert suspend fun insertOrderItems(items: List<OrderItemEntity>)
+        /** Inserts a list of order items (used internally by the transaction). */
+        @Insert suspend fun insertOrderItems(items: List<OrderItemEntity>)
 
-    /** Returns all saved orders, ordered by creation date (descending). */
-    @Query("SELECT * FROM orders ORDER BY created_at DESC")
-    suspend fun getAllOrders(): List<OrderEntity>
+        /** Returns all saved orders, ordered by creation date (descending). */
+        @Query("SELECT * FROM orders ORDER BY created_at DESC")
+        suspend fun getAllOrders(): List<OrderEntity>
 
-    @Query("SELECT * FROM orders ORDER BY created_at DESC")
-    fun getAllOrdersFlow(): Flow<List<OrderEntity>>
+        @Query("SELECT * FROM orders ORDER BY created_at DESC")
+        fun getAllOrdersFlow(): Flow<List<OrderEntity>>
 
-    // Ganancia por categoría en un rango [inicio, fin] (por created_at)
-    @Query(
-            """
+        // Ganancia por categoría en un rango [inicio, fin] (por created_at)
+        @Query(
+                """
 SELECT COALESCE(SUM(oi.quantity * oi.unit_price), 0)
 FROM order_items oi
 INNER JOIN orders o ON o.orderId = oi.order_id
@@ -77,44 +77,48 @@ WHERE (:includeCombos = 1 OR oi.esCombo = 0)
        ) = :category
   )
 """
-    )
-    suspend fun getProfitByCategory(
-            category: String?,
-            inicio: Long,
-            fin: Long,
-            includeCombos: Int
-    ): Double
+        )
+        suspend fun getProfitByCategory(
+                category: String?,
+                inicio: Long,
+                fin: Long,
+                includeCombos: Int
+        ): Double
 
-    /** Retrieves all items associated with a specific order ID. */
-    // CORREGIDO: El nombre del parámetro en la consulta (:orderId) debe coincidir con el nombre del
-    // parámetro de la función.
-    @Query("SELECT * FROM order_items WHERE order_id = :orderId")
-    suspend fun getItemsForOrder(orderId: Long): List<OrderItemEntity>
+        /** Retrieves all items associated with a specific order ID. */
+        // CORREGIDO: El nombre del parámetro en la consulta (:orderId) debe coincidir con el nombre
+        // del
+        // parámetro de la función.
+        @Query("SELECT * FROM order_items WHERE order_id = :orderId")
+        suspend fun getItemsForOrder(orderId: Long): List<OrderItemEntity>
 
-    @Query("SELECT * FROM products WHERE name = :nombre LIMIT 1")
-    suspend fun getProductByName(nombre: String): Product?
+        @Query("SELECT * FROM products WHERE name = :nombre LIMIT 1")
+        suspend fun getProductByName(nombre: String): Product?
 
-    @Query("SELECT * FROM products WHERE name IN (:nombres)")
-    suspend fun getProductsByNames(nombres: List<String>): List<Product>
+        @Query("SELECT * FROM products WHERE name IN (:nombres)")
+        suspend fun getProductsByNames(nombres: List<String>): List<Product>
 
-    /** Deletes all items belonging to a specific order (used before a full item replacement). */
-    @Query("DELETE FROM order_items WHERE order_id = :orderId")
-    suspend fun deleteItemsForOrder(orderId: Long)
+        /**
+         * Deletes all items belonging to a specific order (used before a full item replacement).
+         */
+        @Query("DELETE FROM order_items WHERE order_id = :orderId")
+        suspend fun deleteItemsForOrder(orderId: Long)
 
-    /** Deletes an order by its ID (its items are automatically deleted due to CASCADE). */
-    @Query("DELETE FROM orders WHERE orderId = :orderId") suspend fun deleteOrderById(orderId: Long)
+        /** Deletes an order by its ID (its items are automatically deleted due to CASCADE). */
+        @Query("DELETE FROM orders WHERE orderId = :orderId")
+        suspend fun deleteOrderById(orderId: Long)
 
-    @Query(
-            """
+        @Query(
+                """
         SELECT * FROM orders
         WHERE created_at BETWEEN :inicio AND :fin
         ORDER BY created_at ASC
     """
-    )
-    suspend fun getOrdersBetween(inicio: Long, fin: Long): List<OrderEntity>
+        )
+        suspend fun getOrdersBetween(inicio: Long, fin: Long): List<OrderEntity>
 
-    @Query(
-            """
+        @Query(
+                """
         SELECT oi.name, SUM(oi.quantity) as totalQty
         FROM order_items oi
         INNER JOIN orders o ON o.orderId = oi.order_id
@@ -123,33 +127,34 @@ WHERE (:includeCombos = 1 OR oi.esCombo = 0)
         ORDER BY totalQty DESC
         LIMIT 10
     """
-    )
-    suspend fun getTopSellingProducts(start: Long, end: Long): List<TopSellingProduct>
+        )
+        suspend fun getTopSellingProducts(start: Long, end: Long): List<TopSellingProduct>
 
-    // ======== RESÚMENES / ESTADÍSTICAS =========
+        // ======== RESÚMENES / ESTADÍSTICAS =========
 
-    // 🔹 Combo-specific filters
-    /** Returns all orders marked as combos. */
-    @Query("SELECT * FROM orders WHERE esCombo = 1") suspend fun getComboOrders(): List<OrderEntity>
+        // 🔹 Combo-specific filters
+        /** Returns all orders marked as combos. */
+        @Query("SELECT * FROM orders WHERE esCombo = 1")
+        suspend fun getComboOrders(): List<OrderEntity>
 
-    /** Returns all items that are combos (across any order). */
-    // CORREGIDO: Se asumió que la columna correcta es 'esCombo', no 'combo'.
-    @Query("SELECT * FROM order_items WHERE esCombo = 1")
-    suspend fun getComboItems(): List<OrderItemEntity>
+        /** Returns all items that are combos (across any order). */
+        // CORREGIDO: Se asumió que la columna correcta es 'esCombo', no 'combo'.
+        @Query("SELECT * FROM order_items WHERE esCombo = 1")
+        suspend fun getComboItems(): List<OrderItemEntity>
 
-    /** Counts how many combo items have been sold across all orders. */
-    // CORREGIDO: Se cambió 'Combo' por 'esCombo' para que coincida con otras consultas.
-    @Query("SELECT SUM(quantity) FROM order_items WHERE esCombo = 1")
-    suspend fun countComboItemsSold(): Int?
+        /** Counts how many combo items have been sold across all orders. */
+        // CORREGIDO: Se cambió 'Combo' por 'esCombo' para que coincida con otras consultas.
+        @Query("SELECT SUM(quantity) FROM order_items WHERE esCombo = 1")
+        suspend fun countComboItemsSold(): Int?
 
-    /** Calculates total revenue generated from combos. */
-    // CORREGIDO: Se cambió 'Combo' por 'esCombo' para que coincida con otras consultas.
-    @Query("SELECT SUM(quantity * unit_price) FROM order_items WHERE esCombo = 1")
-    suspend fun getTotalComboRevenue(): Double?
+        /** Calculates total revenue generated from combos. */
+        // CORREGIDO: Se cambió 'Combo' por 'esCombo' para que coincida con otras consultas.
+        @Query("SELECT SUM(quantity * unit_price) FROM order_items WHERE esCombo = 1")
+        suspend fun getTotalComboRevenue(): Double?
 
-    @Query(
-            value =
-                    """
+        @Query(
+                value =
+                        """
                 SELECT DISTINCT o.* 
                 FROM orders AS o
                 INNER JOIN order_items AS oi ON o.orderId = oi.order_id -- Join con items del pedido
@@ -159,64 +164,64 @@ WHERE (:includeCombos = 1 OR oi.esCombo = 0)
                     AND o.created_at BETWEEN :startDate AND :endDate -- Filtrar por rango de fechas
                 ORDER BY o.created_at DESC
             """
-    )
-    suspend fun getOrdersByCategory(
-            categoryName: String,
-            startDate: Long,
-            endDate: Long
-    ): List<OrderEntity>
+        )
+        suspend fun getOrdersByCategory(
+                categoryName: String,
+                startDate: Long,
+                endDate: Long
+        ): List<OrderEntity>
 
-    @Query(
-            "SELECT business_date AS businessDate, SUM(grand_total) AS totalSales, COUNT(orderId) AS ordersCount " +
-                    "FROM orders GROUP BY business_date ORDER BY business_date DESC"
-    )
-    suspend fun getDailySales(): List<DailySummary>
+        @Query(
+                "SELECT business_date AS businessDate, SUM(grand_total) AS totalSales, COUNT(orderId) AS ordersCount " +
+                        "FROM orders GROUP BY business_date ORDER BY business_date DESC"
+        )
+        suspend fun getDailySales(): List<DailySummary>
 
-    /** Returns weekly sales summary grouped by year-week (format 'YYYY-WW'). */
-    @Query(
-            "SELECT strftime('%Y-%W', created_at / 1000, 'unixepoch') AS week, " + // CORREGIDO:
-                    // Usar
-                    // created_at si
-                    // business_date
-                    // es para lógica
-                    // de negocio
-                    "SUM(grand_total) AS totalSales, COUNT(orderId) AS ordersCount " +
-                    "FROM orders GROUP BY week ORDER BY week DESC"
-    )
-    suspend fun getWeeklySales(): List<WeeklySummary>
+        /** Returns weekly sales summary grouped by year-week (format 'YYYY-WW'). */
+        @Query(
+                "SELECT strftime('%Y-%W', created_at / 1000, 'unixepoch') AS week, " + // CORREGIDO:
+                        // Usar
+                        // created_at si
+                        // business_date
+                        // es para lógica
+                        // de negocio
+                        "SUM(grand_total) AS totalSales, COUNT(orderId) AS ordersCount " +
+                        "FROM orders GROUP BY week ORDER BY week DESC"
+        )
+        suspend fun getWeeklySales(): List<WeeklySummary>
 
-    /** Returns monthly sales summary grouped by year-month (format 'YYYY-MM'). */
-    @Query(
-            "SELECT strftime('%Y-%m', created_at / 1000, 'unixepoch') AS month, " + // CORREGIDO:
-                    // Usar
-                    // created_at si
-                    // business_date
-                    // es para
-                    // lógica de
-                    // negocio
-                    "SUM(grand_total) AS totalSales, COUNT(orderId) AS ordersCount " +
-                    "FROM orders GROUP BY month ORDER BY month DESC"
-    )
-    suspend fun getMonthlySales():
-            List<MonthlySummary> // CORREGIDO: Se eliminó la declaración duplicada y se colocó
-    // esta aquí.
+        /** Returns monthly sales summary grouped by year-month (format 'YYYY-MM'). */
+        @Query(
+                "SELECT strftime('%Y-%m', created_at / 1000, 'unixepoch') AS month, " + // CORREGIDO:
+                        // Usar
+                        // created_at si
+                        // business_date
+                        // es para
+                        // lógica de
+                        // negocio
+                        "SUM(grand_total) AS totalSales, COUNT(orderId) AS ordersCount " +
+                        "FROM orders GROUP BY month ORDER BY month DESC"
+        )
+        suspend fun getMonthlySales():
+                List<MonthlySummary> // CORREGIDO: Se eliminó la declaración duplicada y se colocó
+        // esta aquí.
 
-    // 🔹 Calcular el total de ingresos de productos normales
-    @Query("SELECT SUM(quantity * unit_price) FROM order_items WHERE esCombo = 0")
-    suspend fun totalGananciasNormales(): Double?
+        // 🔹 Calcular el total de ingresos de productos normales
+        @Query("SELECT SUM(quantity * unit_price) FROM order_items WHERE esCombo = 0")
+        suspend fun totalGananciasNormales(): Double?
 
-    // 🔹 Calcular el total global (combos + normales)
-    @Query("SELECT SUM(quantity * unit_price) FROM order_items")
-    suspend fun totalGananciasGlobal(): Double?
+        // 🔹 Calcular el total global (combos + normales)
+        @Query("SELECT SUM(quantity * unit_price) FROM order_items")
+        suspend fun totalGananciasGlobal(): Double?
 
-    // 🔹 Obtener artículos vendidos dentro de un rango de fechas (por created_at)
-    @Query(
-            """
+        // 🔹 Obtener artículos vendidos dentro de un rango de fechas (por created_at)
+        @Query(
+                """
         SELECT oi.* FROM order_items oi
         INNER JOIN orders o ON o.orderId = oi.order_id
         WHERE o.created_at BETWEEN :inicio AND :fin
         ORDER BY o.created_at DESC
     """
-    )
-    suspend fun obtenerItemsPorRangoDeFecha(inicio: Long, fin: Long): List<OrderItemEntity>
+        )
+        suspend fun obtenerItemsPorRangoDeFecha(inicio: Long, fin: Long): List<OrderItemEntity>
 }
