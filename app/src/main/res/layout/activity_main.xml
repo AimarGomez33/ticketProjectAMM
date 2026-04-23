@@ -438,6 +438,12 @@
                 android:layout="@layout/layout_grid_postres" />
 
             <LinearLayout
+                android:id="@+id/containerDynamicCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <LinearLayout
                 android:id="@+id/summaryContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

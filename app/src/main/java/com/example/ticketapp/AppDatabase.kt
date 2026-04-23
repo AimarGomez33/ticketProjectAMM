@@ -28,7 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
         private var INSTANCE: AppDatabase? = null
 
 
-        val MIGRATION_12_13 = object : Migration(1, 2) {
+        val MIGRATION_12_13 = object : Migration(12, 13) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 // Define aquí los cambios.
                 // En este caso, añadimos la columna 'esCombo' a la tabla 'orders'.
@@ -49,10 +49,10 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "ticket_app_database" // El nombre de tu base de datos
+                    "ticket_app_database"
                 )
-                    .fallbackToDestructiveMigration()
-                    // ✅ PASO 3: Añade la migración al constructor
+                    // ⚠️ NO usar fallbackToDestructiveMigration() en producción:
+                    // destruye TODOS los datos ante cualquier migración no cubierta.
                     .addMigrations(MIGRATION_12_13, MIGRATION_13_14)
                     .build()
                 INSTANCE = instance

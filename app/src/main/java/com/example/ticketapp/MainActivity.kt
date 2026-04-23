@@ -33,6 +33,7 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
@@ -60,6 +61,19 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
+
+    private val printerManager: PrinterManager by lazy { PrinterManager(applicationContext) }
+
+    private val viewModel: MainViewModel by viewModels {
+        MainViewModel.Factory(
+            OrderRepository(
+                AppDatabase.getDatabase(applicationContext, lifecycleScope).orderDao(),
+                AppDatabase.getDatabase(applicationContext, lifecycleScope).productDao()
+            ),
+            printerManager
+        )
+    }
+
 
     // --- Constantes ---
     private companion object {
@@ -129,27 +143,8 @@ class MainActivity : AppCompatActivity() {
             }
             }
 
-    private enum class PrinterType {
-        BLUETOOTH_58MM,
-        NETWORK_80MM,
-        NETWORK_58MM
-    }
 
-    private fun resolveTicketProfile(printerType: PrinterType): PrinterType {
-        return when (printerType) {
-            PrinterType.NETWORK_58MM -> PrinterType.BLUETOOTH_58MM
-            else -> printerType
-        }
-    }
 
-    private fun centerText(text: String, width: Int, charScale: Int = 1): String {
-        val safeScale = charScale.coerceAtLeast(1)
-        // Para fuentes anchas (doble ancho), centrar por columnas efectivas evita
-        // desplazamientos hacia la derecha en impresoras 58mm.
-        val effectiveWidth = (width / safeScale).coerceAtLeast(text.length)
-        val leftPadding = ((effectiveWidth - text.length) / 2).coerceAtLeast(0)
-        return " ".repeat(leftPadding) + text
-    }
 
     private val legacyProductAliases =
             mapOf(
@@ -257,7 +252,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var selectedPrinterType = PrinterType.BLUETOOTH_58MM
 
     private val products = mutableMapOf<String, ProductData>()
     private val quantities = mutableMapOf<String, Int>()
@@ -279,7 +273,6 @@ class MainActivity : AppCompatActivity() {
         return colorResIds.random()
     }
 
-    private lateinit var appDatabase: AppDatabase
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var btnGananciaDiaria: MaterialButton
     private lateinit var btnGananciaSemanal: MaterialButton
@@ -305,11 +298,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var layoutCustomRange: View
     private lateinit var tvProductSalesResult: TextView
 
-    private val bluetoothManager: BluetoothManager by lazy {
-        getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
-    }
-    private val bluetoothAdapter: BluetoothAdapter? by lazy { bluetoothManager.adapter }
-    private var bluetoothSocket: BluetoothSocket? = null
+
 
     private val requestBluetoothPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
@@ -400,8 +389,7 @@ class MainActivity : AppCompatActivity() {
         // Inicializa la base de datos una vez al inicio. La observación se configurará
         // después de que el adaptador de órdenes haya sido configurado para evitar
         // condiciones de carrera.
-        appDatabase = AppDatabase.getDatabase(applicationContext, lifecycleScope)
-        txtTotal = findViewById(R.id.textViewTotal)
+                txtTotal = findViewById(R.id.textViewTotal)
 
         editCategoryStartDate =
                 requireNotNull(
@@ -445,8 +433,7 @@ class MainActivity : AppCompatActivity() {
         // DB y panel admin
         // La base de datos ya fue inicializada al inicio de onCreate, no es necesario volver a
         // asignarla aquí
-        // appDatabase = AppDatabase.getDatabase(this, lifecycleScope)
-        drawerLayout = findViewById(R.id.drawerLayout)
+                drawerLayout = findViewById(R.id.drawerLayout)
         btnGananciaDiaria = findViewById(R.id.btnGananciaDiaria)
         btnGananciaSemanal = findViewById(R.id.btnGananciaSemanal)
         btnGananciaMensual = findViewById(R.id.btnGananciaMensual)
@@ -465,8 +452,7 @@ class MainActivity : AppCompatActivity() {
         layoutCustomRange = findViewById(R.id.layoutCustomRange)
         tvProductSalesResult = findViewById(R.id.tvProductSalesResult)
 
-        appDatabase = AppDatabase.getDatabase(applicationContext, lifecycleScope)
-        adminOrderAdapter =
+                adminOrderAdapter =
                 AdminOrderAdapter(
                         onDelete = { orderId -> eliminarPedido(orderId) },
                         onOrderClick = { order -> mostrarResumenDeOrdenGuardada(order) },
@@ -507,7 +493,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        closeBluetoothSocket()
     }
 
     // ─── Calculadora (drawer izquierdo) ──────────────────────────────────────
@@ -647,42 +632,7 @@ class MainActivity : AppCompatActivity() {
 
     // ─────────────────────────────────────────────────────────────────────────
 
-    private fun printViaNetwork(text: String, is80mm: Boolean = true): Boolean {
-        return try {
-            val ticketBytes = text.toByteArray(Charset.forName("windows-1252"))
-            val initPrinter = byteArrayOf(0x1B, 0x40)
-            val logoBytes =
-                    getAppIconEscPos(
-                    if (is80mm) PrinterType.NETWORK_80MM
-                    else PrinterType.BLUETOOTH_58MM
-                    )
-            val feedAndCut = byteArrayOf(0x0A, 0x1D, 0x56, 0x42, 0x00)
 
-            java.net.Socket("192.168.10.3", 9100).use { socket ->
-                socket.tcpNoDelay = true
-                socket.soTimeout = 4000
-                socket.getOutputStream().use { output ->
-                    output.write(initPrinter)
-                    output.write(logoBytes)
-                    output.write(ticketBytes)
-                    output.write(feedAndCut)
-                    output.flush()
-                }
-            }
-            true
-        } catch (e: Exception) {
-            Log.e("PRINT_NET", "Error: ${e.message}", e)
-            false
-        }
-    }
-
-    private suspend fun printWithSelectedPrinter(ticketText: String): Boolean {
-        return when (selectedPrinterType) {
-            PrinterType.BLUETOOTH_58MM -> printViaBluetooth(ticketText)
-            PrinterType.NETWORK_80MM -> printViaNetwork(ticketText, true)
-            PrinterType.NETWORK_58MM -> printViaNetwork(ticketText, false)
-        }
-    }
 
     private fun showPaymentConfirmationBottomSheet(order: OrderEntity) {
         val dialog = BottomSheetDialog(this)
@@ -777,7 +727,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 // 1️⃣ Generar el texto del ticket
-                val textoTicket = generarTextoTicket(productosSeleccionados, selectedPrinterType)
+                val textoTicket = "" // Se delega al viewModel la impresión completa
 
                 // 2️⃣ Guardar la orden en la base de datos
                 val mesaInfo = editTextMesa.text.toString().trim()
@@ -786,15 +736,15 @@ class MainActivity : AppCompatActivity() {
                 // 3️⃣ Imprimir automáticamente
                 val exito =
                         try {
-                            printWithSelectedPrinter(textoTicket)
+                            viewModel.printTicket(productosSeleccionados, editTextMesa.text.toString().trim(), noCuenta.isChecked, getString(R.string.cuenta))
                         } catch (e: Exception) {
                             Log.e("PRINT", "Error al imprimir con impresora seleccionada", e)
-                            false
+                            PrintResult.Error("Excepción: ${e.message}")
                         }
 
                 // 4️⃣ Mostrar mensaje en la UI
                 withContext(Dispatchers.Main) {
-                    if (exito) {
+                    if (exito is PrintResult.Success) {
                         Toast.makeText(
                                         this@MainActivity,
                                         "Ticket enviado a impresora",
@@ -954,7 +904,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupHamburguesasGrid(grid: GridLayout) {
         grid.removeAllViews()
-        grid.columnCount = 2 // O 3 si quieres más en tablets
+        val isTablet = resources.configuration.screenWidthDp >= 600
+        grid.columnCount = if (isTablet) 3 else 2 // O 3 si quieres más en tablets
 
         val inflater = LayoutInflater.from(this)
 
@@ -1002,10 +953,11 @@ class MainActivity : AppCompatActivity() {
                     gravity = Gravity.CENTER_HORIZONTAL
                 }
 
-        // 3. Título
+        // 3. Título y Precio
         content.addView(
                 TextView(this).apply {
-                    text = displayName
+                    val precio = preciosHamburguesas[nombre] ?: 0.0
+                    text = "$displayName\n$${"%.2f".format(precio)}"
                     setTextColor(ContextCompat.getColor(this@MainActivity, R.color.text_secondary))
                     textSize = 16f
                     gravity = Gravity.CENTER
@@ -1288,34 +1240,34 @@ class MainActivity : AppCompatActivity() {
         summaryTotalTextView = findViewById(R.id.summaryTotalTextView)
         btnCloseSummary = findViewById(R.id.btnCloseSummary)
 
-        selectedPrinterType =
-                if (radioPrinter80Network.isChecked) PrinterType.NETWORK_80MM
-                else if (radioPrinter58Network.isChecked) PrinterType.NETWORK_58MM
-                else PrinterType.BLUETOOTH_58MM
+        printerManager.selectedPrinterType =
+                if (radioPrinter80Network.isChecked) com.example.ticketapp.PrinterType.NETWORK_80MM
+                else if (radioPrinter58Network.isChecked) com.example.ticketapp.PrinterType.NETWORK_58MM
+                else com.example.ticketapp.PrinterType.BLUETOOTH_58MM
         btnEmparejar.visibility =
-                if (selectedPrinterType == PrinterType.BLUETOOTH_58MM) View.VISIBLE else View.GONE
+                if (printerManager.selectedPrinterType == com.example.ticketapp.PrinterType.BLUETOOTH_58MM) View.VISIBLE else View.GONE
         layoutPrinter80Help.visibility =
-                if (selectedPrinterType == PrinterType.NETWORK_80MM ||
-                                selectedPrinterType == PrinterType.NETWORK_58MM
+                if (printerManager.selectedPrinterType == com.example.ticketapp.PrinterType.NETWORK_80MM ||
+                                printerManager.selectedPrinterType == com.example.ticketapp.PrinterType.NETWORK_58MM
                 )
                         View.VISIBLE
                 else View.GONE
 
         printerTypeGroup.setOnCheckedChangeListener { _, checkedId ->
-            selectedPrinterType =
+            printerManager.selectedPrinterType =
                     when (checkedId) {
-                        R.id.radioPrinter80Network -> PrinterType.NETWORK_80MM
-                        R.id.radioPrinter58Network -> PrinterType.NETWORK_58MM
-                        else -> PrinterType.BLUETOOTH_58MM
+                        R.id.radioPrinter80Network -> com.example.ticketapp.PrinterType.NETWORK_80MM
+                        R.id.radioPrinter58Network -> com.example.ticketapp.PrinterType.NETWORK_58MM
+                        else -> com.example.ticketapp.PrinterType.BLUETOOTH_58MM
                     }
 
             btnEmparejar.visibility =
-                    if (selectedPrinterType == PrinterType.BLUETOOTH_58MM) View.VISIBLE
+                    if (printerManager.selectedPrinterType == com.example.ticketapp.PrinterType.BLUETOOTH_58MM) View.VISIBLE
                     else View.GONE
 
             layoutPrinter80Help.visibility =
-                    if (selectedPrinterType == PrinterType.NETWORK_80MM ||
-                                    selectedPrinterType == PrinterType.NETWORK_58MM
+                    if (printerManager.selectedPrinterType == com.example.ticketapp.PrinterType.NETWORK_80MM ||
+                                    printerManager.selectedPrinterType == com.example.ticketapp.PrinterType.NETWORK_58MM
                     )
                             View.VISIBLE
                     else View.GONE
@@ -1657,9 +1609,7 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 val ventas =
                         withContext(Dispatchers.IO) {
-                            appDatabase
-                                    .orderDao()
-                                    .getProfitByCategory(
+                            viewModel.getProfitByCategory(
                                             category = categoria,
                                             inicio = inicio,
                                             fin = fin,
@@ -1742,9 +1692,7 @@ class MainActivity : AppCompatActivity() {
                     // 1) Ventas brutas desde Room
                     val ventas =
                             withContext(Dispatchers.IO) {
-                                appDatabase
-                                        .orderDao()
-                                        .getProfitByCategory(
+                                viewModel.getProfitByCategory(
                                                 category = cat,
                                                 inicio = inicio,
                                                 fin = fin,
@@ -1797,9 +1745,7 @@ class MainActivity : AppCompatActivity() {
             for (cat in categoriasDB) {
                 val ventas =
                         withContext(Dispatchers.IO) {
-                            appDatabase
-                                    .orderDao()
-                                    .getProfitByCategory(
+                            viewModel.getProfitByCategory(
                                             category = cat,
                                             inicio = startDate,
                                             fin = endDate,
@@ -1931,7 +1877,7 @@ class MainActivity : AppCompatActivity() {
     ) {
         lifecycleScope.launch(Dispatchers.IO) {
             // Obtener todas las órdenes
-            val orders = appDatabase.orderDao().getAllOrders()
+            val orders = viewModel.getAllOrders()
             var totalNormales = 0.0
             var unidadesNormales = 0
             var totalCombos = 0.0
@@ -1941,7 +1887,7 @@ class MainActivity : AppCompatActivity() {
                     orders.filter { order -> order.createdAt >= inicio && order.createdAt <= fin }
             // Para cada orden en el rango, sumar las ventas del producto
             for (order in filteredOrders) {
-                val items = appDatabase.orderDao().getItemsForOrder(order.orderId)
+                val items = viewModel.getItemsForOrder(order.orderId)
                 for (item in items) {
                     // Extraer el nombre base sin sufijo de combo si existe
                     val baseName =
@@ -2162,7 +2108,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             // 🔹 Generar texto del ticket
-            val ticketTexto = generarTextoTicket(productosSeleccionados, selectedPrinterType)
+            val ticketTexto = "" // Se delega al viewModel la impresión completa
 
             withContext(Dispatchers.Main) {
                 AlertDialog.Builder(this@MainActivity)
@@ -2170,9 +2116,9 @@ class MainActivity : AppCompatActivity() {
                         .setMessage(ticketTexto)
                         .setPositiveButton("Imprimir") { _, _ ->
                             lifecycleScope.launch(Dispatchers.IO) {
-                                val printed = printWithSelectedPrinter(ticketTexto)
+                                val printed = viewModel.printTicket(productosSeleccionados, editTextMesa.text.toString().trim(), noCuenta.isChecked, getString(R.string.cuenta))
                                 withContext(Dispatchers.Main) {
-                                    if (printed) {
+                                    if (printed is PrintResult.Success) {
                                         Toast.makeText(
                                                         this@MainActivity,
                                                         "Ticket impreso correctamente",
@@ -2231,158 +2177,8 @@ class MainActivity : AppCompatActivity() {
     // *** BLUETOOTH PRINT ***
     // -------------------------------------------------------------------------
 
-    @SuppressLint("MissingPermission")
-    private suspend fun connectToBluetoothPrinter(): BluetoothSocket? =
-            withContext(Dispatchers.IO) {
-                val adapter = bluetoothAdapter
-                if (adapter == null) {
-                    Log.e(TAG, "Adaptador Bluetooth no disponible.")
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                                        this@MainActivity,
-                                        "Bluetooth no disponible en este dispositivo",
-                                        Toast.LENGTH_SHORT
-                                )
-                                .show()
-                    }
-                    return@withContext null
-                }
+    
 
-                if (!adapter.isEnabled) {
-                    Log.i(TAG, "Bluetooth no activado. Solicitando activación.")
-                    withContext(Dispatchers.Main) {
-                        val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                        enableBluetoothLauncher.launch(enableBtIntent)
-                        Toast.makeText(
-                                        this@MainActivity,
-                                        "Activando Bluetooth...",
-                                        Toast.LENGTH_SHORT
-                                )
-                                .show()
-                    }
-                    return@withContext null
-                }
-
-                val pairedDevices: Set<BluetoothDevice>? = adapter.bondedDevices
-                if (pairedDevices.isNullOrEmpty()) {
-                    Log.e(TAG, "No hay dispositivos emparejados")
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                                        this@MainActivity,
-                                        "No hay dispositivos Bluetooth emparejados",
-                                        Toast.LENGTH_LONG
-                                )
-                                .show()
-                    }
-                    return@withContext null
-                }
-
-                // Buscar impresora cuyo nombre contenga "POS-58", "5890", etc.
-                val printerDevice =
-                        pairedDevices.firstOrNull { device ->
-                            val name = device.name ?: ""
-                            PRINTER_BT_NAMES.any { sig -> name.contains(sig, ignoreCase = true) }
-                        }
-
-                if (printerDevice == null) {
-                    Log.e(TAG, "No encontré impresora tipo POS-58 entre los emparejados")
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                                        this@MainActivity,
-                                        "No encontré impresora POS-58 emparejada",
-                                        Toast.LENGTH_LONG
-                                )
-                                .show()
-                    }
-                    return@withContext null
-                }
-
-                Log.d(
-                        TAG,
-                        "Intentando conectar con la impresora Bluetooth: ${printerDevice.name} [${printerDevice.address}]"
-                )
-
-                return@withContext try {
-                    val socket = printerDevice.createRfcommSocketToServiceRecord(PRINTER_UUID)
-                    adapter.cancelDiscovery()
-                    socket.connect()
-                    Log.d(TAG, "Conexión Bluetooth establecida con ${printerDevice.name}")
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                                        this@MainActivity,
-                                        "Conectado a ${printerDevice.name}",
-                                        Toast.LENGTH_SHORT
-                                )
-                                .show()
-                    }
-                    bluetoothSocket = socket
-                    socket
-                } catch (e: IOException) {
-                    Log.e(
-                            TAG,
-                            "Error al conectar por Bluetooth con ${printerDevice.name}: ${e.message}",
-                            e
-                    )
-                    try {
-                        bluetoothSocket?.close()
-                    } catch (_: IOException) {}
-                    bluetoothSocket = null
-                    null
-                }
-            }
-
-    @SuppressLint("MissingPermission")
-    private suspend fun printViaBluetooth(textoTicket: String): Boolean =
-            withContext(Dispatchers.IO) {
-                try {
-                    val socket = bluetoothSocket ?: connectToBluetoothPrinter()
-                    if (socket == null || !socket.isConnected) {
-                        Log.e(TAG, "No se pudo conectar a la impresora Bluetooth")
-                        return@withContext false
-                    }
-
-                    val outputStream: OutputStream = socket.outputStream
-
-                    // ESC @ -> reset impresora + centrado global si acaso
-                    val initPrinter = byteArrayOf(0x1B, 0x40)
-
-                    // Obtener logo de la app en formato ESC/POS raster bit image
-                    val logoBytes = getAppIconEscPos(PrinterType.BLUETOOTH_58MM)
-
-                    // Texto del ticket con codificación occidental
-                    // (windows-1252 imprime bien ñ, acentos en muchas POS 58mm)
-                    val ticketBytes = textoTicket.toByteArray(Charset.forName("windows-1252"))
-
-                    // Alimentar papel y comando de corte (ignorado si no tiene cortador)
-                    val feedAndCut = byteArrayOf(0x0A, 0x1D, 0x56, 0x42, 0x00)
-
-                    outputStream.write(initPrinter)
-                    outputStream.write(logoBytes)
-                    outputStream.write(ticketBytes)
-                    outputStream.write(feedAndCut)
-                    outputStream.flush()
-
-                    true
-                } catch (e: IOException) {
-                    Log.e(TAG, "Error de E/S al imprimir por Bluetooth: ${e.message}", e)
-                    false
-                } catch (e: SecurityException) {
-                    Log.e(TAG, "Error de permisos BT al imprimir: ${e.message}", e)
-                    false
-                } finally {
-                    closeBluetoothSocket()
-                }
-            }
-
-    private fun closeBluetoothSocket() {
-        try {
-            bluetoothSocket?.close()
-            bluetoothSocket = null
-            Log.d(TAG, "Socket Bluetooth cerrado.")
-        } catch (e: IOException) {
-            Log.e(TAG, "Error al cerrar socket Bluetooth: ${e.message}", e)
-        }
-    }
 
     private fun ensureSummaryViewsInitialized() {
         if (!::summaryContainer.isInitialized) {
@@ -2449,7 +2245,7 @@ class MainActivity : AppCompatActivity() {
         // 1. Usar una corrutina para acceder a la base de datos en un hilo secundario
         lifecycleScope.launch(Dispatchers.IO) {
             // 2. Obtener la lista de artículos para la orden seleccionada
-            val itemsDeLaOrden = appDatabase.orderDao().getItemsForOrder(order.orderId)
+            val itemsDeLaOrden = viewModel.getItemsForOrder(order.orderId)
 
             val productosParaResumen =
                     itemsDeLaOrden.map { itemEntity ->
@@ -2486,16 +2282,6 @@ class MainActivity : AppCompatActivity() {
             val btnMas: Button,
             val precio: Double
     )
-
-    data class Producto(
-            val nombre: String,
-            val precio: Double,
-            val cantidad: Int,
-            val esCombo: Boolean
-    ) {
-        val total: Double
-            get() = precio * cantidad
-    }
 
     // -------------------------------------------------------------------------
     // Construcción del ticket ESC/POS (solo texto)
@@ -2617,340 +2403,12 @@ class MainActivity : AppCompatActivity() {
     // -------------------------------------------------------------------------
 
     /** Convierte el ícono vectorial de la app a un comando ESC/POS raster bit image (GS v 0). */
-    private fun getAppIconEscPos(printerType: PrinterType): ByteArray {
-        val drawable =
-                androidx.core.content.ContextCompat.getDrawable(this, R.drawable.pambazo)
-                        ?: return ByteArray(0)
 
-        return if (printerType == PrinterType.NETWORK_80MM) {
-            // Impresora 80mm: ~576 dots imprimibles. Usamos 512×256 para llenar el ancho
-            // del ticket sin sacrificar nitidez (el bitmap se escala antes de codificar ESC/POS).
-            getEscPosImageWithEscStar(drawable, width = 512, height = 256)
-        } else {
-            // 58mm: usar ancho completo del ticket y centrar dentro del bitmap evita
-            // desplazamientos laterales en modelos que interpretan irregular ESC a 1.
-            getEscPosImageWithGsV0(
-                    drawable,
-                    width = 384,
-                    height = 128,
-                    usePrinterCenter = false
-            )
-        }
-    }
 
-    private fun drawableToBitmap(
-            drawable: android.graphics.drawable.Drawable,
-            width: Int,
-            height: Int
-    ): android.graphics.Bitmap {
-        val bitmap =
-                android.graphics.Bitmap.createBitmap(
-                        width,
-                        height,
-                        android.graphics.Bitmap.Config.ARGB_8888
-                )
-        val canvas = android.graphics.Canvas(bitmap)
-        canvas.drawColor(android.graphics.Color.WHITE)
 
-        val srcW = drawable.intrinsicWidth.takeIf { it > 0 } ?: width
-        val srcH = drawable.intrinsicHeight.takeIf { it > 0 } ?: height
-        val scale = minOf(width.toFloat() / srcW.toFloat(), height.toFloat() / srcH.toFloat())
-        val drawW = (srcW * scale).toInt().coerceAtLeast(1)
-        val drawH = (srcH * scale).toInt().coerceAtLeast(1)
-        val left = (width - drawW) / 2
-        val top = (height - drawH) / 2
 
-        drawable.setBounds(left, top, left + drawW, top + drawH)
-        drawable.draw(canvas)
-        return bitmap
-    }
-
-    private fun isDarkPixel(color: Int): Boolean {
-        val r = android.graphics.Color.red(color)
-        val g = android.graphics.Color.green(color)
-        val b = android.graphics.Color.blue(color)
-        val luminance = (r * 0.299 + g * 0.587 + b * 0.114).toInt()
-        return luminance < 128
-    }
-
-    private fun getEscPosImageWithGsV0(
-            drawable: android.graphics.drawable.Drawable,
-            width: Int,
-            height: Int,
-            usePrinterCenter: Boolean = true
-    ): ByteArray {
-        val bitmap = drawableToBitmap(drawable, width, height)
-
-        val xL = (width / 8).toByte()
-        val xH = ((width / 8) / 256).toByte()
-        val yL = (height % 256).toByte()
-        val yH = (height / 256).toByte()
-        val header = byteArrayOf(0x1D, 0x76, 0x30, 0x00, xL, xH, yL, yH)
-        val imageData = ByteArray((width / 8) * height)
-
-        var index = 0
-        for (y in 0 until height) {
-            for (x in 0 until width step 8) {
-                var byteValue = 0
-                for (k in 0..7) {
-                    val bit = if (x + k < width && isDarkPixel(bitmap.getPixel(x + k, y))) 1 else 0
-                    byteValue = byteValue or (bit shl (7 - k))
-                }
-                imageData[index++] = byteValue.toByte()
-            }
-        }
-
-        val alignCenter = byteArrayOf(0x1B, 0x61, 0x01)
-        val alignLeft = byteArrayOf(0x1B, 0x61, 0x00)
-        val feed = byteArrayOf(0x0A, 0x0A)
-        val alignStart = if (usePrinterCenter) alignCenter else alignLeft
-
-        val result =
-                ByteArray(
-                alignStart.size + header.size + imageData.size + feed.size + alignLeft.size
-                )
-        var offset = 0
-        System.arraycopy(alignStart, 0, result, offset, alignStart.size)
-        offset += alignStart.size
-        System.arraycopy(header, 0, result, offset, header.size)
-        offset += header.size
-        System.arraycopy(imageData, 0, result, offset, imageData.size)
-        offset += imageData.size
-        System.arraycopy(feed, 0, result, offset, feed.size)
-        offset += feed.size
-        System.arraycopy(alignLeft, 0, result, offset, alignLeft.size)
-
-        return result
-    }
-
-    private fun getEscPosImageWithEscStar(
-            drawable: android.graphics.drawable.Drawable,
-            width: Int,
-            height: Int
-    ): ByteArray {
-        val bitmap = drawableToBitmap(drawable, width, height)
-        val out = ByteArrayOutputStream()
-
-        val alignCenter = byteArrayOf(0x1B, 0x61, 0x01)
-        val alignLeft = byteArrayOf(0x1B, 0x61, 0x00)
-        val lineSpacing24 = byteArrayOf(0x1B, 0x33, 24)
-        val lineSpacingDefault = byteArrayOf(0x1B, 0x32)
-
-        out.write(alignCenter)
-        out.write(lineSpacing24)
-
-        // En ESC * 24-dot (m=33), nL/nH representan columnas (dots), no bytes.
-        // Si se envía el valor en bytes, la impresora interpreta parte de la imagen como texto.
-        val widthDots = width
-        for (y in 0 until height step 24) {
-            val nL = (widthDots % 256).toByte()
-            val nH = (widthDots / 256).toByte()
-            out.write(byteArrayOf(0x1B, 0x2A, 33, nL, nH))
-
-            for (x in 0 until width) {
-                for (block in 0 until 3) {
-                    var byteValue = 0
-                    for (bit in 0 until 8) {
-                        val yy = y + block * 8 + bit
-                        val pixelOn =
-                                if (yy < height && isDarkPixel(bitmap.getPixel(x, yy))) 1 else 0
-                        byteValue = byteValue or (pixelOn shl (7 - bit))
-                    }
-                    out.write(byteValue)
-                }
-            }
-            out.write(0x0A)
-        }
-
-        out.write(lineSpacingDefault)
-        out.write(byteArrayOf(0x0A, 0x0A))
-        out.write(alignLeft)
-
-        return out.toByteArray()
-    }
 
     // Construcción del ticket ESC/POS (solo texto)
-    private suspend fun generarTextoTicket(
-            productosSeleccionados: List<Producto>,
-            printerType: PrinterType
-    ): String =
-            withContext(Dispatchers.IO) {
-            val ticketProfile = resolveTicketProfile(printerType)
-                val fechaHora =
-                        SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
-                val sb = StringBuilder()
-                val anchoTotalLinea = if (ticketProfile == PrinterType.NETWORK_80MM) 48 else 32
-                val lineaSeparadora = "-".repeat(anchoTotalLinea)
-
-                // ── Encabezado ────────────────────────────────────────────
-                // ESC/POS: centrar + negrita + doble tamaño para el nombre
-                val ESC = "\u001B"
-                val GS = "\u001D"
-                val centerOn = "$ESC\u0061\u0001" // ESC a 1  → centrar
-                val boldOn = "$ESC\u0045\u0001" // ESC E 1  → negrita ON
-                val sizeXL = "$GS\u0021\u0011" // GS ! 0x11 → doble ancho + doble alto
-                val sizeWide = "$GS\u0021\u0010" // GS ! 0x10 → doble ancho, alto normal
-                val sizeNorm =
-                    "$GS\u0021\u0000" // GS ! 0x00 → revertido a tamaño verdaderamente normal
-                // para no romper columnas
-                val boldOff = "$ESC\u0045\u0000" // ESC E 0  → negrita OFF
-                val centerOff = "$ESC\u0061\u0000" // ESC a 0  → alinear izquierda
-
-                val headerSize =
-                    if (ticketProfile == PrinterType.NETWORK_80MM) sizeXL else sizeWide
-                val headerCharSpacing = "$GS\u0020\u0000"
-                // GS SP n: espaciado extra entre chars para el cuerpo del ticket en 58mm.
-                val bodyCharSpacing =
-                    if (ticketProfile == PrinterType.NETWORK_80MM) "$GS\u0020\u0000"
-                    else "$GS\u0020\u000E"
-                val charSpacingReset = "$GS\u0020\u0000" // GS SP  0 → normal
-
-                val is58Profile = ticketProfile != PrinterType.NETWORK_80MM
-                if (is58Profile) {
-                    // En varias 58mm, ESC a 1 desplaza visualmente a la derecha con fuentes anchas.
-                    // Centramos por padding en modo left para mantener el bloque realmente centrado.
-                    sb.append(centerOff)
-                } else {
-                    sb.append(centerOn)
-                }
-                sb.append(boldOn)
-                sb.append(headerSize)
-                sb.append(headerCharSpacing)
-                val headerScale = if (is58Profile) 2 else 1
-                if (ticketProfile == PrinterType.NETWORK_80MM) {
-                    sb.appendLine("ANTOJITOS")
-                    sb.appendLine("MEXICANOS")
-                    sb.appendLine("MARGARITA")
-                } else {
-                    sb.appendLine(centerText("ANTOJITOS", anchoTotalLinea, headerScale))
-                    sb.appendLine(centerText("MEXICANOS", anchoTotalLinea, headerScale))
-                    sb.appendLine(centerText("MARGARITA", anchoTotalLinea, headerScale))
-                }
-                sb.append(charSpacingReset)
-                sb.append(sizeNorm)
-                sb.append(boldOff)
-                sb.append(centerOff)
-                sb.appendLine("=".repeat(anchoTotalLinea))
-                sb.appendLine(centerText("*** TICKET DE COMPRA ***", anchoTotalLinea))
-                sb.appendLine("=".repeat(anchoTotalLinea))
-                sb.appendLine("Fecha y hora: $fechaHora")
-
-                // Datos de cuenta si aplica
-                if (noCuenta.isChecked) {
-                    sb.appendLine("No. de cuenta: ${getString(R.string.cuenta)} ")
-                    sb.appendLine("Nombre: Margarita Daniel Pérez")
-                    sb.appendLine("Banco: BBVA")
-                }
-
-                // Mesa/cliente
-                val mesaInfo = editTextMesa.text.toString().trim()
-                if (mesaInfo.isNotEmpty()) {
-                    sb.appendLine(
-                            String.format("%-${anchoTotalLinea}s", "Mesa: ${mesaInfo.uppercase()}")
-                    )
-                    sb.appendLine("*****************************")
-                }
-
-                // Obtener productos seleccionados desde tus inputs (debe devolver List<Producto>)
-
-                // Guardar orden en BD y mostrar resumen en el layou
-
-                // Separación normales vs combos
-                val combos = mutableListOf<Producto>()
-                val normales = mutableListOf<Producto>()
-                for (p in productosSeleccionados) if (p.esCombo) combos.add(p) else normales.add(p)
-
-                // Tabla cabecera
-                sb.appendLine(lineaSeparadora)
-                val productColWidth = if (ticketProfile == PrinterType.NETWORK_80MM) 23 else 13
-                val priceColWidth = if (ticketProfile == PrinterType.NETWORK_80MM) 8 else 6
-                val qtyColWidth = if (ticketProfile == PrinterType.NETWORK_80MM) 5 else 3
-                val amountColWidth = if (ticketProfile == PrinterType.NETWORK_80MM) 9 else 7
-                sb.appendLine(
-                        String.format(
-                                "%-${productColWidth}s %${priceColWidth}s %${qtyColWidth}s %${amountColWidth}s",
-                                "Producto",
-                                "Precio",
-                                "Cant",
-                                "Total"
-                        )
-                )
-                sb.appendLine(lineaSeparadora)
-
-                var totalGeneral = 0.0
-
-                // Listado de productos normales
-                if (normales.isNotEmpty()) {
-                    sb.appendLine("PRODUCTOS")
-                    for (p in normales) {
-                        val totalProducto = p.precio * p.cantidad
-                        totalGeneral += totalProducto
-
-                        val nombreVisible = (productColWidth - 3).coerceAtLeast(5)
-                        val nombreCorto =
-                                if (p.nombre.length > productColWidth)
-                                        p.nombre.substring(0, nombreVisible) + "..."
-                                else p.nombre
-                        val precioFmt = String.format("$%.2f", p.precio)
-                        val totalFmt = String.format("$%.2f", totalProducto)
-
-                        sb.appendLine(
-                                String.format(
-                                        "%-${productColWidth}s %${priceColWidth}s %${qtyColWidth}d %${amountColWidth}s",
-                                        nombreCorto,
-                                        precioFmt,
-                                        p.cantidad,
-                                        totalFmt
-                                )
-                        )
-                    }
-                    sb.appendLine(lineaSeparadora)
-                }
-
-                // Listado de combos
-                if (combos.isNotEmpty()) {
-                    sb.appendLine("COMBOS")
-                    for (c in combos) {
-                        val totalCombo = c.precio * c.cantidad
-                        totalGeneral += totalCombo
-
-                        val nombreVisible = (productColWidth - 3).coerceAtLeast(5)
-                        val nombreCorto =
-                                if (c.nombre.length > productColWidth)
-                                        c.nombre.substring(0, nombreVisible) + "..."
-                                else c.nombre
-                        val precioFmt = String.format("$%.2f", c.precio)
-                        val totalFmt = String.format("$%.2f", totalCombo)
-
-                        sb.appendLine(
-                                String.format(
-                                        "%-${productColWidth}s %${priceColWidth}s %${qtyColWidth}d %${amountColWidth}s",
-                                        nombreCorto,
-                                        precioFmt,
-                                        c.cantidad,
-                                        totalFmt
-                                )
-                        )
-                    }
-                    sb.appendLine(lineaSeparadora)
-                }
-
-                // Totales
-                val totalValueWidth = (anchoTotalLinea - 15).coerceAtLeast(8)
-                sb.appendLine(
-                        String.format(
-                                "%-15s %${totalValueWidth}s",
-                                "TOTAL:",
-                                String.format("$%.2f", totalGeneral)
-                        )
-                )
-                sb.appendLine(lineaSeparadora)
-                sb.appendLine("")
-                sb.appendLine("    Gracias por su compra")
-                sb.appendLine("    Vuelva pronto")
-
-                return@withContext sb.toString()
-            }
 
     // -------------------------------------------------------------------------
     // Persistencia en base de datos y panel admin
@@ -2963,10 +2421,10 @@ class MainActivity : AppCompatActivity() {
     private fun refreshOrders(order: OrderEntity, items: List<OrderItemEntity>) {
         lifecycleScope.launch(Dispatchers.IO) {
             // 🔹 Inserta la orden con sus ítems
-            appDatabase.orderDao().insertOrderWithItems(order, items)
+            viewModel.guardarPedidoBD(order, items)
 
             // 🔹 Luego obtiene todas las órdenes actualizadas
-            val updatedOrders = appDatabase.orderDao().getAllOrders()
+            val updatedOrders = viewModel.getAllOrders()
 
             withContext(Dispatchers.Main) { adminOrderAdapter.updateOrders(updatedOrders) }
         }
@@ -2987,7 +2445,7 @@ class MainActivity : AppCompatActivity() {
                 // ACTUALIZAR ORDEN EXISTENTE: borrar todos sus ítems y reemplazarlos
                 // con la lista completa actual (originales ya cargados + nuevos).
                 // Esto garantiza que no haya duplicados ni ítems huérfanos.
-                appDatabase.orderDao().deleteItemsForOrder(editingId)
+                viewModel.deleteItemsForOrderBD(editingId)
 
                 val allItems =
                         productos.map {
@@ -2999,11 +2457,11 @@ class MainActivity : AppCompatActivity() {
                                     esCombo = it.esCombo
                             )
                         }
-                appDatabase.orderDao().insertOrderItems(allItems)
+                viewModel.insertOrderItemsBD(allItems)
 
                 // Recalcular total desde los ítems recién insertados
                 val newGrandTotal = allItems.sumOf { it.quantity * it.unitPrice }
-                appDatabase.orderDao().updateOrderTotal(editingId, newGrandTotal)
+                viewModel.updateOrderTotalBD(editingId, newGrandTotal)
 
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@MainActivity, "✅ Pedido actualizado", Toast.LENGTH_SHORT)
@@ -3040,7 +2498,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                 // Inserta en la BD. El observador se encargará del resto.
-                appDatabase.orderDao().insertOrderWithItems(orderEntity, items)
+                viewModel.guardarPedidoBD(orderEntity, items)
             }
         }
     }
@@ -3051,7 +2509,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun observarOrdenes() {
         lifecycleScope.launch {
-            appDatabase.orderDao().getAllOrdersFlow().collect { listaDeOrdenes ->
+            viewModel.getAllOrdersFlow().collect { listaDeOrdenes ->
                 // Cuando hay un cambio en la BD, la lista llega aquí
                 withContext(Dispatchers.Main) {
                     // Y se la pasamos al adaptador, que se actualiza eficientemente
@@ -3104,8 +2562,7 @@ class MainActivity : AppCompatActivity() {
 
                             lifecycleScope.launch(Dispatchers.IO) {
                                 val orders =
-                                        appDatabase
-                                                .orderDao()
+                                        viewModel
                                                 .getOrdersBetween(startOfDay, endOfDay)
                                 val total = orders.sumOf { it.grandTotal }
                                 val count = orders.size
@@ -3131,7 +2588,7 @@ class MainActivity : AppCompatActivity() {
     /** Ganancia semanal */
     private fun generarGananciaSemanal() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val resultados = appDatabase.orderDao().getWeeklySales()
+            val resultados = viewModel.getWeeklySales()
             val texto =
                     buildResumen(resultados) { r ->
                         "Semana ${r.week}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
@@ -3143,7 +2600,7 @@ class MainActivity : AppCompatActivity() {
     /** Ganancia mensual */
     private fun generarGananciaMensual() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val resultados = appDatabase.orderDao().getMonthlySales()
+            val resultados = viewModel.getMonthlySales()
             val texto =
                     buildResumen(resultados) { r ->
                         "Mes ${r.month}: ${r.ordersCount} órdenes, ${r.totalSales.formatMoney()}"
@@ -3158,7 +2615,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 // 🔹 Obtener pedidos desde la base de datos
-                val pedidos = appDatabase.orderDao().getAllOrders()
+                val pedidos = viewModel.getAllOrders()
 
                 withContext(Dispatchers.Main) {
                     // 🔹 Actualizar adaptador
@@ -3182,7 +2639,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             // 1. Elimina la orden de la base de datos en un hilo secundario.
             //    La llave foránea con onDelete = CASCADE se encargará de borrar sus items.
-            appDatabase.orderDao().deleteOrderById(orderId)
+            viewModel.deleteOrderById(orderId)
 
             // 2. Muestra un mensaje de confirmación en el hilo principal.
             withContext(Dispatchers.Main) {
@@ -3203,7 +2660,7 @@ class MainActivity : AppCompatActivity() {
         // Utiliza una rutina de corrutina para recuperar los ítems y construir el ticket
         lifecycleScope.launch(Dispatchers.IO) {
             // Obtén los items de la orden desde la base de datos
-            val items = appDatabase.orderDao().getItemsForOrder(order.orderId)
+            val items = viewModel.getItemsForOrder(order.orderId)
 
             // Construye una lista de Producto a partir de los items guardados
             val productos =
@@ -3217,7 +2674,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
             // Genera el texto del ticket con los productos recuperados
-            val ticket = generarTextoTicket(productos, selectedPrinterType)
+            val ticket = "" // Se delega al viewModel
 
             // Cambia al hilo principal para mostrar el diálogo personalizado
             withContext(Dispatchers.Main) {
@@ -3243,7 +2700,7 @@ class MainActivity : AppCompatActivity() {
 
                 // Al imprimir, ejecuta la impresión en un hilo de fondo y cierra el diálogo
                 btnPrint.setOnClickListener {
-                    lifecycleScope.launch(Dispatchers.IO) { printWithSelectedPrinter(ticket) }
+                    lifecycleScope.launch(Dispatchers.IO) { viewModel.printTicket(productos, "", false, "") }
                     alertDialog.dismiss()
                 }
 
@@ -3270,7 +2727,7 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 val topProducts =
                         withContext(Dispatchers.IO) {
-                            appDatabase.orderDao().getTopSellingProducts(inicio, fin)
+                            viewModel.getTopSellingProducts(inicio, fin)
                         }
 
                 val tituloPeriodo = periodo.name.lowercase().replaceFirstChar { it.uppercase() }
@@ -3298,7 +2755,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun onOrderToggleStatus(orderId: Long, isCompleted: Boolean) {
         lifecycleScope.launch(Dispatchers.IO) {
-            appDatabase.orderDao().updateOrderStatus(orderId, isCompleted)
+            viewModel.updateOrderStatus(orderId, isCompleted)
         }
     }
 
@@ -3339,7 +2796,7 @@ class MainActivity : AppCompatActivity() {
 
         // 3. Cargar ítems existentes de la orden en la UI
         lifecycleScope.launch(Dispatchers.IO) {
-            val existingItems = appDatabase.orderDao().getItemsForOrder(order.orderId)
+            val existingItems = viewModel.getItemsForOrder(order.orderId)
 
             withContext(Dispatchers.Main) {
                 var itemsLoaded = 0
@@ -3523,7 +2980,7 @@ class MainActivity : AppCompatActivity() {
             val btnMenos = itemView.findViewById<Button>(R.id.btnMenos)
             val btnMas = itemView.findViewById<Button>(R.id.btnMas)
 
-            tvName.text = configProduct.name
+            tvName.text = "${configProduct.name}\n$${"%.2f".format(configProduct.price)}"
             tvQty.text = "0"
 
             products[configProduct.name] =
@@ -3550,6 +3007,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeCategoryProducts(category: String, root: View) {
+        if (root is GridLayout) {
+            val isTablet = resources.configuration.screenWidthDp >= 600
+            root.columnCount = if (isTablet) 3 else 2
+        }
+
         when (category) {
             "Platillos" -> {
 
@@ -3970,6 +3432,12 @@ class MainActivity : AppCompatActivity() {
 
         setupAllProductListeners()
         updateAllProductViews()
+
+        // Inyectar precios visualmente debajo del nombre de la tarjeta en componentes de ViewStub estáticos
+        val priceRenames = products.map { (name, data) ->
+            name to "$name\n$${"%.2f".format(data.precio)}"
+        }
+        renameVisibleProductLabels(priceRenames)
     }
 
     private fun setupAllProductListeners() {

@@ -92,6 +92,56 @@ object CatalogConfigStore {
             CatalogProductConfig("Hamburguesa Doble", "Hamburguesa Doble", 110.0, "Hamburguesas", false)
         )
 
+    fun buildResolvedProducts(config: CatalogConfig): List<CatalogProductConfig> {
+        val resolvedDefaults =
+            defaultProducts.map { base ->
+                val override = config.productOverrides[base.sourceName]
+                CatalogProductConfig(
+                    sourceName = base.sourceName,
+                    name = override?.name?.trim().orEmpty().ifBlank { base.name },
+                    price = override?.price?.takeIf { it > 0.0 } ?: base.price,
+                    category = override?.category?.trim().orEmpty().ifBlank { base.category },
+                    isCustom = false
+                )
+            }
+
+        val resolvedCustoms =
+            config.customProducts.mapNotNull { custom ->
+                val name = custom.name.trim()
+                val category = custom.category.trim()
+                val price = custom.price
+
+                if (name.isBlank() || category.isBlank() || price <= 0.0) {
+                    null
+                } else {
+                    custom.copy(name = name, category = category, price = price, isCustom = true)
+                }
+            }
+
+        return resolvedDefaults + resolvedCustoms
+    }
+
+    fun buildAvailableCategories(config: CatalogConfig): List<String> {
+        val categories =
+            linkedSetOf<String>().apply {
+                addAll(defaultCategories)
+                addAll(config.categoryOrder.map { it.trim() }.filter { it.isNotBlank() })
+                addAll(buildResolvedProducts(config).map { it.category.trim() }.filter { it.isNotBlank() })
+            }
+
+        return buildList {
+            addAll(config.categoryOrder.filter { categories.contains(it) })
+            addAll(categories.filterNot { contains(it) }.sorted())
+        }
+    }
+
+    fun isHamburgerSource(sourceName: String?): Boolean {
+        if (sourceName.isNullOrBlank()) return false
+        return defaultProducts.firstOrNull { it.sourceName == sourceName }
+            ?.category
+            .equals("Hamburguesas", ignoreCase = true)
+    }
+
     fun load(context: Context): CatalogConfig {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val json = prefs.getString(KEY_JSON, null)
