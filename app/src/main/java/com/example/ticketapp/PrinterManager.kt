@@ -146,27 +146,32 @@ class PrinterManager(private val context: Context) {
         val GS = "\u001D"
         val centerOn = "$ESC\u0061\u0001"
         val boldOn = "$ESC\u0045\u0001"
-        val sizeXL = "$GS\u0021\u0011"
-        val sizeWide = "$GS\u0021\u0010"
-        val sizeNorm = "$GS\u0021\u0000"
+        // Intentar los dos modos de expansión de tamaño simultáneos (GS ! 0x11 y ESC ! 0x30)
+        val sizeXL = "$ESC\u0021\u0030$GS\u0021\u0011"
+        val sizeWide = "$ESC\u0021\u0020$GS\u0021\u0010"
+        val sizeNorm = "$ESC\u0021\u0000$GS\u0021\u0000"
         val boldOff = "$ESC\u0045\u0000"
         val centerOff = "$ESC\u0061\u0000"
 
         val headerSize = if (ticketProfile == PrinterType.NETWORK_80MM) sizeXL else sizeWide
-        val headerCharSpacing = "$GS\u0020\u0000"
+        val headerCharSpacing = "$GS\u0020\u0002"
         val charSpacingReset = "$GS\u0020\u0000"
 
         val is58Profile = ticketProfile != PrinterType.NETWORK_80MM
-        if (is58Profile) sb.append(centerOff) else sb.append(centerOn)
+        sb.append(centerOn) // Centramos el título sin importar el perfil
         sb.append(boldOn)
         sb.append(headerSize)
         sb.append(headerCharSpacing)
         val headerScale = if (is58Profile) 2 else 1
+        
         if (ticketProfile == PrinterType.NETWORK_80MM) {
+            // Mandamos los textos puros para que el "centerOn" de la impresora los alinee perfecto
             sb.appendLine("ANTOJITOS")
             sb.appendLine("MEXICANOS")
             sb.appendLine("MARGARITA")
         } else {
+            // En 58MM a veces ESC a 1 falla o desalinea la factura entera, por lo cual usamos centerText artificial y centerOff
+            sb.append(centerOff)
             sb.appendLine(centerText("ANTOJITOS", anchoTotalLinea, headerScale))
             sb.appendLine(centerText("MEXICANOS", anchoTotalLinea, headerScale))
             sb.appendLine(centerText("MARGARITA", anchoTotalLinea, headerScale))
@@ -391,7 +396,9 @@ class PrinterManager(private val context: Context) {
         val drawable = ContextCompat.getDrawable(context, R.drawable.pambazo)
             ?: return ByteArray(0)
         return if (printerType == PrinterType.NETWORK_80MM) {
-            getEscPosImageWithEscStar(drawable, width = 512, height = 256)
+            // El modo EscStar (ESC *) en 80mm produce imágenes muy pequeñas dada la triple densidad requerida.
+            // GSv0 envía píxel por píxel con mayor exactitud y escala perfecta a 576 puntos (80mm).
+            getEscPosImageWithGsV0(drawable, width = 512, height = 256, usePrinterCenter = true)
         } else {
             getEscPosImageWithGsV0(drawable, width = 384, height = 128, usePrinterCenter = false)
         }
