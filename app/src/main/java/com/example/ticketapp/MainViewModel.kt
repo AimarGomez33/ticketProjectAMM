@@ -142,22 +142,16 @@ class MainViewModel(
     // --- Impresión (delegada al PrinterManager) ---
     suspend fun printTicket(
         productosSeleccionados: List<Producto>,
-        mesaInfo: String,
-        mostrarCuenta: Boolean,
-        numeroCuenta: String
-    ) = printer.printTicket(productosSeleccionados, mesaInfo, mostrarCuenta, numeroCuenta)
+        mesaInfo: String
+    ) = printer.printTicket(productosSeleccionados, mesaInfo)
 
     suspend fun generarTextoTicket(
         productosSeleccionados: List<Producto>,
-        mesaInfo: String = "",
-        mostrarCuenta: Boolean = false,
-        numeroCuenta: String = ""
+        mesaInfo: String = ""
     ) = printer.generarTextoTicket(
         productosSeleccionados = productosSeleccionados,
         printerType = printer.selectedPrinterType,
-        mesaInfo = mesaInfo,
-        mostrarCuenta = mostrarCuenta,
-        numeroCuenta = numeroCuenta
+        mesaInfo = mesaInfo
     )
 
     @Suppress("UNCHECKED_CAST")

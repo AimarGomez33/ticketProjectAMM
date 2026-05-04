@@ -59,15 +59,7 @@
 
 
             </com.google.android.material.textfield.TextInputLayout>
-            <CheckBox
-                android:id="@+id/noCuenta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/Text"
-                android:checked="false"
-                android:text="@string/incluir_n_mero_de_cuenta"
-                android:textColor="@color/text_secondary"
-                android:textSize="16dp" />
+
             <RelativeLayout android:id="@+id/headerPlatillos" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="8dp" android:paddingBottom="8dp" android:background="?android:attr/selectableItemBackground" >
 
                 <TextView
@@ -662,6 +654,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:descendantFocusability="beforeDescendants"
             android:fadingEdge="horizontal">
 
             <TextView

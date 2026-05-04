@@ -19,10 +19,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/akatab"
-            android:text="Reimpresión de Ticket"
+            android:text="Vista Previa del Ticket"
             android:textColor="@color/text_primary"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_centerVertical="true" />
 
         <ImageButton
             android:id="@+id/btnCloseDialog"
@@ -43,21 +44,250 @@
         android:layout_height="1dp"
         android:background="@color/Grayish_lime" />
 
-    <!-- Área scrollable para el contenido del ticket -->
+    <!-- Área scrollable - simula el ticket físico -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:scrollbars="vertical">
 
-        <TextView
-            android:id="@+id/ticketTextView"
+        <!-- Contenedor con fondo blanco que simula papel térmico -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/akatab"
-            android:textColor="@color/text_secondary"
-            android:textSize="16sp"
-            android:lineSpacingExtra="4dp" />
+            android:orientation="vertical"
+            android:background="@android:color/white"
+            android:elevation="4dp"
+            android:padding="20dp">
+
+            <!-- Logo del local (ahora usa el nuevo vector que incluye texto) -->
+            <ImageView
+                android:id="@+id/ticketLogoImageView"
+                android:layout_width="80dp"
+                android:layout_height="90dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="4dp"
+                android:src="@drawable/logo"
+                android:scaleType="fitCenter"
+                android:contentDescription="Logo" />
+
+            <!-- Separador con asteriscos -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="monospace"
+                android:textColor="@android:color/black"
+                android:textSize="12sp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="2dp"
+                android:text="════════════════════════" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="monospace"
+                android:textColor="@android:color/black"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:text="★ TICKET DE COMPRA ★" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="monospace"
+                android:textColor="@android:color/black"
+                android:textSize="12sp"
+                android:layout_marginBottom="6dp"
+                android:text="════════════════════════" />
+
+            <!-- Fecha y Mesa -->
+            <TextView
+                android:id="@+id/ticketFechaTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:textColor="#444444"
+                android:textSize="11sp"
+                android:layout_marginBottom="2dp"
+                tools:text="Fecha: 2024-01-01 12:00:00" />
+
+            <TextView
+                android:id="@+id/ticketMesaTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:textColor="@android:color/black"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"
+                tools:text="Mesa: MESA 3" />
+
+            <!-- Encabezado de columnas -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#CCCCCC"
+                android:layout_marginBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:fontFamily="monospace"
+                    android:textColor="#555555"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:text="Producto" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.2"
+                    android:fontFamily="monospace"
+                    android:textColor="#555555"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:gravity="end"
+                    android:text="Precio" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:fontFamily="monospace"
+                    android:textColor="#555555"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:text="Cant" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.2"
+                    android:fontFamily="monospace"
+                    android:textColor="#555555"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:gravity="end"
+                    android:text="Total" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#CCCCCC"
+                android:layout_marginBottom="4dp" />
+
+            <!-- Contenedor dinámico para los items del pedido -->
+            <LinearLayout
+                android:id="@+id/ticketItemsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- Separador y Total -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#333333"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="6dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="monospace"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:text="TOTAL:" />
+
+                <TextView
+                    android:id="@+id/ticketTotalTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:text="$120.00" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#333333"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Mensaje de gracias -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="monospace"
+                android:textColor="#333333"
+                android:textSize="12sp"
+                android:text="¡Gracias por su preferencia!" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="monospace"
+                android:textColor="#333333"
+                android:textSize="12sp"
+                android:layout_marginBottom="12dp"
+                android:text="¡Buen provecho!" />
+
+            <!-- Sección QR (se oculta para pedidos llevar) -->
+            <View
+                android:id="@+id/ticketQrDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#CCCCCC"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:id="@+id/ticketQrLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="monospace"
+                android:textColor="#333333"
+                android:textSize="11sp"
+                android:layout_marginBottom="8dp"
+                android:text="Visítanos o déjanos tu reseña:" />
+
+            <ImageView
+                android:id="@+id/qrCodeImageView"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="fitCenter"
+                android:contentDescription="QR Code Google Maps" />
+
+        </LinearLayout>
     </ScrollView>
 
     <!-- Línea divisoria inferior -->

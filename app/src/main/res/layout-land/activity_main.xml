@@ -56,15 +56,7 @@
                     android:inputType="textCapWords"
                     android:textColor="@color/Grayish_green" />
 
-                <CheckBox
-                    android:id="@+id/noCuenta"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/night_grey"
-                    android:checked="false"
-                    android:text="@string/incluir_n_mero_de_cuenta"
-                    android:textColor="@color/Grayish_green"
-                    android:textSize="16dp" />
+
 
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -1661,6 +1653,9 @@
             android:background="@color/app_background"
             android:fadingEdge="horizontal"
             android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:descendantFocusability="beforeDescendants"
             android:padding="16dp">
 
         <TextView
