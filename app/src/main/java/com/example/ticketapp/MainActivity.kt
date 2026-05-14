@@ -448,6 +448,45 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun buildProductFilterOptions(): List<ProductFilterOption> {
+        val resolvedProducts = CatalogConfigStore.buildResolvedProducts(catalogConfig)
+
+        return resolvedProducts
+                .map { product ->
+                    val sourceName = product.sourceName?.trim().orEmpty()
+                    val displayName = product.name.trim().ifBlank { sourceName }
+                    val isHamburger = product.category.equals(CATEG_HAMB, ignoreCase = true)
+                    val aliases =
+                            linkedSetOf<String>().apply {
+                                add(displayName)
+                                if (sourceName.isNotBlank()) add(sourceName)
+                                legacyProductAliases
+                                        .filterValues { it.equals(sourceName, ignoreCase = true) }
+                                        .keys
+                                        .forEach { add(it) }
+                            }
+
+                    ProductFilterOption(
+                            displayName = displayName,
+                            isHamburger = isHamburger,
+                            aliases = aliases.filter { it.isNotBlank() }.toSet()
+                    )
+                }
+                .distinctBy { normalizeProductLabel(it.displayName) }
+                .sortedWith(compareBy<ProductFilterOption> { !it.isHamburger }.thenBy { it.displayName })
+    }
+
+    private fun currentDisplayNameForReport(savedName: String): String {
+        val baseName = savedName.substringBefore(" + Combo").substringBefore(" (Combo)").trim()
+        val normalizedBase = normalizeProductLabel(baseName)
+        val option =
+                buildProductFilterOptions().firstOrNull { productOption ->
+                    productOption.aliases.any { normalizeProductLabel(it) == normalizedBase }
+                }
+        val displayName = option?.displayName ?: baseName
+        return if (savedName.contains("Combo", ignoreCase = true)) "$displayName + Combo" else displayName
+    }
+
 
 
     private val duplicatedTextViewCache = mutableMapOf<Int, MutableList<TextView>>()
@@ -619,6 +658,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var layoutCustomRange: View
 
     private lateinit var tvProductSalesResult: TextView
+
+    private data class ProductFilterOption(
+            val displayName: String,
+            val isHamburger: Boolean,
+            val aliases: Set<String>
+    )
+
+    private var productSalesFilterOptions: List<ProductFilterOption> = emptyList()
 
 
 
@@ -1846,9 +1893,7 @@ class MainActivity : AppCompatActivity() {
 
         grid.removeAllViews()
 
-        val isTablet = resources.configuration.screenWidthDp >= 600
-
-        grid.columnCount = if (isTablet) 3 else 2 // O 3 si quieres más en tablets
+        grid.columnCount = 2
 
 
 
@@ -2699,29 +2744,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupProductSalesFilter() {
 
-        // Poblar spinner de productos: une nombres de hamburguesas y otros productos
-
-        val productNames: MutableList<String> =
-
-                mutableSetOf<String>()
-
-                        .apply {
-
-                            // nombres de hamburguesas (normales y combos comparten nombre base)
-
-                            addAll(preciosHamburguesas.keys)
-
-                            // nombres de productos generales (otros platillos y extras)
-
-                            addAll(products.keys)
-
-                        }
-
-                        .toMutableList()
-
-                        .sorted()
-
-                        .toMutableList()
+        productSalesFilterOptions = buildProductFilterOptions()
+        val productNames = productSalesFilterOptions.map { it.displayName }
 
 
 
@@ -2773,13 +2797,13 @@ class MainActivity : AppCompatActivity() {
 
                     ) {
 
-                        val selectedName = productNames[position]
+                        val selectedOption = productSalesFilterOptions.getOrNull(position)
 
                         // Si es una hamburguesa, mostrar el spinner de tipo; de lo contrario
 
                         // ocultarlo
 
-                        if (preciosHamburguesas.containsKey(selectedName)) {
+                        if (selectedOption?.isHamburger == true) {
 
                             spinnerTypeFilter.visibility = View.VISIBLE
 
@@ -2873,9 +2897,10 @@ class MainActivity : AppCompatActivity() {
 
         btnCalcularVentas.setOnClickListener {
 
+            val selectedPosition = spinnerProductFilter.selectedItemPosition
             val selectedProduct =
-
-                    spinnerProductFilter.selectedItem as? String ?: return@setOnClickListener
+                    productSalesFilterOptions.getOrNull(selectedPosition)
+                            ?: return@setOnClickListener
 
             val selectedPeriod =
 
@@ -2997,9 +3022,9 @@ class MainActivity : AppCompatActivity() {
 
             if (range != null) {
 
-                calcularVentasProducto(selectedProduct, range.first, range.second, selectedType)
+            calcularVentasProducto(selectedProduct, range.first, range.second, selectedType)
 
-            }
+        }
 
         }
 
@@ -3765,7 +3790,7 @@ class MainActivity : AppCompatActivity() {
 
      *
 
-     * @param nombreProducto El nombre base del producto (por ejemplo, "Hamburguesa Hawaiana").
+     * @param productOption El producto actual del catálogo y sus nombres anteriores/equivalentes.
 
      * @param inicio Timestamp de inicio del rango (inclusive).
 
@@ -3779,7 +3804,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun calcularVentasProducto(
 
-            nombreProducto: String,
+            productOption: ProductFilterOption,
 
             inicio: Long,
 
@@ -3790,6 +3815,8 @@ class MainActivity : AppCompatActivity() {
     ) {
 
         lifecycleScope.launch(Dispatchers.IO) {
+            val displayName = productOption.displayName
+            val normalizedAliases = productOption.aliases.map { normalizeProductLabel(it) }.toSet()
 
             // Obtener todas las órdenes
 
@@ -3835,7 +3862,7 @@ class MainActivity : AppCompatActivity() {
 
                             }
 
-                    if (baseName == nombreProducto) {
+                    if (normalizeProductLabel(baseName) in normalizedAliases) {
 
                         if (item.esCombo) {
 
@@ -3883,11 +3910,11 @@ class MainActivity : AppCompatActivity() {
 
                                 "Normal" ->
 
-                                        "Ventas de $nombreProducto (normal): $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
+                                        "Ventas de $displayName (normal): $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
 
                                 "Combo" ->
 
-                                        "Ventas de $nombreProducto combo: $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
+                                        "Ventas de $displayName combo: $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
 
                                 else -> {
 
@@ -3917,13 +3944,13 @@ class MainActivity : AppCompatActivity() {
 
                                     if (partes.isNotEmpty()) {
 
-                                        "Ventas de $nombreProducto:\n" + partes.joinToString("\n")
+                                        "Ventas de $displayName:\n" + partes.joinToString("\n")
 
                                     } else {
 
                                         // Fallback por si acaso (no debería ocurrir)
 
-                                        "Ventas de $nombreProducto: $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
+                                        "Ventas de $displayName: $unidadesVendidas unidad(es), Total: ${totalVentas.formatMoney()}"
 
                                     }
 
@@ -3933,7 +3960,7 @@ class MainActivity : AppCompatActivity() {
 
                         } else {
 
-                            "No se encontraron ventas para $nombreProducto en el periodo seleccionado"
+                            "No se encontraron ventas para $displayName en el periodo seleccionado"
 
                         }
 
@@ -5495,6 +5522,14 @@ class MainActivity : AppCompatActivity() {
                             viewModel.getTopSellingProducts(inicio, fin)
 
                         }
+                                .groupBy { currentDisplayNameForReport(it.name) }
+                                .map { (name, rows) ->
+                                    TopSellingProduct(
+                                            name = name,
+                                            totalQty = rows.sumOf { it.totalQty }
+                                    )
+                                }
+                                .sortedByDescending { it.totalQty }
 
 
 

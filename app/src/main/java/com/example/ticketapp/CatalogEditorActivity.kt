@@ -24,17 +24,10 @@ class CatalogEditorActivity : AppCompatActivity() {
         val spinnerCategory: Spinner
     )
 
-    private lateinit var spinnerCategoryOrder: Spinner
-    private lateinit var btnCategoryUp: Button
-    private lateinit var btnCategoryDown: Button
-    private lateinit var tvCategoryOrderPreview: TextView
-
     private lateinit var etNewProductName: EditText
     private lateinit var etNewProductPrice: EditText
     private lateinit var spinnerNewProductCategory: Spinner
     private lateinit var btnAddNewProduct: Button
-    private lateinit var etNewCategoryName: EditText
-    private lateinit var btnAddNewCategory: Button
 
     private lateinit var containerCatalogProducts: LinearLayout
     private lateinit var btnSaveCatalog: Button
@@ -43,24 +36,15 @@ class CatalogEditorActivity : AppCompatActivity() {
     private val categoryOrder = mutableListOf<String>()
     private val availableCategories = mutableListOf<String>()
     private val rowBindings = mutableListOf<RowBinding>()
-    private lateinit var categoryOrderAdapter: ArrayAdapter<String>
-    private lateinit var newProductCategoryAdapter: ArrayAdapter<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_catalog_editor)
 
-        spinnerCategoryOrder = findViewById(R.id.spinnerCategoryOrder)
-        btnCategoryUp = findViewById(R.id.btnCategoryUp)
-        btnCategoryDown = findViewById(R.id.btnCategoryDown)
-        tvCategoryOrderPreview = findViewById(R.id.tvCategoryOrderPreview)
-
         etNewProductName = findViewById(R.id.etNewProductName)
         etNewProductPrice = findViewById(R.id.etNewProductPrice)
         spinnerNewProductCategory = findViewById(R.id.spinnerNewProductCategory)
         btnAddNewProduct = findViewById(R.id.btnAddNewProduct)
-        etNewCategoryName = findViewById(R.id.etNewCategoryName)
-        btnAddNewCategory = findViewById(R.id.btnAddNewCategory)
 
         containerCatalogProducts = findViewById(R.id.containerCatalogProducts)
         btnSaveCatalog = findViewById(R.id.btnSaveCatalog)
@@ -73,7 +57,7 @@ class CatalogEditorActivity : AppCompatActivity() {
         availableCategories.clear()
         availableCategories.addAll(categoryOrder)
 
-        setupCategoryOrderControls()
+        setupCategoryControls()
         setupNewProductControls()
         renderRows(config)
 
@@ -82,57 +66,11 @@ class CatalogEditorActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupCategoryOrderControls() {
-        categoryOrderAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoryOrder)
-        categoryOrderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerCategoryOrder.adapter = categoryOrderAdapter
-
-        newProductCategoryAdapter =
+    private fun setupCategoryControls() {
+        val newProductCategoryAdapter =
             ArrayAdapter(this, android.R.layout.simple_spinner_item, availableCategories)
         newProductCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerNewProductCategory.adapter = newProductCategoryAdapter
-
-        btnCategoryUp.setOnClickListener {
-            val idx = spinnerCategoryOrder.selectedItemPosition
-            if (idx > 0) {
-                val item = categoryOrder.removeAt(idx)
-                categoryOrder.add(idx - 1, item)
-                categoryOrderAdapter.notifyDataSetChanged()
-                spinnerCategoryOrder.setSelection(idx - 1)
-                updateOrderPreview()
-            }
-        }
-
-        btnCategoryDown.setOnClickListener {
-            val idx = spinnerCategoryOrder.selectedItemPosition
-            if (idx >= 0 && idx < categoryOrder.lastIndex) {
-                val item = categoryOrder.removeAt(idx)
-                categoryOrder.add(idx + 1, item)
-                categoryOrderAdapter.notifyDataSetChanged()
-                spinnerCategoryOrder.setSelection(idx + 1)
-                updateOrderPreview()
-            }
-        }
-
-        btnAddNewCategory.setOnClickListener {
-            val categoryName = etNewCategoryName.text.toString().trim()
-            if (categoryName.isBlank()) {
-                Toast.makeText(this, "Escribe un nombre de categoría", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (!addCategoryIfMissing(categoryName)) {
-                Toast.makeText(this, "La categoría ya existe", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            etNewCategoryName.setText("")
-            spinnerCategoryOrder.setSelection(categoryOrder.indexOf(categoryName))
-            spinnerNewProductCategory.setSelection(availableCategories.indexOf(categoryName))
-            Toast.makeText(this, "Categoría agregada", Toast.LENGTH_SHORT).show()
-        }
-
-        updateOrderPreview()
     }
 
     private fun setupNewProductControls() {
@@ -319,41 +257,6 @@ class CatalogEditorActivity : AppCompatActivity() {
             if (excludeRow != null && row.root == excludeRow) return@any false
             val rowName = row.etName.text.toString().trim()
             rowName.lowercase(Locale.getDefault()) == normalized
-        }
-    }
-
-    private fun updateOrderPreview() {
-        tvCategoryOrderPreview.text = categoryOrder.joinToString("  >  ")
-    }
-
-    private fun addCategoryIfMissing(categoryName: String): Boolean {
-        val normalized = categoryName.trim()
-        if (normalized.isBlank()) return false
-
-        val exists =
-            availableCategories.any { it.equals(normalized, ignoreCase = true) }
-        if (exists) return false
-
-        availableCategories.add(normalized)
-        categoryOrder.add(normalized)
-        categoryOrderAdapter.notifyDataSetChanged()
-        newProductCategoryAdapter.notifyDataSetChanged()
-        refreshRowCategorySpinners()
-        updateOrderPreview()
-        return true
-    }
-
-    private fun refreshRowCategorySpinners() {
-        rowBindings.forEach { row ->
-            val selectedCategory = row.spinnerCategory.selectedItem?.toString().orEmpty()
-            val adapter =
-                ArrayAdapter(this, android.R.layout.simple_spinner_item, availableCategories).apply {
-                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                }
-            row.spinnerCategory.adapter = adapter
-
-            val index = availableCategories.indexOfFirst { it.equals(selectedCategory, ignoreCase = true) }
-            row.spinnerCategory.setSelection(index.coerceAtLeast(0))
         }
     }
 }
